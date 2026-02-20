@@ -1,0 +1,47 @@
+{
+  "appName": "Socrates",
+  "common": {
+    "actions": {
+      "signIn": "Sign In",
+      "signUp": "Sign Up",
+      "logout": "Log Out",
+      "switchLanguage": "Switch language"
+    },
+    "fields": {
+      "email": "Email",
+      "password": "Password",
+      "fullName": "Full Name"
+    },
+    "errors": {
+      "title": "Error",
+      "requiredFields": "Please fill in all fields."
+    }
+  },
+  "auth": {
+    "signIn": {
+      "title": "Welcome Back",
+      "subtitle": "Sign in to continue",
+      "footerText": "Don't have an account?",
+      "emailInputA11y": "Email input",
+      "passwordInputA11y": "Password input",
+      "submitA11y": "Sign in button",
+      "goToSignUpA11y": "Go to sign up"
+    },
+    "signUp": {
+      "title": "Create Account",
+      "subtitle": "Sign up to get started",
+      "footerText": "Already have an account?",
+      "fullNameInputA11y": "Full name input",
+      "emailInputA11y": "Email input",
+      "passwordInputA11y": "Password input",
+      "submitA11y": "Sign up button",
+      "goToSignInA11y": "Go to sign in"
+    }
+  },
+  "home": {
+    "title": "Home",
+    "subtitle": "You are logged in!",
+    "logoutA11y": "Log out",
+    "languageToggleA11y": "Switch language"
+  }
+}

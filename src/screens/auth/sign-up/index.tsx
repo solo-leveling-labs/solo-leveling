@@ -2,6 +2,7 @@ import { useAuth } from "@/src/contexts/AuthContext";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Alert,
   KeyboardAvoidingView,
@@ -16,6 +17,7 @@ import {
 const SignUpScreen = () => {
   const { back } = useRouter();
   const { register } = useAuth();
+  const { t } = useTranslation();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -23,7 +25,7 @@ const SignUpScreen = () => {
 
   const handleSignUp = () => {
     if (!name.trim() || !email.trim() || !password.trim()) {
-      Alert.alert("Error", "Please fill in all fields.");
+      Alert.alert(t("common.errors.title"), t("common.errors.requiredFields"));
       return;
     }
     register();
@@ -37,8 +39,8 @@ const SignUpScreen = () => {
       <View style={styles.content}>
         <View style={styles.header}>
           <Ionicons name="person-add-outline" size={56} color="#1A1A2E" />
-          <Text style={styles.title}>Create Account</Text>
-          <Text style={styles.subtitle}>Sign up to get started</Text>
+          <Text style={styles.title}>{t("auth.signUp.title")}</Text>
+          <Text style={styles.subtitle}>{t("auth.signUp.subtitle")}</Text>
         </View>
 
         <View style={styles.form}>
@@ -51,12 +53,12 @@ const SignUpScreen = () => {
             />
             <TextInput
               style={styles.input}
-              placeholder="Full Name"
+              placeholder={t("common.fields.fullName")}
               placeholderTextColor="#8E8E93"
               value={name}
               onChangeText={setName}
               autoCapitalize="words"
-              accessibilityLabel="Full name input"
+              accessibilityLabel={t("auth.signUp.fullNameInputA11y")}
             />
           </View>
 
@@ -69,14 +71,14 @@ const SignUpScreen = () => {
             />
             <TextInput
               style={styles.input}
-              placeholder="Email"
+              placeholder={t("common.fields.email")}
               placeholderTextColor="#8E8E93"
               value={email}
               onChangeText={setEmail}
               keyboardType="email-address"
               autoCapitalize="none"
               autoCorrect={false}
-              accessibilityLabel="Email input"
+              accessibilityLabel={t("auth.signUp.emailInputA11y")}
             />
           </View>
 
@@ -89,12 +91,12 @@ const SignUpScreen = () => {
             />
             <TextInput
               style={styles.input}
-              placeholder="Password"
+              placeholder={t("common.fields.password")}
               placeholderTextColor="#8E8E93"
               value={password}
               onChangeText={setPassword}
               secureTextEntry
-              accessibilityLabel="Password input"
+              accessibilityLabel={t("auth.signUp.passwordInputA11y")}
             />
           </View>
 
@@ -104,21 +106,21 @@ const SignUpScreen = () => {
               pressed && styles.buttonPressed,
             ]}
             onPress={handleSignUp}
-            accessibilityLabel="Sign up button"
+            accessibilityLabel={t("auth.signUp.submitA11y")}
             accessibilityRole="button"
           >
-            <Text style={styles.buttonText}>Sign Up</Text>
+            <Text style={styles.buttonText}>{t("common.actions.signUp")}</Text>
           </Pressable>
         </View>
 
         <Pressable
           onPress={back}
-          accessibilityLabel="Go to sign in"
+          accessibilityLabel={t("auth.signUp.goToSignInA11y")}
           accessibilityRole="link"
           style={styles.footerButton}
         >
-          <Text style={styles.footerText}>Already have an account?</Text>
-          <Text style={styles.linkText}>Sign In</Text>
+          <Text style={styles.footerText}>{t("auth.signUp.footerText")}</Text>
+          <Text style={styles.linkText}>{t("common.actions.signIn")}</Text>
         </Pressable>
       </View>
     </KeyboardAvoidingView>

@@ -2,6 +2,7 @@ import { useAuth } from "@/src/contexts/AuthContext";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Alert,
   KeyboardAvoidingView,
@@ -16,13 +17,14 @@ import {
 const SignInScreen = () => {
   const { push } = useRouter();
   const { login } = useAuth();
+  const { t } = useTranslation();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSignIn = () => {
     if (!email.trim() || !password.trim()) {
-      Alert.alert("Error", "Please fill in all fields.");
+      Alert.alert(t("common.errors.title"), t("common.errors.requiredFields"));
       return;
     }
     login();
@@ -36,8 +38,8 @@ const SignInScreen = () => {
       <View style={styles.content}>
         <View style={styles.header}>
           <Ionicons name="school-outline" size={56} color="#1A1A2E" />
-          <Text style={styles.title}>Welcome Back</Text>
-          <Text style={styles.subtitle}>Sign in to continue</Text>
+          <Text style={styles.title}>{t("auth.signIn.title")}</Text>
+          <Text style={styles.subtitle}>{t("auth.signIn.subtitle")}</Text>
         </View>
 
         <View style={styles.form}>
@@ -50,14 +52,14 @@ const SignInScreen = () => {
             />
             <TextInput
               style={styles.input}
-              placeholder="Email"
+              placeholder={t("common.fields.email")}
               placeholderTextColor="#8E8E93"
               value={email}
               onChangeText={setEmail}
               keyboardType="email-address"
               autoCapitalize="none"
               autoCorrect={false}
-              accessibilityLabel="Email input"
+              accessibilityLabel={t("auth.signIn.emailInputA11y")}
             />
           </View>
 
@@ -70,12 +72,12 @@ const SignInScreen = () => {
             />
             <TextInput
               style={styles.input}
-              placeholder="Password"
+              placeholder={t("common.fields.password")}
               placeholderTextColor="#8E8E93"
               value={password}
               onChangeText={setPassword}
               secureTextEntry
-              accessibilityLabel="Password input"
+              accessibilityLabel={t("auth.signIn.passwordInputA11y")}
             />
           </View>
 
@@ -85,22 +87,22 @@ const SignInScreen = () => {
               pressed && styles.buttonPressed,
             ]}
             onPress={handleSignIn}
-            accessibilityLabel="Sign in button"
+            accessibilityLabel={t("auth.signIn.submitA11y")}
             accessibilityRole="button"
           >
-            <Text style={styles.buttonText}>Sign In</Text>
+            <Text style={styles.buttonText}>{t("common.actions.signIn")}</Text>
           </Pressable>
         </View>
 
         <Pressable
           onPress={() => push("/(auth)/sign-up")}
-          accessibilityLabel="Go to sign up"
+          accessibilityLabel={t("auth.signIn.goToSignUpA11y")}
           accessibilityRole="link"
           style={styles.footerButton}
         >
-          <Text style={styles.footerText}>Don&apos;t have an account?</Text>
+          <Text style={styles.footerText}>{t("auth.signIn.footerText")}</Text>
 
-          <Text style={styles.linkText}>Sign Up</Text>
+          <Text style={styles.linkText}>{t("common.actions.signUp")}</Text>
         </Pressable>
       </View>
     </KeyboardAvoidingView>
