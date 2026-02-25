@@ -18,6 +18,14 @@
     }
   },
   "auth": {
+    "welcome": {
+      "tagline": "Inteligencia artificial para aprender",
+      "subtitle": "¿Ya has usado Zapienz, o acabas de llegar?",
+      "firstTime": "Primera vez en Zapienz",
+      "haveAccount": "Ya tengo cuenta",
+      "firstTimeA11y": "Soy nuevo, ir a introducción",
+      "haveAccountA11y": "Ya tengo cuenta, ir a inicio de sesión"
+    },
     "onboarding": {
       "slide1": {
         "title": "Aprende con los grandes pensadores",

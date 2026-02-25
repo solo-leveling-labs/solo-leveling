@@ -28,7 +28,7 @@ const OnboardingScreen = () => {
   const handleNext = useCallback(() => {
     if (isAnimating.current) return;
     if (isLastSlide) {
-      replace("/(auth)/sign-in");
+      replace("/welcome");
       return;
     }
     isAnimating.current = true;
@@ -36,7 +36,7 @@ const OnboardingScreen = () => {
   }, [isLastSlide, replace]);
 
   const handleSkip = useCallback(() => {
-    replace("/(auth)/sign-in");
+    replace("/welcome");
   }, [replace]);
 
   return (

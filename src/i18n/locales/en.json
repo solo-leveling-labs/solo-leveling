@@ -18,6 +18,14 @@
     }
   },
   "auth": {
+    "welcome": {
+      "tagline": "Artificial intelligence for learning",
+      "subtitle": "Have you used Zapienz before, or are you about to?",
+      "firstTime": "First time on Socrates",
+      "haveAccount": "I already have an account",
+      "firstTimeA11y": "I'm new, go to introduction",
+      "haveAccountA11y": "I have an account, go to sign in"
+    },
     "onboarding": {
       "slide1": {
         "title": "Learn from great thinkers",
