@@ -97,6 +97,9 @@
         "repeatPin": "Repetir pin de acceso"
       },
       "helperPin": "Se usará para ingresar a tu perfil parental.",
+      "errorPinLength": "El pin debe contener 6 dígitos.",
+      "errorPinMismatch": "Los pins no coinciden.",
+      "errorTermsRequired": "Debes aceptar los términos y condiciones para continuar.",
       "termsCheckbox": "Declaro que soy mayor de 18 años y acepto términos y condiciones.",
       "pinInputA11y": "Campo de pin de acceso",
       "repeatPinInputA11y": "Campo de repetir pin de acceso",

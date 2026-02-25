@@ -9,6 +9,12 @@ import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
 const PIN_LENGTH = 6;
 
+interface FormErrors {
+  pin?: string;
+  repeatPin?: string;
+  terms?: string;
+}
+
 const SignUpStep3Screen = () => {
   const { back } = useRouter();
   const { t } = useTranslation();
@@ -18,14 +24,21 @@ const SignUpStep3Screen = () => {
   const [showPin, setShowPin] = useState(false);
   const [showRepeatPin, setShowRepeatPin] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const [errors, setErrors] = useState<FormErrors>({});
 
-  const isFormValid =
-    pin.length === PIN_LENGTH && pin === repeatPin && termsAccepted;
+  const isFormFilled = pin.length > 0 && repeatPin.length > 0;
+
+  const clearFieldError = (field: keyof FormErrors) => {
+    if (errors[field]) {
+      setErrors((prev) => ({ ...prev, [field]: undefined }));
+    }
+  };
 
   const handlePinChange = (text: string) => {
     const digitsOnly = text.replace(/[^0-9]/g, "");
     if (digitsOnly.length <= PIN_LENGTH) {
       setPin(digitsOnly);
+      clearFieldError("pin");
     }
   };
 
@@ -33,11 +46,35 @@ const SignUpStep3Screen = () => {
     const digitsOnly = text.replace(/[^0-9]/g, "");
     if (digitsOnly.length <= PIN_LENGTH) {
       setRepeatPin(digitsOnly);
+      clearFieldError("repeatPin");
     }
   };
 
+  const handleTermsToggle = () => {
+    setTermsAccepted((prev) => !prev);
+    clearFieldError("terms");
+  };
+
   const handleNext = () => {
-    if (!isFormValid) return;
+    const newErrors: FormErrors = {};
+
+    if (pin.length < PIN_LENGTH) {
+      newErrors.pin = t("auth.signUpStep3.errorPinLength");
+    }
+
+    if (pin !== repeatPin) {
+      newErrors.repeatPin = t("auth.signUpStep3.errorPinMismatch");
+    }
+
+    if (!termsAccepted) {
+      newErrors.terms = t("auth.signUpStep3.errorTermsRequired");
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
     // TODO: Call register() from AuthContext with collected data
   };
 
@@ -46,11 +83,18 @@ const SignUpStep3Screen = () => {
       description={t("auth.signUpStep3.description")}
       onNext={handleNext}
       onBack={back}
-      isFormValid={isFormValid}
+      isFormValid={isFormFilled}
     >
       <View style={styles.fieldGroup}>
-        <Text style={styles.label}>{t("auth.signUpStep3.fields.pin")}</Text>
-        <View style={styles.inputContainer}>
+        <Text style={[styles.label, errors.pin && styles.labelError]}>
+          {t("auth.signUpStep3.fields.pin")}
+        </Text>
+        <View
+          style={[
+            styles.inputContainer,
+            errors.pin && styles.inputContainerError,
+          ]}
+        >
           <TextInput
             style={styles.input}
             value={pin}
@@ -62,6 +106,7 @@ const SignUpStep3Screen = () => {
             placeholderTextColor={colors.neutral[700]}
             accessibilityLabel={t("auth.signUpStep3.pinInputA11y")}
           />
+          {/* TODO: Add svg icon for eye toggle */}
           <Pressable
             onPress={() => setShowPin((prev) => !prev)}
             style={styles.eyeIcon}
@@ -75,14 +120,25 @@ const SignUpStep3Screen = () => {
             />
           </Pressable>
         </View>
-        <Text style={styles.helperText}>{t("auth.signUpStep3.helperPin")}</Text>
+        {errors.pin ? (
+          <Text style={styles.errorText}>{errors.pin}</Text>
+        ) : (
+          <Text style={styles.helperText}>
+            {t("auth.signUpStep3.helperPin")}
+          </Text>
+        )}
       </View>
 
       <View style={styles.fieldGroup}>
-        <Text style={styles.label}>
+        <Text style={[styles.label, errors.repeatPin && styles.labelError]}>
           {t("auth.signUpStep3.fields.repeatPin")}
         </Text>
-        <View style={styles.inputContainer}>
+        <View
+          style={[
+            styles.inputContainer,
+            errors.repeatPin && styles.inputContainerError,
+          ]}
+        >
           <TextInput
             style={styles.input}
             value={repeatPin}
@@ -94,6 +150,7 @@ const SignUpStep3Screen = () => {
             placeholderTextColor={colors.neutral[700]}
             accessibilityLabel={t("auth.signUpStep3.repeatPinInputA11y")}
           />
+          {/* TODO: Add svg icon for eye toggle */}
           <Pressable
             onPress={() => setShowRepeatPin((prev) => !prev)}
             style={styles.eyeIcon}
@@ -107,24 +164,36 @@ const SignUpStep3Screen = () => {
             />
           </Pressable>
         </View>
+        {errors.repeatPin && (
+          <Text style={styles.errorText}>{errors.repeatPin}</Text>
+        )}
       </View>
 
       <Pressable
         style={styles.checkboxRow}
-        onPress={() => setTermsAccepted((prev) => !prev)}
+        onPress={handleTermsToggle}
         accessibilityLabel={t("auth.signUpStep3.termsCheckboxA11y")}
         accessibilityRole="checkbox"
         accessibilityState={{ checked: termsAccepted }}
       >
+        {/* TODO: Add svg icon for checkbox */}
         <Ionicons
           name={termsAccepted ? "checkbox-outline" : "square-outline"}
           size={24}
-          color={colors.accent.mainBlue}
+          color={errors.terms ? colors.error : colors.accent.mainBlue}
         />
-        <Text style={styles.checkboxText}>
+        <Text
+          style={[
+            styles.checkboxText,
+            errors.terms && styles.checkboxTextError,
+          ]}
+        >
           {t("auth.signUpStep3.termsCheckbox")}
         </Text>
       </Pressable>
+      {errors.terms && (
+        <Text style={styles.errorText}>{errors.terms}</Text>
+      )}
     </SignUpLayout>
   );
 };
@@ -138,6 +207,9 @@ const styles = StyleSheet.create({
     fontFamily: fonts.poppins.regular,
     color: colors.neutral[300],
   },
+  labelError: {
+    color: colors.error,
+  },
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -145,6 +217,9 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     borderColor: colors.accent.mainBlue,
     backgroundColor: colors.transparent,
+  },
+  inputContainerError: {
+    borderColor: colors.error,
   },
   input: {
     flex: 1,
@@ -162,21 +237,32 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontFamily: fonts.poppins.regular,
     color: colors.neutral[500],
-    marginTop: 4,
-    paddingHorizontal: 8,
+    paddingHorizontal: 24,
+    lineHeight: 16,
+  },
+  errorText: {
+    fontSize: 12,
+    fontFamily: fonts.poppins.regular,
+    color: colors.error,
+    paddingHorizontal: 24,
+    lineHeight: 16,
+    letterSpacing: 0.4,
   },
   checkboxRow: {
     flexDirection: "row",
     alignItems: "flex-start",
-    gap: 12,
+    gap: 8,
     marginTop: 8,
   },
   checkboxText: {
     flex: 1,
     fontSize: 14,
     fontFamily: fonts.poppins.regular,
-    color: colors.neutral[300],
+    color: colors.neutral.black,
     lineHeight: 22,
+  },
+  checkboxTextError: {
+    color: colors.error,
   },
 });
 
