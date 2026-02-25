@@ -81,6 +81,9 @@
         "repeatPassword": "Repeat password"
       },
       "helperPassword": "Password must contain at least 8 characters.",
+      "errorInvalidEmail": "The email entered is incorrect.",
+      "errorPasswordLength": "Password must contain at least 8 characters.",
+      "errorPasswordMismatch": "Passwords do not match.",
       "mailInputA11y": "Email input",
       "passwordInputA11y": "Password input",
       "repeatPasswordInputA11y": "Repeat password input",

@@ -81,6 +81,9 @@
         "repeatPassword": "Repetir contraseña"
       },
       "helperPassword": "La contraseña debe contener al menos 8 caracteres.",
+      "errorInvalidEmail": "El mail ingresado es incorrecto.",
+      "errorPasswordLength": "La contraseña debe contener al menos 8 caracteres.",
+      "errorPasswordMismatch": "Las contraseñas no coinciden.",
       "mailInputA11y": "Campo de correo electrónico",
       "passwordInputA11y": "Campo de contraseña",
       "repeatPasswordInputA11y": "Campo de repetir contraseña",
