@@ -10,7 +10,9 @@
     "fields": {
       "email": "Email",
       "password": "Password",
-      "fullName": "Full Name"
+      "fullName": "Full Name",
+      "name": "Name",
+      "birthDate": "Date of birth"
     },
     "errors": {
       "title": "Error",
@@ -56,14 +58,20 @@
       "goToSignUpA11y": "Go to sign up"
     },
     "signUp": {
-      "title": "Create Account",
-      "subtitle": "Sign up to get started",
-      "footerText": "Already have an account?",
-      "fullNameInputA11y": "Full name input",
-      "emailInputA11y": "Email input",
-      "passwordInputA11y": "Password input",
-      "submitA11y": "Sign up button",
-      "goToSignInA11y": "Go to sign in"
+      "title": "Sign Up",
+      "subtitle": "And create a safe digital environment.",
+      "description": "Enter your details. Remember that you must be of legal age to set up the app.",
+      "next": "Next",
+      "back": "Go back",
+      "selectDate": "DD/MM/YYYY",
+      "underageWarning": "You must be at least 18 years old to use this app.",
+      "datePickerConfirm": "Confirm",
+      "datePickerCancel": "Cancel",
+      "datePickerLocale": "en",
+      "nameInputA11y": "Name input",
+      "birthDateInputA11y": "Date of birth input. Tap to open date picker",
+      "nextA11y": "Go to next registration step",
+      "backA11y": "Go back to previous screen"
     }
   },
   "home": {

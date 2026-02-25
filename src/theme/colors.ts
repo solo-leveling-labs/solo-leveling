@@ -17,7 +17,7 @@ export const colors = {
     500: "#555555",
     700: "#777777",
     white: "#FFFFFF",
-    black: "#222222",
+    black: "#000000",
     disabled: "#D0D0D0",
   },
   error: "#811123",

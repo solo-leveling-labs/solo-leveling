@@ -1,209 +1,347 @@
-import { useAuth } from "@/src/contexts/AuthContext";
+import WelcomeBackground from "@/assets/svg/welcome-background.svg";
+import { colors } from "@/src/theme/colors";
+import { fonts } from "@/src/theme/fonts";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
-  Alert,
   KeyboardAvoidingView,
   Platform,
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
+  useWindowDimensions,
   View,
 } from "react-native";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+
+const SVG_ASPECT_RATIO = 132 / 375;
+const MINIMUM_AGE = 18;
+
+const getAge = (birthDate: Date): number => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const normalizedBirth = new Date(birthDate);
+  normalizedBirth.setHours(0, 0, 0, 0);
+
+  let age = today.getFullYear() - normalizedBirth.getFullYear();
+  const monthDiff = today.getMonth() - normalizedBirth.getMonth();
+  if (
+    monthDiff < 0 ||
+    (monthDiff === 0 && today.getDate() < normalizedBirth.getDate())
+  ) {
+    age--;
+  }
+  return age;
+};
+
+const getDefaultPickerDate = (): Date => {
+  const date = new Date();
+  date.setFullYear(date.getFullYear() - MINIMUM_AGE);
+  return date;
+};
+
+const formatDate = (date: Date): string => {
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = date.getFullYear();
+  return `${day}/${month}/${year}`;
+};
 
 const SignUpScreen = () => {
   const { back } = useRouter();
-  const { register } = useAuth();
   const { t } = useTranslation();
+  const { width: screenWidth } = useWindowDimensions();
 
   const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [birthDate, setBirthDate] = useState<Date | null>(null);
+  const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
+  const [isUnderage, setIsUnderage] = useState(false);
 
-  const handleSignUp = () => {
-    if (!name.trim() || !email.trim() || !password.trim()) {
-      Alert.alert(t("common.errors.title"), t("common.errors.requiredFields"));
+  const isFormValid =
+    name.trim().length > 0 && birthDate !== null && !isUnderage;
+
+  const showDatePicker = useCallback(() => {
+    setIsDatePickerVisible(true);
+  }, []);
+
+  const hideDatePicker = useCallback(() => {
+    setIsDatePickerVisible(false);
+  }, []);
+
+  const handleDateConfirm = useCallback((date: Date) => {
+    hideDatePicker();
+    setBirthDate(date);
+    const age = getAge(date);
+    setIsUnderage(age < MINIMUM_AGE);
+  }, []);
+
+  const handleNext = () => {
+    if (!birthDate) return;
+
+    if (isUnderage) {
+      // TODO: Navigate to underage screen
       return;
     }
-    register();
+
+    // TODO: Navigate to next registration step
   };
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-    >
-      <View style={styles.content}>
-        <View style={styles.header}>
-          <Ionicons name="person-add-outline" size={56} color="#1A1A2E" />
-          <Text style={styles.title}>{t("auth.signUp.title")}</Text>
-          <Text style={styles.subtitle}>{t("auth.signUp.subtitle")}</Text>
-        </View>
-
-        <View style={styles.form}>
-          <View style={styles.inputContainer}>
-            <Ionicons
-              name="person-outline"
-              size={20}
-              color="#8E8E93"
-              style={styles.inputIcon}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder={t("common.fields.fullName")}
-              placeholderTextColor="#8E8E93"
-              value={name}
-              onChangeText={setName}
-              autoCapitalize="words"
-              accessibilityLabel={t("auth.signUp.fullNameInputA11y")}
-            />
-          </View>
-
-          <View style={styles.inputContainer}>
-            <Ionicons
-              name="mail-outline"
-              size={20}
-              color="#8E8E93"
-              style={styles.inputIcon}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder={t("common.fields.email")}
-              placeholderTextColor="#8E8E93"
-              value={email}
-              onChangeText={setEmail}
-              keyboardType="email-address"
-              autoCapitalize="none"
-              autoCorrect={false}
-              accessibilityLabel={t("auth.signUp.emailInputA11y")}
-            />
-          </View>
-
-          <View style={styles.inputContainer}>
-            <Ionicons
-              name="lock-closed-outline"
-              size={20}
-              color="#8E8E93"
-              style={styles.inputIcon}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder={t("common.fields.password")}
-              placeholderTextColor="#8E8E93"
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry
-              accessibilityLabel={t("auth.signUp.passwordInputA11y")}
-            />
-          </View>
-
-          <Pressable
-            style={({ pressed }) => [
-              styles.button,
-              pressed && styles.buttonPressed,
-            ]}
-            onPress={handleSignUp}
-            accessibilityLabel={t("auth.signUp.submitA11y")}
-            accessibilityRole="button"
-          >
-            <Text style={styles.buttonText}>{t("common.actions.signUp")}</Text>
-          </Pressable>
-        </View>
-
-        <Pressable
-          onPress={back}
-          accessibilityLabel={t("auth.signUp.goToSignInA11y")}
-          accessibilityRole="link"
-          style={styles.footerButton}
+    <View style={styles.container}>
+      <WelcomeBackground
+        width={screenWidth}
+        height={screenWidth * SVG_ASPECT_RATIO}
+        style={styles.background}
+      />
+      <KeyboardAvoidingView
+        style={styles.flex}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      >
+        <ScrollView
+          contentContainerStyle={styles.content}
+          keyboardShouldPersistTaps="handled"
+          bounces={false}
         >
-          <Text style={styles.footerText}>{t("auth.signUp.footerText")}</Text>
-          <Text style={styles.linkText}>{t("common.actions.signIn")}</Text>
-        </Pressable>
-      </View>
-    </KeyboardAvoidingView>
+          <View style={styles.header}>
+            <Text style={styles.title}>{t("auth.signUp.title")}</Text>
+            <Text style={styles.subtitle}>{t("auth.signUp.subtitle")}</Text>
+          </View>
+
+          <View style={styles.form}>
+            <Text style={styles.description}>
+              {t("auth.signUp.description")}
+            </Text>
+
+            <View style={styles.fieldGroup}>
+              <Text style={styles.label}>{t("common.fields.name")}</Text>
+              <View style={styles.inputContainer}>
+                <TextInput
+                  style={styles.input}
+                  value={name}
+                  onChangeText={setName}
+                  autoCapitalize="words"
+                  accessibilityLabel={t("auth.signUp.nameInputA11y")}
+                />
+              </View>
+            </View>
+
+            <View style={styles.fieldGroup}>
+              <Text style={styles.label}>{t("common.fields.birthDate")}</Text>
+              <Pressable
+                style={styles.inputContainer}
+                onPress={showDatePicker}
+                accessibilityLabel={t("auth.signUp.birthDateInputA11y")}
+                accessibilityRole="button"
+              >
+                <Text
+                  style={[
+                    styles.dateText,
+                    !birthDate && styles.dateTextPlaceholder,
+                  ]}
+                >
+                  {birthDate
+                    ? formatDate(birthDate)
+                    : t("auth.signUp.selectDate")}
+                </Text>
+                {/* TODO: Add svg icon for calendar */}
+                <Ionicons
+                  style={styles.calendarIcon}
+                  name="calendar-outline"
+                  size={22}
+                  color={colors.neutral[500]}
+                />
+              </Pressable>
+              {isUnderage && (
+                <Text style={styles.underageText}>
+                  {t("auth.signUp.underageWarning")}
+                </Text>
+              )}
+            </View>
+          </View>
+
+          <DateTimePickerModal
+            isVisible={isDatePickerVisible}
+            mode="date"
+            onConfirm={handleDateConfirm}
+            onCancel={hideDatePicker}
+            maximumDate={new Date()}
+            date={birthDate ?? getDefaultPickerDate()}
+            confirmTextIOS={t("auth.signUp.datePickerConfirm")}
+            cancelTextIOS={t("auth.signUp.datePickerCancel")}
+            locale={t("auth.signUp.datePickerLocale")}
+            pickerContainerStyleIOS={styles.datePickerIOS}
+          />
+
+          <View style={styles.footer}>
+            <Pressable
+              style={({ pressed }) => [
+                styles.nextButton,
+                !isFormValid && styles.nextButtonDisabled,
+                pressed && isFormValid && styles.buttonPressed,
+              ]}
+              onPress={handleNext}
+              disabled={!isFormValid}
+              accessibilityLabel={t("auth.signUp.nextA11y")}
+              accessibilityRole="button"
+            >
+              <Text
+                style={[
+                  styles.nextButtonText,
+                  !isFormValid && styles.nextButtonTextDisabled,
+                ]}
+              >
+                {t("auth.signUp.next")}
+              </Text>
+            </Pressable>
+
+            <Pressable
+              onPress={back}
+              accessibilityLabel={t("auth.signUp.backA11y")}
+              accessibilityRole="button"
+              style={styles.backButton}
+            >
+              <Text style={styles.backText}>{t("auth.signUp.back")}</Text>
+            </Pressable>
+          </View>
+
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F8F9FA",
+    backgroundColor: colors.accent.lightBackground,
+  },
+  flex: {
+    flex: 1,
   },
   content: {
-    flex: 1,
-    justifyContent: "center",
-    paddingHorizontal: 32,
+    paddingHorizontal: 24,
+    paddingTop: "40%",
+    justifyContent: "space-between",
   },
   header: {
-    alignItems: "center",
+    gap: 8,
     marginBottom: 48,
   },
   title: {
-    fontSize: 28,
-    fontWeight: "700",
-    color: "#1A1A2E",
-    marginTop: 16,
+    fontSize: 40,
+    fontFamily: fonts.raleway.extraBold,
+    color: colors.accent.mainBlue,
   },
   subtitle: {
-    fontSize: 16,
-    color: "#8E8E93",
-    marginTop: 8,
+    fontSize: 18,
+    fontFamily: fonts.raleway.bold,
+    color: colors.accent.mainBlue,
   },
   form: {
     gap: 16,
   },
+  description: {
+    fontSize: 14,
+    fontFamily: fonts.poppins.regular,
+    color: colors.neutral.black,
+    lineHeight: 22,
+    marginBottom: 16,
+  },
+  fieldGroup: {
+    gap: 6,
+  },
+  label: {
+    fontSize: 14,
+    fontFamily: fonts.poppins.regular,
+    color: colors.neutral[300],
+  },
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#FFFFFF",
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: "#E5E5EA",
-    paddingHorizontal: 16,
-    height: 52,
-  },
-  inputIcon: {
-    marginRight: 12,
+    borderRadius: 28,
+    borderWidth: 1.5,
+    borderColor: colors.accent.mainBlue,
+    backgroundColor: colors.transparent,
   },
   input: {
     flex: 1,
     fontSize: 16,
-    color: "#1A1A2E",
+    fontFamily: fonts.poppins.regular,
+    color: colors.neutral[300],
+    height: 56,
+    paddingHorizontal: 20,
   },
-  button: {
-    backgroundColor: "#1A1A2E",
-    borderRadius: 12,
-    height: 52,
+  dateText: {
+    flex: 1,
+    fontSize: 16,
+    fontFamily: fonts.poppins.regular,
+    color: colors.neutral[300],
+    paddingHorizontal: 20,
+    lineHeight: 56,
+  },
+  dateTextPlaceholder: {
+    color: colors.neutral[700],
+  },
+  underageText: {
+    fontSize: 12,
+    fontFamily: fonts.poppins.regular,
+    color: colors.error,
+    marginTop: 4,
+    paddingHorizontal: 8,
+  },
+  datePickerIOS: {
+    alignItems: "center",
+  },
+  calendarIcon: {
+    position: "absolute",
+    right: 20,
+  },
+  footer: {
+    alignItems: "center",
+    gap: 16,
+    paddingBottom: "35%",
+    marginTop: 56,
+  },
+  nextButton: {
+    backgroundColor: colors.accent.mainBlue,
+    height: 56,
+    borderRadius: 28,
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 8,
+    paddingHorizontal: 64,
+    width: "100%",
+  },
+  nextButtonDisabled: {
+    backgroundColor: colors.neutral.disabled,
   },
   buttonPressed: {
     opacity: 0.8,
   },
-  buttonText: {
-    color: "#FFFFFF",
-    fontSize: 17,
-    fontWeight: "600",
+  nextButtonText: {
+    fontSize: 16,
+    fontFamily: fonts.poppins.bold,
+    color: colors.neutral.white,
   },
-  footerButton: {
-    flexDirection: "row",
-    justifyContent: "center",
+  backButton: {
+    width: "100%",
     alignItems: "center",
-    marginTop: 32,
-    gap: 6,
   },
-  footerText: {
-    fontSize: 15,
-    color: "#8E8E93",
+  nextButtonTextDisabled: {
+    color: colors.neutral[700],
   },
-  linkText: {
-    fontSize: 15,
-    color: "#1A1A2E",
-    fontWeight: "600",
+  backText: {
+    fontSize: 16,
+    fontFamily: fonts.poppins.regular,
+    color: colors.accent.mainBlue,
+  },
+  background: {
+    position: "absolute",
+    bottom: 0,
   },
 });
 

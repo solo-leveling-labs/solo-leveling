@@ -10,7 +10,9 @@
     "fields": {
       "email": "Correo electrónico",
       "password": "Contraseña",
-      "fullName": "Nombre completo"
+      "fullName": "Nombre completo",
+      "name": "Nombre",
+      "birthDate": "Fecha de nacimiento"
     },
     "errors": {
       "title": "Error",
@@ -56,14 +58,20 @@
       "goToSignUpA11y": "Ir a registro"
     },
     "signUp": {
-      "title": "Crear cuenta",
-      "subtitle": "Regístrate para comenzar",
-      "footerText": "¿Ya tienes una cuenta?",
-      "fullNameInputA11y": "Campo de nombre completo",
-      "emailInputA11y": "Campo de correo electrónico",
-      "passwordInputA11y": "Campo de contraseña",
-      "submitA11y": "Botón de registrarse",
-      "goToSignInA11y": "Ir a inicio de sesión"
+      "title": "Regístrate",
+      "subtitle": "Y crea un entorno digital seguro.",
+      "description": "Ingresa tus datos. Recuerda que debes ser mayor de edad para configurar la app.",
+      "next": "Siguiente",
+      "back": "Volver",
+      "selectDate": "DD/MM/AAAA",
+      "underageWarning": "Debes tener al menos 18 años para usar esta app.",
+      "datePickerConfirm": "Confirmar",
+      "datePickerCancel": "Cancelar",
+      "datePickerLocale": "es",
+      "nameInputA11y": "Campo de nombre",
+      "birthDateInputA11y": "Campo de fecha de nacimiento. Toca para abrir selector de fecha",
+      "nextA11y": "Ir al siguiente paso del registro",
+      "backA11y": "Volver a la pantalla anterior"
     }
   },
   "home": {
