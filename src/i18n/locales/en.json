@@ -18,6 +18,26 @@
     }
   },
   "auth": {
+    "onboarding": {
+      "slide1": {
+        "title": "Learn from great thinkers",
+        "description": "Explore the ideas of history's most influential philosophers through interactive conversations."
+      },
+      "slide2": {
+        "title": "Conversations that inspire",
+        "description": "Talk with Socrates, Plato, Aristotle and many more. Ask questions and discover new perspectives."
+      },
+      "slide3": {
+        "title": "Your philosophical journey starts here",
+        "description": "Develop your critical thinking and broaden your worldview with every conversation."
+      },
+      "skip": "Skip",
+      "next": "Next",
+      "start": "Get Started",
+      "skipA11y": "Skip introduction and go to sign in",
+      "nextA11y": "Go to next slide",
+      "startA11y": "Get started and go to sign in"
+    },
     "signIn": {
       "title": "Welcome Back",
       "subtitle": "Sign in to continue",

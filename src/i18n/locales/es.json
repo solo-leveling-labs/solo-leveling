@@ -18,6 +18,26 @@
     }
   },
   "auth": {
+    "onboarding": {
+      "slide1": {
+        "title": "Aprende con los grandes pensadores",
+        "description": "Explora las ideas de los filósofos más influyentes de la historia a través de conversaciones interactivas."
+      },
+      "slide2": {
+        "title": "Conversaciones que inspiran",
+        "description": "Dialoga con Sócrates, Platón, Aristóteles y muchos más. Haz preguntas y descubre nuevas perspectivas."
+      },
+      "slide3": {
+        "title": "Tu camino filosófico comienza aquí",
+        "description": "Desarrolla tu pensamiento crítico y amplía tu visión del mundo con cada conversación."
+      },
+      "skip": "Omitir",
+      "next": "Siguiente",
+      "start": "Comenzar",
+      "skipA11y": "Omitir introducción e ir a inicio de sesión",
+      "nextA11y": "Ir a la siguiente diapositiva",
+      "startA11y": "Comenzar y ir a inicio de sesión"
+    },
     "signIn": {
       "title": "Bienvenido de nuevo",
       "subtitle": "Inicia sesión para continuar",
