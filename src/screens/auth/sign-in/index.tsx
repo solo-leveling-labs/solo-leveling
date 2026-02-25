@@ -95,7 +95,7 @@ const SignInScreen = () => {
         </View>
 
         <Pressable
-          onPress={() => push("/(auth)/sign-up")}
+          onPress={() => push("/(auth)/sign-up-step-1")}
           accessibilityLabel={t("auth.signIn.goToSignUpA11y")}
           accessibilityRole="link"
           style={styles.footerButton}

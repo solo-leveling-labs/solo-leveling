@@ -72,6 +72,34 @@
       "birthDateInputA11y": "Campo de fecha de nacimiento. Toca para abrir selector de fecha",
       "nextA11y": "Ir al siguiente paso del registro",
       "backA11y": "Volver a la pantalla anterior"
+    },
+    "signUpStep2": {
+      "description": "Ingresa tu correo electrónico y crea una contraseña segura.",
+      "fields": {
+        "mail": "Mail",
+        "password": "Contraseña",
+        "repeatPassword": "Repetir contraseña"
+      },
+      "helperPassword": "La contraseña debe contener al menos 8 caracteres.",
+      "mailInputA11y": "Campo de correo electrónico",
+      "passwordInputA11y": "Campo de contraseña",
+      "repeatPasswordInputA11y": "Campo de repetir contraseña",
+      "togglePasswordA11y": "Mostrar u ocultar contraseña",
+      "toggleRepeatPasswordA11y": "Mostrar u ocultar repetir contraseña"
+    },
+    "signUpStep3": {
+      "description": "Crea un pin de acceso y acepta los términos y condiciones.",
+      "fields": {
+        "pin": "Pin de acceso",
+        "repeatPin": "Repetir pin de acceso"
+      },
+      "helperPin": "Se usará para ingresar a tu perfil parental.",
+      "termsCheckbox": "Declaro que soy mayor de 18 años y acepto términos y condiciones.",
+      "pinInputA11y": "Campo de pin de acceso",
+      "repeatPinInputA11y": "Campo de repetir pin de acceso",
+      "togglePinA11y": "Mostrar u ocultar pin",
+      "toggleRepeatPinA11y": "Mostrar u ocultar repetir pin",
+      "termsCheckboxA11y": "Aceptar términos y condiciones"
     }
   },
   "home": {

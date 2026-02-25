@@ -23,7 +23,7 @@ const WelcomeScreen = () => {
   const { t } = useTranslation();
   const { width: screenWidth } = useWindowDimensions();
 
-  const handleFirstTime = () => push("/sign-up");
+  const handleFirstTime = () => push("/sign-up-step-1");
   const handleHaveAccount = () => push("/sign-in");
 
   return (

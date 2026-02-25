@@ -72,6 +72,34 @@
       "birthDateInputA11y": "Date of birth input. Tap to open date picker",
       "nextA11y": "Go to next registration step",
       "backA11y": "Go back to previous screen"
+    },
+    "signUpStep2": {
+      "description": "Enter your email and create a secure password.",
+      "fields": {
+        "mail": "Mail",
+        "password": "Password",
+        "repeatPassword": "Repeat password"
+      },
+      "helperPassword": "Password must contain at least 8 characters.",
+      "mailInputA11y": "Email input",
+      "passwordInputA11y": "Password input",
+      "repeatPasswordInputA11y": "Repeat password input",
+      "togglePasswordA11y": "Show or hide password",
+      "toggleRepeatPasswordA11y": "Show or hide repeat password"
+    },
+    "signUpStep3": {
+      "description": "Create an access PIN and accept the terms and conditions.",
+      "fields": {
+        "pin": "Access PIN",
+        "repeatPin": "Repeat access PIN"
+      },
+      "helperPin": "It will be used to access your parental profile.",
+      "termsCheckbox": "I declare that I am over 18 years old and accept the terms and conditions.",
+      "pinInputA11y": "Access PIN input",
+      "repeatPinInputA11y": "Repeat access PIN input",
+      "togglePinA11y": "Show or hide PIN",
+      "toggleRepeatPinA11y": "Show or hide repeat PIN",
+      "termsCheckboxA11y": "Accept terms and conditions"
     }
   },
   "home": {
