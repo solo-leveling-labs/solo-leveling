@@ -125,6 +125,8 @@ const SignUpScreen = () => {
                   value={name}
                   onChangeText={setName}
                   autoCapitalize="words"
+                  placeholder={t("common.fields.name")}
+                  placeholderTextColor={colors.neutral[700]}
                   accessibilityLabel={t("auth.signUp.nameInputA11y")}
                 />
               </View>
