@@ -84,9 +84,10 @@ const SignUpStep2Screen = () => {
             />
           </Pressable>
         </View>
-        <Text style={styles.helperText}>
+        {/* TODO: Use text as error message */}
+        {/* <Text style={styles.helperText}>
           {t("auth.signUpStep2.helperPassword")}
-        </Text>
+        </Text> */}
       </View>
 
       <View style={styles.fieldGroup}>

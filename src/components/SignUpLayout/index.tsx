@@ -1,3 +1,4 @@
+import BgDecorations from "@/assets/svg/bg-decorations.svg";
 import Buho from "@/assets/svg/buho.svg";
 import { colors } from "@/src/theme/colors";
 import { fonts } from "@/src/theme/fonts";
@@ -13,6 +14,7 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const BUHO_ASPECT_RATIO = 134 / 375;
 const BUHO_WIDTH_RATIO = 1;
@@ -38,9 +40,11 @@ const SignUpLayout = ({
 }: SignUpLayoutProps) => {
   const { t } = useTranslation();
   const { width: screenWidth } = useWindowDimensions();
+  const { bottom: safeBottom } = useSafeAreaInsets();
 
   return (
     <View style={styles.container}>
+      <BgDecorations width={100} height={166} style={styles.decorations} />
       <Buho
         width={screenWidth * BUHO_WIDTH_RATIO}
         height={screenWidth * BUHO_WIDTH_RATIO * BUHO_ASPECT_RATIO}
@@ -65,7 +69,7 @@ const SignUpLayout = ({
             {children}
           </View>
 
-          <View style={styles.footer}>
+          <View style={[styles.footer, { paddingBottom: safeBottom + 40 }]}>
             <Pressable
               style={({ pressed }) => [
                 styles.nextButton,
@@ -118,7 +122,7 @@ const styles = StyleSheet.create({
   content: {
     flexGrow: 1,
     paddingHorizontal: 24,
-    paddingTop: "40%",
+    paddingTop: "25%",
     justifyContent: "space-between",
   },
   header: {
@@ -148,7 +152,6 @@ const styles = StyleSheet.create({
   footer: {
     alignItems: "center",
     gap: 16,
-    paddingBottom: "35%",
     marginTop: 56,
   },
   nextButton: {
@@ -182,6 +185,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: fonts.poppins.regular,
     color: colors.accent.mainBlue,
+  },
+  decorations: {
+    position: "absolute",
+    top: -20,
+    right: -18,
   },
   background: {
     position: "absolute",

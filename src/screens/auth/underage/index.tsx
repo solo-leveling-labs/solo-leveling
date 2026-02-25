@@ -1,3 +1,4 @@
+import BgDecorations from "@/assets/svg/bg-decorations.svg";
 import Buho from "@/assets/svg/buho.svg";
 import { colors } from "@/src/theme/colors";
 import { fonts } from "@/src/theme/fonts";
@@ -19,6 +20,7 @@ const UnderageScreen = () => {
 
   return (
     <View style={styles.container}>
+      <BgDecorations width={100} height={166} />
       <View style={styles.content}>
         <View style={styles.header}>
           <Text style={styles.title}>{t("auth.underage.title")}</Text>
@@ -93,6 +95,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: fonts.poppins.bold,
     color: colors.neutral.white,
+  },
+  decorations: {
+    position: "absolute",
+    top: 100,
+    right: -18,
   },
   background: {
     position: "absolute",
