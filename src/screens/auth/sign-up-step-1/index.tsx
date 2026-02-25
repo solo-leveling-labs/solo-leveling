@@ -48,10 +48,7 @@ const SignUpStep1Screen = () => {
   const [name, setName] = useState("");
   const [birthDate, setBirthDate] = useState<Date | null>(null);
   const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
-  const [isUnderage, setIsUnderage] = useState(false);
-
-  const isFormValid =
-    name.trim().length > 0 && birthDate !== null && !isUnderage;
+  const isFormValid = name.trim().length > 0 && birthDate !== null;
 
   const showDatePicker = useCallback(() => {
     setIsDatePickerVisible(true);
@@ -64,15 +61,18 @@ const SignUpStep1Screen = () => {
   const handleDateConfirm = useCallback(
     (date: Date) => {
       hideDatePicker();
-      setBirthDate(date);
       const age = getAge(date);
-      setIsUnderage(age < MINIMUM_AGE);
+      if (age < MINIMUM_AGE) {
+        push("/(auth)/underage");
+        return;
+      }
+      setBirthDate(date);
     },
-    [hideDatePicker],
+    [hideDatePicker, push],
   );
 
   const handleNext = () => {
-    if (!birthDate || isUnderage) return;
+    if (!birthDate) return;
     push("/(auth)/sign-up-step-2");
   };
 
@@ -117,11 +117,6 @@ const SignUpStep1Screen = () => {
             style={styles.calendarIcon}
           />
         </Pressable>
-        {isUnderage && (
-          <Text style={styles.underageText}>
-            {t("auth.signUp.underageWarning")}
-          </Text>
-        )}
       </View>
 
       <DateTimePickerModal
@@ -175,13 +170,6 @@ const styles = StyleSheet.create({
   },
   dateTextPlaceholder: {
     color: colors.neutral[700],
-  },
-  underageText: {
-    fontSize: 12,
-    fontFamily: fonts.poppins.regular,
-    color: colors.error,
-    marginTop: 4,
-    paddingHorizontal: 8,
   },
   datePickerIOS: {
     alignItems: "center",

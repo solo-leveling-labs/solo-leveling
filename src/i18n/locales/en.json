@@ -100,6 +100,12 @@
       "togglePinA11y": "Show or hide PIN",
       "toggleRepeatPinA11y": "Show or hide repeat PIN",
       "termsCheckboxA11y": "Accept terms and conditions"
+    },
+    "underage": {
+      "title": "Adults only!",
+      "subtitle": "Let an adult know you want to start using Zapienz!",
+      "back": "Go back",
+      "backA11y": "Go back to previous screen"
     }
   },
   "home": {
