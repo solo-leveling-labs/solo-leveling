@@ -30,16 +30,16 @@
     },
     "onboarding": {
       "slide1": {
-        "title": "Learn from great thinkers",
-        "description": "Explore the ideas of history's most influential philosophers through interactive conversations."
+        "title": "A safe AI environment for kids",
+        "description": "Your children can explore AI in a protected space, specially designed for their age."
       },
       "slide2": {
-        "title": "Conversations that inspire",
-        "description": "Talk with Socrates, Plato, Aristotle and many more. Ask questions and discover new perspectives."
+        "title": "Smart parental controls",
+        "description": "Set rules, define sensitive topics, and receive real-time alerts when risky situations arise."
       },
       "slide3": {
-        "title": "Your philosophical journey starts here",
-        "description": "Develop your critical thinking and broaden your worldview with every conversation."
+        "title": "Learning with guidance",
+        "description": "Conversations are monitored and adapted to the child's age, promoting safe learning."
       },
       "skip": "Skip",
       "next": "Next",

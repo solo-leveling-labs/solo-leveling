@@ -30,16 +30,16 @@
     },
     "onboarding": {
       "slide1": {
-        "title": "Aprende con los grandes pensadores",
-        "description": "Explora las ideas de los filósofos más influyentes de la historia a través de conversaciones interactivas."
+        "title": "Un entorno de IA seguro para niños",
+        "description": "Tus hijos pueden explorar la IA en un espacio protegido, diseñado a medida para sus necesidades."
       },
       "slide2": {
-        "title": "Conversaciones que inspiran",
-        "description": "Dialoga con Sócrates, Platón, Aristóteles y muchos más. Haz preguntas y descubre nuevas perspectivas."
+        "title": "Control parental inteligente",
+        "description": "Configura reglas, define temas sensibles y recibe alertas en tiempo real ante situaciones de riesgo."
       },
       "slide3": {
-        "title": "Tu camino filosófico comienza aquí",
-        "description": "Desarrolla tu pensamiento crítico y amplía tu visión del mundo con cada conversación."
+        "title": "Aprender con acompañamiento",
+        "description": "Las conversaciones son monitoreadas y adaptadas a la edad del niño para un aprendizaje seguro."
       },
       "skip": "Omitir",
       "next": "Siguiente",
