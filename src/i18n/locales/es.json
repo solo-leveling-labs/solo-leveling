@@ -10,7 +10,9 @@
     "fields": {
       "email": "Correo electrónico",
       "password": "Contraseña",
-      "fullName": "Nombre completo"
+      "fullName": "Nombre completo",
+      "name": "Nombre",
+      "birthDate": "Fecha de nacimiento"
     },
     "errors": {
       "title": "Error",
@@ -18,6 +20,34 @@
     }
   },
   "auth": {
+    "welcome": {
+      "tagline": "Inteligencia artificial para aprender",
+      "subtitle": "¿Ya has usado Zapienz, o acabas de llegar?",
+      "firstTime": "Primera vez en Zapienz",
+      "haveAccount": "Ya tengo cuenta",
+      "firstTimeA11y": "Soy nuevo, ir a introducción",
+      "haveAccountA11y": "Ya tengo cuenta, ir a inicio de sesión"
+    },
+    "onboarding": {
+      "slide1": {
+        "title": "Un entorno de IA seguro para niños",
+        "description": "Tus hijos pueden explorar la IA en un espacio protegido, diseñado a medida para sus necesidades."
+      },
+      "slide2": {
+        "title": "Control parental inteligente",
+        "description": "Configura reglas, define temas sensibles y recibe alertas en tiempo real ante situaciones de riesgo."
+      },
+      "slide3": {
+        "title": "Aprender con acompañamiento",
+        "description": "Las conversaciones son monitoreadas y adaptadas a la edad del niño para un aprendizaje seguro."
+      },
+      "skip": "Omitir",
+      "next": "Siguiente",
+      "start": "Comenzar",
+      "skipA11y": "Omitir introducción e ir a inicio de sesión",
+      "nextA11y": "Ir a la siguiente diapositiva",
+      "startA11y": "Comenzar y ir a inicio de sesión"
+    },
     "signIn": {
       "title": "Bienvenido de nuevo",
       "subtitle": "Inicia sesión para continuar",
@@ -28,14 +58,60 @@
       "goToSignUpA11y": "Ir a registro"
     },
     "signUp": {
-      "title": "Crear cuenta",
-      "subtitle": "Regístrate para comenzar",
-      "footerText": "¿Ya tienes una cuenta?",
-      "fullNameInputA11y": "Campo de nombre completo",
-      "emailInputA11y": "Campo de correo electrónico",
+      "title": "Regístrate",
+      "subtitle": "Y crea un entorno digital seguro.",
+      "description": "Ingresa tus datos. Recuerda que debes ser mayor de edad para configurar la app.",
+      "next": "Siguiente",
+      "back": "Volver",
+      "selectDate": "DD/MM/AAAA",
+      "underageWarning": "Debes tener al menos 18 años para usar esta app.",
+      "datePickerConfirm": "Confirmar",
+      "datePickerCancel": "Cancelar",
+      "datePickerLocale": "es",
+      "nameInputA11y": "Campo de nombre",
+      "birthDateInputA11y": "Campo de fecha de nacimiento. Toca para abrir selector de fecha",
+      "nextA11y": "Ir al siguiente paso del registro",
+      "backA11y": "Volver a la pantalla anterior"
+    },
+    "signUpStep2": {
+      "description": "Ingresa tu correo electrónico y crea una contraseña segura.",
+      "fields": {
+        "mail": "Mail",
+        "password": "Contraseña",
+        "repeatPassword": "Repetir contraseña"
+      },
+      "helperPassword": "La contraseña debe contener al menos 8 caracteres.",
+      "errorInvalidEmail": "El mail ingresado es incorrecto.",
+      "errorPasswordLength": "La contraseña debe contener al menos 8 caracteres.",
+      "errorPasswordMismatch": "Las contraseñas no coinciden.",
+      "mailInputA11y": "Campo de correo electrónico",
       "passwordInputA11y": "Campo de contraseña",
-      "submitA11y": "Botón de registrarse",
-      "goToSignInA11y": "Ir a inicio de sesión"
+      "repeatPasswordInputA11y": "Campo de repetir contraseña",
+      "togglePasswordA11y": "Mostrar u ocultar contraseña",
+      "toggleRepeatPasswordA11y": "Mostrar u ocultar repetir contraseña"
+    },
+    "signUpStep3": {
+      "description": "Crea un pin de acceso y acepta los términos y condiciones.",
+      "fields": {
+        "pin": "Pin de acceso",
+        "repeatPin": "Repetir pin de acceso"
+      },
+      "helperPin": "Se usará para ingresar a tu perfil parental.",
+      "errorPinLength": "El pin debe contener 6 dígitos.",
+      "errorPinMismatch": "Los pins no coinciden.",
+      "errorTermsRequired": "Debes aceptar los términos y condiciones para continuar.",
+      "termsCheckbox": "Declaro que soy mayor de 18 años y acepto términos y condiciones.",
+      "pinInputA11y": "Campo de pin de acceso",
+      "repeatPinInputA11y": "Campo de repetir pin de acceso",
+      "togglePinA11y": "Mostrar u ocultar pin",
+      "toggleRepeatPinA11y": "Mostrar u ocultar repetir pin",
+      "termsCheckboxA11y": "Aceptar términos y condiciones"
+    },
+    "underage": {
+      "title": "¡Solo para adultos!",
+      "subtitle": "¡Avisale a un adulto que queres comenzar a usar Zapienz!",
+      "back": "Volver",
+      "backA11y": "Volver a la pantalla anterior"
     }
   },
   "home": {

@@ -51,7 +51,6 @@ const HomeScreen = () => {
       </View>
 
       <View style={styles.content}>
-        <Ionicons name="home-outline" size={64} color="#1A1A2E" />
         <Text style={styles.title}>{t("home.title")}</Text>
         <Text style={styles.subtitle}>{t("home.subtitle")}</Text>
       </View>

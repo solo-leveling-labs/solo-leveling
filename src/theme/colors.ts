@@ -12,11 +12,12 @@ export const colors = {
     decoBlue: "#0063A2",
   },
   neutral: {
+    200: "#222222",
     300: "#333333",
     500: "#555555",
     700: "#777777",
     white: "#FFFFFF",
-    black: "#222222",
+    black: "#000000",
     disabled: "#D0D0D0",
   },
   error: "#811123",

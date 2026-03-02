@@ -10,7 +10,9 @@
     "fields": {
       "email": "Email",
       "password": "Password",
-      "fullName": "Full Name"
+      "fullName": "Full Name",
+      "name": "Name",
+      "birthDate": "Date of birth"
     },
     "errors": {
       "title": "Error",
@@ -18,6 +20,34 @@
     }
   },
   "auth": {
+    "welcome": {
+      "tagline": "Artificial intelligence for learning",
+      "subtitle": "Have you used Zapienz before, or are you about to?",
+      "firstTime": "First time on Socrates",
+      "haveAccount": "I already have an account",
+      "firstTimeA11y": "I'm new, go to introduction",
+      "haveAccountA11y": "I have an account, go to sign in"
+    },
+    "onboarding": {
+      "slide1": {
+        "title": "A safe AI environment for kids",
+        "description": "Your children can explore AI in a protected space, specially designed for their age."
+      },
+      "slide2": {
+        "title": "Smart parental controls",
+        "description": "Set rules, define sensitive topics, and receive real-time alerts when risky situations arise."
+      },
+      "slide3": {
+        "title": "Learning with guidance",
+        "description": "Conversations are monitored and adapted to the child's age, promoting safe learning."
+      },
+      "skip": "Skip",
+      "next": "Next",
+      "start": "Get Started",
+      "skipA11y": "Skip introduction and go to sign in",
+      "nextA11y": "Go to next slide",
+      "startA11y": "Get started and go to sign in"
+    },
     "signIn": {
       "title": "Welcome Back",
       "subtitle": "Sign in to continue",
@@ -28,14 +58,60 @@
       "goToSignUpA11y": "Go to sign up"
     },
     "signUp": {
-      "title": "Create Account",
-      "subtitle": "Sign up to get started",
-      "footerText": "Already have an account?",
-      "fullNameInputA11y": "Full name input",
-      "emailInputA11y": "Email input",
+      "title": "Sign Up",
+      "subtitle": "And create a safe digital environment.",
+      "description": "Enter your details. Remember that you must be of legal age to set up the app.",
+      "next": "Next",
+      "back": "Go back",
+      "selectDate": "DD/MM/YYYY",
+      "underageWarning": "You must be at least 18 years old to use this app.",
+      "datePickerConfirm": "Confirm",
+      "datePickerCancel": "Cancel",
+      "datePickerLocale": "en",
+      "nameInputA11y": "Name input",
+      "birthDateInputA11y": "Date of birth input. Tap to open date picker",
+      "nextA11y": "Go to next registration step",
+      "backA11y": "Go back to previous screen"
+    },
+    "signUpStep2": {
+      "description": "Enter your email and create a secure password.",
+      "fields": {
+        "mail": "Mail",
+        "password": "Password",
+        "repeatPassword": "Repeat password"
+      },
+      "helperPassword": "Password must contain at least 8 characters.",
+      "errorInvalidEmail": "The email entered is incorrect.",
+      "errorPasswordLength": "Password must contain at least 8 characters.",
+      "errorPasswordMismatch": "Passwords do not match.",
+      "mailInputA11y": "Email input",
       "passwordInputA11y": "Password input",
-      "submitA11y": "Sign up button",
-      "goToSignInA11y": "Go to sign in"
+      "repeatPasswordInputA11y": "Repeat password input",
+      "togglePasswordA11y": "Show or hide password",
+      "toggleRepeatPasswordA11y": "Show or hide repeat password"
+    },
+    "signUpStep3": {
+      "description": "Create an access PIN and accept the terms and conditions.",
+      "fields": {
+        "pin": "Access PIN",
+        "repeatPin": "Repeat access PIN"
+      },
+      "helperPin": "It will be used to access your parental profile.",
+      "errorPinLength": "PIN must contain 6 digits.",
+      "errorPinMismatch": "PINs do not match.",
+      "errorTermsRequired": "You must accept the terms and conditions to continue.",
+      "termsCheckbox": "I declare that I am over 18 years old and accept the terms and conditions.",
+      "pinInputA11y": "Access PIN input",
+      "repeatPinInputA11y": "Repeat access PIN input",
+      "togglePinA11y": "Show or hide PIN",
+      "toggleRepeatPinA11y": "Show or hide repeat PIN",
+      "termsCheckboxA11y": "Accept terms and conditions"
+    },
+    "underage": {
+      "title": "Adults only!",
+      "subtitle": "Let an adult know you want to start using Zapienz!",
+      "back": "Go back",
+      "backA11y": "Go back to previous screen"
     }
   },
   "home": {
