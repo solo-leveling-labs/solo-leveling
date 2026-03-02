@@ -20,7 +20,7 @@ const UnderageScreen = () => {
 
   return (
     <View style={styles.container}>
-      <BgDecorations width={100} height={166} />
+      <BgDecorations width={100} height={166} style={styles.decorations} />
       <View style={styles.content}>
         <View style={styles.header}>
           <Text style={styles.title}>{t("auth.underage.title")}</Text>
@@ -98,8 +98,8 @@ const styles = StyleSheet.create({
   },
   decorations: {
     position: "absolute",
-    top: 100,
-    right: -18,
+    top: 0,
+    right: 0,
   },
   background: {
     position: "absolute",

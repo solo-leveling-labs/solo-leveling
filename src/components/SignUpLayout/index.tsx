@@ -188,8 +188,8 @@ const styles = StyleSheet.create({
   },
   decorations: {
     position: "absolute",
-    top: -20,
-    right: -18,
+    top: 0,
+    right: -10,
   },
   background: {
     position: "absolute",

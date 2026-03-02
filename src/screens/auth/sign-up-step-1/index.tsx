@@ -1,7 +1,7 @@
+import CalendarIcon from "@/assets/svg/calendar.svg";
 import SignUpLayout from "@/src/components/SignUpLayout";
 import { colors } from "@/src/theme/colors";
 import { fonts } from "@/src/theme/fonts";
-import CalendarIcon from "@/assets/svg/calendar.svg";
 import { useRouter } from "expo-router";
 import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -61,18 +61,18 @@ const SignUpStep1Screen = () => {
   const handleDateConfirm = useCallback(
     (date: Date) => {
       hideDatePicker();
-      const age = getAge(date);
-      if (age < MINIMUM_AGE) {
-        push("/(auth)/underage");
-        return;
-      }
       setBirthDate(date);
     },
-    [hideDatePicker, push],
+    [hideDatePicker],
   );
 
   const handleNext = () => {
     if (!birthDate) return;
+    const age = getAge(birthDate);
+    if (age < MINIMUM_AGE) {
+      push("/(auth)/underage");
+      return;
+    }
     push("/(auth)/sign-up-step-2");
   };
 
@@ -111,11 +111,7 @@ const SignUpStep1Screen = () => {
           >
             {birthDate ? formatDate(birthDate) : t("auth.signUp.selectDate")}
           </Text>
-          <CalendarIcon
-            width={22}
-            height={22}
-            style={styles.calendarIcon}
-          />
+          <CalendarIcon width={22} height={22} style={styles.calendarIcon} />
         </Pressable>
       </View>
 
@@ -130,6 +126,21 @@ const SignUpStep1Screen = () => {
         cancelTextIOS={t("auth.signUp.datePickerCancel")}
         locale={t("auth.signUp.datePickerLocale")}
         pickerContainerStyleIOS={styles.datePickerIOS}
+        customConfirmButtonIOS={({ onPress }) => (
+          <Pressable
+            onPress={onPress}
+            style={({ pressed }) => [
+              styles.datePickerConfirmButton,
+              pressed && styles.datePickerConfirmPressed,
+            ]}
+            accessibilityRole="button"
+            accessibilityLabel={t("auth.signUp.datePickerConfirm")}
+          >
+            <Text style={styles.datePickerConfirmText}>
+              {t("auth.signUp.datePickerConfirm")}
+            </Text>
+          </Pressable>
+        )}
       />
     </SignUpLayout>
   );
@@ -173,6 +184,20 @@ const styles = StyleSheet.create({
   },
   datePickerIOS: {
     alignItems: "center",
+  },
+  datePickerConfirmButton: {
+    width: "100%",
+    paddingVertical: 14,
+    alignItems: "center",
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: colors.neutral[700],
+  },
+  datePickerConfirmPressed: {
+    backgroundColor: "rgba(0, 0, 0, 0.05)",
+  },
+  datePickerConfirmText: {
+    fontSize: 20,
+    color: "#0081FF",
   },
   calendarIcon: {
     position: "absolute",
