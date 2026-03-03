@@ -1,1 +1,1 @@
-export { default } from "@/src/screens/auth/sign-up-step-2";
+export { default } from "@/src/screens/auth/sign-up/step-2";

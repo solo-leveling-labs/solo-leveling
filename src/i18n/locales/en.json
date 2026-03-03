@@ -116,7 +116,18 @@
       "cameraButton": "Allow camera access",
       "cancel": "Cancel",
       "cameraButtonA11y": "Allow camera access for identity verification",
-      "cancelA11y": "Cancel verification and go back to previous step"
+      "cancelA11y": "Cancel verification and go back to previous step",
+      "permissionDenied": "Camera permission is required."
+    },
+    "cameraVerification": {
+      "step1Title": "Position your face within the oval and take the photo.",
+      "step2Title": "Now, turn your head to the right and take the photo.",
+      "step3Title": "Finally, turn your head to the left and take the photo.",
+      "takePhotoButton": "Take photo",
+      "cancel": "Cancel",
+      "takePhotoButtonA11y": "Take photo for identity verification",
+      "cameraCancelA11y": "Cancel verification and go back to previous step",
+      "photoSaved": "Photo saved successfully."
     },
     "underage": {
       "title": "Adults only!",

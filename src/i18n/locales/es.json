@@ -116,7 +116,18 @@
       "cameraButton": "Permitir acceso a la cámara",
       "cancel": "Cancelar",
       "cameraButtonA11y": "Permitir acceso a la cámara para verificación de identidad",
-      "cancelA11y": "Cancelar verificación y volver al paso anterior"
+      "cancelA11y": "Cancelar verificación y volver al paso anterior",
+      "permissionDenied": "Se necesita permiso para acceder a la cámara."
+    },
+    "cameraVerification": {
+      "step1Title": "Ubicá tu cara dentro del óvalo y tomá la foto.",
+      "step2Title": "Ahora, girá la cabeza hacia la derecha y tomá la foto.",
+      "step3Title": "Por último, girá la cabeza hacia la izquierda y tomá la foto.",
+      "takePhotoButton": "Tomar foto",
+      "cancel": "Cancelar",
+      "takePhotoButtonA11y": "Tomar foto para verificación de identidad",
+      "cameraCancelA11y": "Cancelar verificación y volver al estado anterior",
+      "photoSaved": "Foto guardada correctamente."
     },
     "underage": {
       "title": "¡Solo para adultos!",

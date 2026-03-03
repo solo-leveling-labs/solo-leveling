@@ -2,10 +2,12 @@ import BgDecorations from "@/assets/svg/bg-decorations.svg";
 import Buho from "@/assets/svg/buho.svg";
 import { colors } from "@/src/theme/colors";
 import { fonts } from "@/src/theme/fonts";
+import { useCameraPermissions } from "expo-camera";
 import { useRouter } from "expo-router";
-import React from "react";
+import React, { useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import {
+  Alert,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -19,18 +21,35 @@ const BUHO_ASPECT_RATIO = 134 / 375;
 const BUHO_WIDTH_RATIO = 1;
 
 const SignUpStep4Screen = () => {
-  const { back } = useRouter();
+  const { back, push } = useRouter();
   const { t } = useTranslation();
   const { width: screenWidth } = useWindowDimensions();
   const { bottom: safeBottom } = useSafeAreaInsets();
 
-  const handleCameraAccess = () => {
-    // TODO: Implement camera permission request and identity verification
-  };
+  const [permission, requestPermission] = useCameraPermissions();
 
-  const handleCancel = () => {
+  const handleAllowCameraAccess = useCallback(async () => {
+    if (!permission) {
+      return;
+    }
+    if (permission.granted) {
+      push("/(auth)/camera-verification-step-1");
+      return;
+    }
+    const result = await requestPermission();
+    if (result.granted) {
+      push("/(auth)/camera-verification-step-1");
+    } else {
+      Alert.alert(
+        t("common.errors.title"),
+        t("auth.signUpStep4.permissionDenied"),
+      );
+    }
+  }, [permission, requestPermission, t, push]);
+
+  const handleCancel = useCallback(() => {
     back();
-  };
+  }, [back]);
 
   return (
     <View style={styles.container}>
@@ -56,14 +75,14 @@ const SignUpStep4Screen = () => {
         <View style={[styles.footer, { paddingBottom: safeBottom + 40 }]}>
           <Pressable
             style={({ pressed }) => [
-              styles.cameraButton,
+              styles.primaryButton,
               pressed && styles.buttonPressed,
             ]}
-            onPress={handleCameraAccess}
+            onPress={handleAllowCameraAccess}
             accessibilityLabel={t("auth.signUpStep4.cameraButtonA11y")}
             accessibilityRole="button"
           >
-            <Text style={styles.cameraButtonText}>
+            <Text style={styles.primaryButtonText}>
               {t("auth.signUpStep4.cameraButton")}
             </Text>
           </Pressable>
@@ -91,6 +110,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.accent.lightBackground,
+  },
+  decorations: {
+    position: "absolute",
+    top: 0,
+    right: -10,
+  },
+  background: {
+    position: "absolute",
+    bottom: 0,
+    alignSelf: "center",
   },
   content: {
     flexGrow: 1,
@@ -127,7 +156,7 @@ const styles = StyleSheet.create({
     gap: 16,
     marginTop: 56,
   },
-  cameraButton: {
+  primaryButton: {
     backgroundColor: colors.accent.mainBlue,
     height: 56,
     borderRadius: 28,
@@ -139,7 +168,7 @@ const styles = StyleSheet.create({
   buttonPressed: {
     opacity: 0.8,
   },
-  cameraButtonText: {
+  primaryButtonText: {
     fontSize: 16,
     fontFamily: fonts.poppins.bold,
     color: colors.neutral.white,
@@ -152,16 +181,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: fonts.poppins.regular,
     color: colors.accent.mainBlue,
-  },
-  decorations: {
-    position: "absolute",
-    top: 0,
-    right: -10,
-  },
-  background: {
-    position: "absolute",
-    bottom: 0,
-    alignSelf: "center",
   },
 });
 
