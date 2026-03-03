@@ -1,5 +1,4 @@
 import SignUpLayout from "@/src/components/SignUpLayout";
-import { useAuth } from "@/src/contexts/AuthContext";
 import { colors } from "@/src/theme/colors";
 import { fonts } from "@/src/theme/fonts";
 import { Ionicons } from "@expo/vector-icons";
@@ -17,8 +16,7 @@ interface FormErrors {
 }
 
 const SignUpStep3Screen = () => {
-  const { back } = useRouter();
-  const { register } = useAuth();
+  const { back, push } = useRouter();
   const { t } = useTranslation();
 
   const [pin, setPin] = useState("");
@@ -77,7 +75,7 @@ const SignUpStep3Screen = () => {
       return;
     }
 
-    register();
+    push("/(auth)/sign-up-step-4");
   };
 
   return (
@@ -193,9 +191,7 @@ const SignUpStep3Screen = () => {
           {t("auth.signUpStep3.termsCheckbox")}
         </Text>
       </Pressable>
-      {errors.terms && (
-        <Text style={styles.errorText}>{errors.terms}</Text>
-      )}
+      {errors.terms && <Text style={styles.errorText}>{errors.terms}</Text>}
     </SignUpLayout>
   );
 };

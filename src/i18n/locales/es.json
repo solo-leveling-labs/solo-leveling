@@ -107,6 +107,17 @@
       "toggleRepeatPinA11y": "Mostrar u ocultar repetir pin",
       "termsCheckboxA11y": "Aceptar términos y condiciones"
     },
+    "signUpStep4": {
+      "title": "Verificación de identidad",
+      "subtitle": "Antes de empezar, necesitamos verificar que eres una persona adulta.",
+      "body1": "Para proteger la seguridad de niños y niñas, usamos un sistema de reconocimiento facial que confirma que quien administra la cuenta es un mayor de edad.",
+      "body2": "Vamos a tomar una foto de tu rostro usando la cámara frontal. La imagen se procesará de forma segura y no se almacenará.",
+      "body3": "Asegurate de tener buena luz y no usar anteojos de sol.",
+      "cameraButton": "Permitir acceso a la cámara",
+      "cancel": "Cancelar",
+      "cameraButtonA11y": "Permitir acceso a la cámara para verificación de identidad",
+      "cancelA11y": "Cancelar verificación y volver al paso anterior"
+    },
     "underage": {
       "title": "¡Solo para adultos!",
       "subtitle": "¡Avisale a un adulto que queres comenzar a usar Zapienz!",
