@@ -9,7 +9,11 @@ export default function AuthLayout() {
       <Stack.Screen name="sign-up-step-1" />
       <Stack.Screen name="sign-up-step-2" />
       <Stack.Screen name="sign-up-step-3" />
+      <Stack.Screen name="sign-up-step-4" />
       <Stack.Screen name="underage" />
+      <Stack.Screen name="camera-verification-step-1" />
+      <Stack.Screen name="camera-verification-step-2" />
+      <Stack.Screen name="camera-verification-step-3" />
     </Stack>
   );
 }

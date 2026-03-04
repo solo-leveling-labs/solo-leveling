@@ -12,6 +12,7 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.zapiens.socrates",
       "infoPlist": {
+        "CFBundleLocalizations": ["es", "en"],
         "NSAppTransportSecurity": {
           "NSExceptionDomains": {
             "socrates-api-dev-env.eba-mwdng3jr.us-east-1.elasticbeanstalk.com": {
@@ -20,6 +21,10 @@
           }
         }
       }
+    },
+    "locales": {
+      "es": "./assets/locales/es/InfoPlist.strings",
+      "en": "./assets/locales/en/InfoPlist.strings"
     },
     "android": {
       "adaptiveIcon": {
@@ -30,7 +35,8 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "com.zapiens.socrates"
+      "package": "com.zapiens.socrates",
+      "permissions": ["android.permission.CAMERA"]
     },
     "web": {
       "output": "static",
@@ -38,6 +44,13 @@
     },
     "plugins": [
       "expo-router",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Necesitamos acceder a tu cámara para verificar tu identidad.",
+          "recordAudioAndroid": false
+        }
+      ],
       [
         "expo-splash-screen",
         {
