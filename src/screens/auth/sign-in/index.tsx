@@ -1,5 +1,6 @@
-import { useAuth } from "@/src/contexts/AuthContext";
+import { useLogin } from "@/src/api/auth/auth.hooks";
 import { Ionicons } from "@expo/vector-icons";
+import { isAxiosError } from "axios";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -16,8 +17,8 @@ import {
 
 const SignInScreen = () => {
   const { push } = useRouter();
-  const { login } = useAuth();
   const { t } = useTranslation();
+  const { mutate: login, isPending } = useLogin();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -27,7 +28,21 @@ const SignInScreen = () => {
       Alert.alert(t("common.errors.title"), t("common.errors.requiredFields"));
       return;
     }
-    login();
+
+    const credentials = { email: email.trim(), password };
+
+    login(credentials, {
+      onError: (e) => {
+        console.log("error", e);
+        if (isAxiosError(e)) {
+          console.log("axios error", e.request, e.response);
+        }
+        Alert.alert(
+          t("common.errors.title"),
+          t("auth.signIn.errorInvalidCredentials"),
+        );
+      },
+    });
   };
 
   return (
@@ -84,9 +99,11 @@ const SignInScreen = () => {
           <Pressable
             style={({ pressed }) => [
               styles.button,
-              pressed && styles.buttonPressed,
+              isPending && styles.buttonDisabled,
+              pressed && !isPending && styles.buttonPressed,
             ]}
             onPress={handleSignIn}
+            disabled={isPending}
             accessibilityLabel={t("auth.signIn.submitA11y")}
             accessibilityRole="button"
           >
@@ -162,6 +179,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginTop: 8,
+  },
+  buttonDisabled: {
+    opacity: 0.5,
   },
   buttonPressed: {
     opacity: 0.8,

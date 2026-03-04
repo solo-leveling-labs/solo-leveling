@@ -52,6 +52,7 @@
       "title": "Bienvenido de nuevo",
       "subtitle": "Inicia sesión para continuar",
       "footerText": "¿No tienes una cuenta?",
+      "errorInvalidCredentials": "Correo electrónico o contraseña incorrectos. Por favor intenta de nuevo.",
       "emailInputA11y": "Campo de correo electrónico",
       "passwordInputA11y": "Campo de contraseña",
       "submitA11y": "Botón de iniciar sesión",
@@ -105,7 +106,8 @@
       "repeatPinInputA11y": "Campo de repetir pin de acceso",
       "togglePinA11y": "Mostrar u ocultar pin",
       "toggleRepeatPinA11y": "Mostrar u ocultar repetir pin",
-      "termsCheckboxA11y": "Aceptar términos y condiciones"
+      "termsCheckboxA11y": "Aceptar términos y condiciones",
+      "errorSignupFailed": "Algo salió mal al crear tu cuenta. Por favor intenta de nuevo."
     },
     "underage": {
       "title": "¡Solo para adultos!",

@@ -1,4 +1,4 @@
-import { useAuth } from "@/src/contexts/AuthContext";
+import { useAuthStore } from "@/src/store/auth.store";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { useTranslation } from "react-i18next";
@@ -6,7 +6,7 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const HomeScreen = () => {
-  const { logout } = useAuth();
+  const { logout } = useAuthStore();
   const { top } = useSafeAreaInsets();
   const { t, i18n } = useTranslation();
 
