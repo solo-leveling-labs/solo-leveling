@@ -9,7 +9,15 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "CFBundleLocalizations": ["es", "en"]
+      },
+      "bundleIdentifier": "com.anonymous.socratesmobile"
+    },
+    "locales": {
+      "es": "./assets/locales/es/InfoPlist.strings",
+      "en": "./assets/locales/en/InfoPlist.strings"
     },
     "android": {
       "adaptiveIcon": {
@@ -19,7 +27,9 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "permissions": ["android.permission.CAMERA"],
+      "package": "com.anonymous.socratesmobile"
     },
     "web": {
       "output": "static",
@@ -30,7 +40,8 @@
       [
         "expo-camera",
         {
-          "cameraPermission": "Necesitamos acceder a tu cámara para verificar tu identidad."
+          "cameraPermission": "Necesitamos acceder a tu cámara para verificar tu identidad.",
+          "recordAudioAndroid": false
         }
       ],
       [

@@ -25,13 +25,13 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Defs, Ellipse, Mask, Rect, Svg } from "react-native-svg";
 
 const BUHO_ASPECT_RATIO = 134 / 375;
 const BUHO_WIDTH_RATIO = 1;
 const OVAL_ASPECT_RATIO = 1.55;
 const OVAL_RX_RATIO = 0.3;
 const CAMERA_FADE_DURATION = 1000;
+const OVERLAY_BORDER_WIDTH = 1000;
 
 interface CameraVerificationLayoutProps {
   titleKey: ParseKeys;
@@ -62,9 +62,6 @@ const CameraVerificationLayout = ({
   const frameWidth = screenWidth - paddingHorizontal * 2;
   const frameHeight = screenWidth;
   const ovalRx = frameWidth * OVAL_RX_RATIO;
-  const ovalRy = ovalRx * OVAL_ASPECT_RATIO;
-  const cx = frameWidth / 2;
-  const cy = frameHeight / 2;
 
   const handleTakePhoto = useCallback(async () => {
     if (isTakingPhoto.current || !cameraRef.current) return;
@@ -126,57 +123,20 @@ const CameraVerificationLayout = ({
               style={StyleSheet.absoluteFillObject}
               onCameraReady={handleCameraReady}
             />
-            <Svg
-              width={frameWidth}
-              height={frameHeight}
-              style={StyleSheet.absoluteFillObject}
-            >
-              {/* Mask: white = show overlay, black = hide overlay (oval hole) */}
-              <Defs>
-                <Mask
-                  id="overlayMask"
-                  maskUnits="userSpaceOnUse"
-                  x="0"
-                  y="0"
-                  width={frameWidth}
-                  height={frameHeight}
-                >
-                  <Rect
-                    x="0"
-                    y="0"
-                    width={frameWidth}
-                    height={frameHeight}
-                    fill="white"
-                  />
-                  <Ellipse
-                    cx={cx}
-                    cy={cy}
-                    rx={ovalRx}
-                    ry={ovalRy}
-                    fill="black"
-                  />
-                </Mask>
-              </Defs>
-              {/* Semi-transparent overlay with the oval hole applied */}
-              <Rect
-                x="0"
-                y="0"
-                width={frameWidth}
-                height={frameHeight}
-                fill="rgba(0,0,0,0.5)"
-                mask="url(#overlayMask)"
-              />
-              {/* Oval border */}
-              <Ellipse
-                cx={cx}
-                cy={cy}
-                rx={ovalRx}
-                ry={ovalRy}
-                stroke={colors.accent.mainBlue}
-                strokeWidth={1}
-                fill="none"
-              />
-            </Svg>
+            <View style={styles.overlayContainer} pointerEvents="none">
+              <View style={{ transform: [{ scaleY: OVAL_ASPECT_RATIO }] }}>
+                <View
+                  style={[
+                    styles.ovalOverlay,
+                    {
+                      width: ovalRx * 2 + OVERLAY_BORDER_WIDTH * 2,
+                      height: ovalRx * 2 + OVERLAY_BORDER_WIDTH * 2,
+                      borderRadius: ovalRx + OVERLAY_BORDER_WIDTH,
+                    },
+                  ]}
+                />
+              </View>
+            </View>
           </Animated.View>
         </View>
 
@@ -277,8 +237,23 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     borderRadius: 50,
   },
+  overlayContainer: {
+    ...StyleSheet.absoluteFillObject,
+    overflow: "hidden",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  ovalOverlay: {
+    borderWidth: OVERLAY_BORDER_WIDTH,
+    borderColor: "rgba(0,0,0,0.5)",
+  },
+  ovalBorder: {
+    position: "absolute",
+    borderWidth: 1,
+    borderColor: colors.accent.mainBlue,
+  },
   cameraFrame: {
-    borderRadius: 50,
+    borderRadius: 51,
     borderWidth: 1,
     borderColor: colors.accent.mainBlue,
   },
