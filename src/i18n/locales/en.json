@@ -107,6 +107,48 @@
       "toggleRepeatPinA11y": "Show or hide repeat PIN",
       "termsCheckboxA11y": "Accept terms and conditions"
     },
+    "signUpStep4": {
+      "title": "Identity verification",
+      "subtitle": "Before we start, we need to verify that you are an adult.",
+      "body1": "To protect the safety of children, we use a facial recognition system that confirms that the person managing the account is an adult.",
+      "body2": "We will take a photo of your face using the front camera. The image will be processed securely and will not be stored.",
+      "body3": "Make sure you have good lighting and are not wearing sunglasses.",
+      "cameraButton": "Allow camera access",
+      "cancel": "Cancel",
+      "cameraButtonA11y": "Allow camera access for identity verification",
+      "cancelA11y": "Cancel verification and go back to previous step",
+      "permissionDenied": "Camera permission is required."
+    },
+    "cameraVerification": {
+      "step1Title": "Position your face within the oval and take the photo.",
+      "step2Title": "Now, turn your head to the right and take the photo.",
+      "step3Title": "Finally, turn your head to the left and take the photo.",
+      "takePhotoButton": "Take photo",
+      "cancel": "Cancel",
+      "takePhotoButtonA11y": "Take photo for identity verification",
+      "cameraCancelA11y": "Cancel verification and go back to previous step",
+      "photoSaved": "Photo saved successfully."
+    },
+    "validatingIdentity": {
+      "title": "Hold on a moment...",
+      "subtitle": "We are validating your identity, this may take a moment...",
+      "titleA11y": "Validating identity, please wait",
+      "progressBarA11y": "Identity validation progress bar"
+    },
+    "identityValidated": {
+      "title": "Perfect!",
+      "subtitle": "Identity validated successfully, you can now start setting up parental controls.",
+      "titleA11y": "Identity validated successfully",
+      "continue": "Continue",
+      "continueA11y": "Continue to the next screen"
+    },
+    "identityValidationFailed": {
+      "title": "We couldn't validate your identity",
+      "subtitle": "There was a problem verifying your identity. Please try again.",
+      "titleA11y": "Identity validation error",
+      "retry": "Retry",
+      "retryA11y": "Retry identity verification"
+    },
     "underage": {
       "title": "Adults only!",
       "subtitle": "Let an adult know you want to start using Zapienz!",

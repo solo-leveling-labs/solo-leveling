@@ -10,6 +10,8 @@ export const colors = {
     decoViolet: "#9F459A",
     decoGreen: "#176F39",
     decoBlue: "#0063A2",
+    progressTrack: "rgba(25, 118, 210, 0.12)",
+    overlay: "rgba(0,0,0,0.5)",
   },
   neutral: {
     200: "#222222",
