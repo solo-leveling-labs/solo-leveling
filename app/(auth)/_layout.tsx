@@ -14,6 +14,18 @@ export default function AuthLayout() {
       <Stack.Screen name="camera-verification-step-1" />
       <Stack.Screen name="camera-verification-step-2" />
       <Stack.Screen name="camera-verification-step-3" />
+      <Stack.Screen
+        name="validating-identity"
+        options={{ gestureEnabled: false }}
+      />
+      <Stack.Screen
+        name="identity-validated"
+        options={{ gestureEnabled: false }}
+      />
+      <Stack.Screen
+        name="identity-validation-failed"
+        options={{ gestureEnabled: false }}
+      />
     </Stack>
   );
 }

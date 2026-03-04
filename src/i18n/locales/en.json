@@ -129,6 +129,26 @@
       "cameraCancelA11y": "Cancel verification and go back to previous step",
       "photoSaved": "Photo saved successfully."
     },
+    "validatingIdentity": {
+      "title": "Hold on a moment...",
+      "subtitle": "We are validating your identity, this may take a moment...",
+      "titleA11y": "Validating identity, please wait",
+      "progressBarA11y": "Identity validation progress bar"
+    },
+    "identityValidated": {
+      "title": "Perfect!",
+      "subtitle": "Identity validated successfully, you can now start setting up parental controls.",
+      "titleA11y": "Identity validated successfully",
+      "continue": "Continue",
+      "continueA11y": "Continue to the next screen"
+    },
+    "identityValidationFailed": {
+      "title": "We couldn't validate your identity",
+      "subtitle": "There was a problem verifying your identity. Please try again.",
+      "titleA11y": "Identity validation error",
+      "retry": "Retry",
+      "retryA11y": "Retry identity verification"
+    },
     "underage": {
       "title": "Adults only!",
       "subtitle": "Let an adult know you want to start using Zapienz!",

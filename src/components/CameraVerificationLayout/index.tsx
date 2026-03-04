@@ -8,7 +8,7 @@ import {
 } from "@/src/utils/identity-photo-storage";
 import { CameraView } from "expo-camera";
 import type { ParseKeys } from "i18next";
-import React, { useCallback, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   Pressable,
@@ -108,7 +108,9 @@ const CameraVerificationLayout = ({
             },
           ]}
         >
-          <Text style={styles.cameraTitle}>{t(titleKey)}</Text>
+          <Text style={styles.cameraTitle} accessibilityRole="header">
+            {t(titleKey)}
+          </Text>
 
           <Animated.View
             style={[
@@ -245,12 +247,7 @@ const styles = StyleSheet.create({
   },
   ovalOverlay: {
     borderWidth: OVERLAY_BORDER_WIDTH,
-    borderColor: "rgba(0,0,0,0.5)",
-  },
-  ovalBorder: {
-    position: "absolute",
-    borderWidth: 1,
-    borderColor: colors.accent.mainBlue,
+    borderColor: colors.deco.overlay,
   },
   cameraFrame: {
     borderRadius: 51,
