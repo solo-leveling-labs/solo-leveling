@@ -1,12 +1,11 @@
 import { Directory, File, Paths } from "expo-file-system";
 
-interface IdentityPhotoRecord {
-  uri: string;
-  capturedAt: number;
-}
+export type PhotoStep = "step1" | "step2" | "step3";
 
-const getPhotoDirectory = () =>
-  new Directory(Paths.document, "identity-verification");
+const PHOTO_DIR = "identity-verification";
+
+const getPhotoDirectory = (): Directory =>
+  new Directory(Paths.cache, PHOTO_DIR);
 
 const ensurePhotoDirectory = (): Directory => {
   const directory = getPhotoDirectory();
@@ -16,40 +15,24 @@ const ensurePhotoDirectory = (): Directory => {
   return directory;
 };
 
-export const saveIdentityPhoto = (tempUri: string): IdentityPhotoRecord => {
+export const saveIdentityPhoto = (step: PhotoStep, tempUri: string): string => {
   const directory = ensurePhotoDirectory();
-
-  const timestamp = Date.now();
-  const fileName = `identity_${timestamp}.jpg`;
-
+  const fileName = `${step}.jpg`;
   const tempFile = new File(tempUri);
   const destFile = new File(directory, fileName);
-  tempFile.move(destFile);
-
-  const record: IdentityPhotoRecord = {
-    uri: destFile.uri,
-    capturedAt: timestamp,
-  };
-
-  const manifest = new File(directory, "manifest.json");
-  manifest.write(JSON.stringify(record));
-
-  return record;
-};
-
-export const getIdentityPhoto = (): IdentityPhotoRecord | null => {
-  try {
-    const manifest = new File(getPhotoDirectory(), "manifest.json");
-    if (!manifest.exists) return null;
-
-    const content = manifest.textSync();
-    return JSON.parse(content) as IdentityPhotoRecord;
-  } catch {
-    return null;
+  if (destFile.exists) {
+    destFile.delete();
   }
+  tempFile.move(destFile);
+  return destFile.uri;
 };
 
-export const deleteIdentityPhoto = (): void => {
+export const getIdentityPhotoUri = (step: PhotoStep): string | null => {
+  const file = new File(getPhotoDirectory(), `${step}.jpg`);
+  return file.exists ? file.uri : null;
+};
+
+export const deleteIdentityPhotos = (): void => {
   const directory = getPhotoDirectory();
   if (directory.exists) {
     directory.delete();
