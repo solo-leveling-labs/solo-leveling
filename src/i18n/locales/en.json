@@ -52,6 +52,7 @@
       "title": "Welcome Back",
       "subtitle": "Sign in to continue",
       "footerText": "Don't have an account?",
+      "errorInvalidCredentials": "Invalid email or password. Please try again.",
       "emailInputA11y": "Email input",
       "passwordInputA11y": "Password input",
       "submitA11y": "Sign in button",
@@ -105,7 +106,8 @@
       "repeatPinInputA11y": "Repeat access PIN input",
       "togglePinA11y": "Show or hide PIN",
       "toggleRepeatPinA11y": "Show or hide repeat PIN",
-      "termsCheckboxA11y": "Accept terms and conditions"
+      "termsCheckboxA11y": "Accept terms and conditions",
+      "errorSignupFailed": "Something went wrong creating your account. Please try again."
     },
     "underage": {
       "title": "Adults only!",
