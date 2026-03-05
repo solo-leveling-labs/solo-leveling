@@ -46,3 +46,6 @@ app-example
 /android
 
 .env
+# Claude
+CLAUDE.md
+.claude/

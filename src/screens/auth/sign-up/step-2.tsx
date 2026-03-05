@@ -226,6 +226,8 @@ const styles = StyleSheet.create({
     height: 56,
     paddingHorizontal: 20,
     borderRadius: 100,
+    lineHeight: 22,
+    includeFontPadding: false,
   },
   eyeIcon: {
     position: "absolute",

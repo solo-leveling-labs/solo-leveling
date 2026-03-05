@@ -1,4 +1,10 @@
 // Requests
+export interface ValidateIdentityRequest {
+  frontalImageUri: string;
+  rightProfileImageUri: string;
+  leftProfileImageUri: string;
+}
+
 export interface LoginRequest {
   email: string;
   password: string;
@@ -20,6 +26,39 @@ export interface SelectProfileRequest {
 }
 
 // Responses
+
+export interface ValidateIdentityResponse {
+  statusCode: number;
+  data: {
+    success: boolean;
+    validationPassed: boolean;
+    failureReasons: string[];
+    message: string;
+    validation: {
+      same_person: {
+        result: boolean;
+        confidence: number;
+        reasoning: string;
+      };
+      is_adult: {
+        result: boolean;
+        confidence: number;
+        reasoning: string;
+        estimated_age_range: string;
+      };
+      manipulation_detected: {
+        result: boolean;
+        confidence: number;
+        reasoning: string;
+      };
+      image_quality: {
+        sufficient_for_verification: boolean;
+        issues_detected: string[];
+      };
+    };
+  };
+}
+
 export type UserRole = "PARENT" | "CHILD" | "ADMIN";
 
 export interface AccountSnapshot {

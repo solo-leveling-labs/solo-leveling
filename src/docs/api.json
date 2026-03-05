@@ -1,0 +1,1534 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/api/v1/users": {
+      "post": {
+        "operationId": "UsersController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CreateUserDto" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User created.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/UserResponseDto" }
+              }
+            }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "Create a user",
+        "tags": ["users"]
+      },
+      "get": {
+        "operationId": "UsersController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Returns users.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/UserResponseDto" }
+                }
+              }
+            }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "List users",
+        "tags": ["users"]
+      }
+    },
+    "/api/v1/users/{id}": {
+      "get": {
+        "operationId": "UsersController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "number" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a user.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/UserResponseDto" }
+              }
+            }
+          },
+          "404": { "description": "User not found." }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "Get a user",
+        "tags": ["users"]
+      },
+      "put": {
+        "operationId": "UsersController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "number" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UpdateUserDto" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User updated.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/UserResponseDto" }
+              }
+            }
+          },
+          "404": { "description": "User not found." }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "Update a user",
+        "tags": ["users"]
+      },
+      "delete": {
+        "operationId": "UsersController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "number" }
+          }
+        ],
+        "responses": {
+          "204": { "description": "User deleted." },
+          "404": { "description": "User not found." }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "Delete a user",
+        "tags": ["users"]
+      }
+    },
+    "/api/v1/auth/login": {
+      "post": {
+        "operationId": "AuthController_login",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/LoginDto" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login successful. Returns account session token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountLoginResponseDto"
+                }
+              }
+            }
+          },
+          "401": { "description": "Invalid credentials." }
+        },
+        "summary": "Authenticate an account and return account token",
+        "tags": ["auth"]
+      }
+    },
+    "/api/v1/auth/select-profile": {
+      "post": {
+        "operationId": "AuthController_selectProfile",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SelectProfileDto" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Profile selected successfully.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/LoginResponseDto" }
+              }
+            }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "Select a profile and return user session tokens",
+        "tags": ["auth"]
+      }
+    },
+    "/api/v1/auth/assign-secret-object": {
+      "post": {
+        "operationId": "AuthController_assignSecretObject",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AssignSecretObjectDto" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Secret object assigned and child session started.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/LoginResponseDto" }
+              }
+            }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "Assign a secret object to a child profile and return child tokens",
+        "tags": ["auth"]
+      }
+    },
+    "/api/v1/auth/refresh": {
+      "post": {
+        "operationId": "AuthController_refresh",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/RefreshTokenDto" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Token refresh successful. Returns access token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RefreshTokenResponseDto"
+                }
+              }
+            }
+          },
+          "401": { "description": "Invalid refresh token." }
+        },
+        "summary": "Exchange a refresh token for a new access token",
+        "tags": ["auth"]
+      }
+    },
+    "/api/v1/auth/signup": {
+      "post": {
+        "operationId": "AuthController_signup",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SignupDto" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Signup successful. Returns account session and refresh tokens.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SignupResponseDto" }
+              }
+            }
+          }
+        },
+        "summary": "Signup an account and admin user",
+        "tags": ["auth"]
+      }
+    },
+    "/api/v1/auth/validate-identity": {
+      "post": {
+        "operationId": "AuthController_validateIdentity",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "frontalImage",
+                  "leftProfileImage",
+                  "rightProfileImage"
+                ],
+                "properties": {
+                  "frontalImage": { "type": "string", "format": "binary" },
+                  "leftProfileImage": { "type": "string", "format": "binary" },
+                  "rightProfileImage": { "type": "string", "format": "binary" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Identity validation completed." }
+        },
+        "summary": "Validate identity consistency using 3 images",
+        "tags": ["auth"]
+      }
+    },
+    "/api/v1/secret-objects": {
+      "get": {
+        "operationId": "SecretObjectsController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Returns available secret objects.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SecretObjectResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "List available secret objects",
+        "tags": ["secret-objects"]
+      }
+    },
+    "/api/v1/openai/query": {
+      "post": {
+        "operationId": "OpenAiController_sendQuery",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/OpenAiQueryDto" }
+            }
+          }
+        },
+        "responses": { "200": { "description": "Query processed." } },
+        "security": [{ "bearer": [] }],
+        "summary": "Send a query to OpenAI",
+        "tags": ["openai"]
+      }
+    },
+    "/api/v1/openai/thread": {
+      "post": {
+        "operationId": "OpenAiController_createThread",
+        "parameters": [],
+        "responses": { "201": { "description": "Thread created." } },
+        "security": [{ "bearer": [] }],
+        "summary": "Create a new conversation thread for current user",
+        "tags": ["openai"]
+      },
+      "get": {
+        "operationId": "OpenAiController_getCurrentUserThread",
+        "parameters": [],
+        "responses": { "200": { "description": "Thread fetched." } },
+        "security": [{ "bearer": [] }],
+        "summary": "Get current user conversation thread",
+        "tags": ["openai"]
+      }
+    },
+    "/api/v1/openai/threads": {
+      "get": {
+        "operationId": "OpenAiController_getAllThreads",
+        "parameters": [],
+        "responses": { "200": { "description": "Threads fetched." } },
+        "security": [{ "bearer": [] }],
+        "summary": "Backoffice: list all conversation threads",
+        "tags": ["openai"]
+      }
+    },
+    "/api/v1/rules": {
+      "post": {
+        "operationId": "RulesController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CreateRuleDto" }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Rule created." } },
+        "security": [{ "bearer": [] }],
+        "summary": "Create a rule",
+        "tags": ["rules"]
+      },
+      "get": {
+        "operationId": "RulesController_findAll",
+        "parameters": [],
+        "responses": { "200": { "description": "Returns rules." } },
+        "security": [{ "bearer": [] }],
+        "summary": "List rules",
+        "tags": ["rules"]
+      }
+    },
+    "/api/v1/rules/{id}": {
+      "get": {
+        "operationId": "RulesController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "number" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Returns a rule." },
+          "404": { "description": "Rule not found." }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "Get a rule",
+        "tags": ["rules"]
+      },
+      "put": {
+        "operationId": "RulesController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "number" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UpdateRuleDto" }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Rule updated." },
+          "404": { "description": "Rule not found." }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "Update a rule",
+        "tags": ["rules"]
+      },
+      "delete": {
+        "operationId": "RulesController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "number" }
+          }
+        ],
+        "responses": {
+          "204": { "description": "Rule deleted." },
+          "404": { "description": "Rule not found." }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "Delete a rule",
+        "tags": ["rules"]
+      }
+    },
+    "/api/v1/rules/{id}/assign": {
+      "post": {
+        "operationId": "RulesController_assign",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "number" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AssignRuleDto" }
+            }
+          }
+        },
+        "responses": { "200": { "description": "Rule assigned." } },
+        "security": [{ "bearer": [] }],
+        "summary": "Assign a rule to a user",
+        "tags": ["rules"]
+      }
+    },
+    "/api/v1/rules/{id}/unassign": {
+      "post": {
+        "operationId": "RulesController_unassign",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "number" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AssignRuleDto" }
+            }
+          }
+        },
+        "responses": { "200": { "description": "Rule unassigned." } },
+        "security": [{ "bearer": [] }],
+        "summary": "Unassign a rule from a user",
+        "tags": ["rules"]
+      }
+    },
+    "/api/v1/notifications": {
+      "post": {
+        "operationId": "NotificationsController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CreateNotificationDto" }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Notification created." } },
+        "security": [{ "bearer": [] }],
+        "summary": "Create an in-app notification",
+        "tags": ["notifications"]
+      },
+      "get": {
+        "operationId": "NotificationsController_findAll",
+        "parameters": [],
+        "responses": { "200": { "description": "Returns notifications." } },
+        "security": [{ "bearer": [] }],
+        "summary": "List notifications",
+        "tags": ["notifications"]
+      }
+    },
+    "/api/v1/notifications/{id}": {
+      "get": {
+        "operationId": "NotificationsController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "number" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Returns a notification." },
+          "404": { "description": "Notification not found." }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "Get a notification",
+        "tags": ["notifications"]
+      },
+      "put": {
+        "operationId": "NotificationsController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "number" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UpdateNotificationDto" }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Notification updated." },
+          "404": { "description": "Notification not found." }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "Update a notification",
+        "tags": ["notifications"]
+      },
+      "delete": {
+        "operationId": "NotificationsController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "number" }
+          }
+        ],
+        "responses": {
+          "204": { "description": "Notification deleted." },
+          "404": { "description": "Notification not found." }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "Delete a notification",
+        "tags": ["notifications"]
+      }
+    },
+    "/api/v1/notifications/{id}/assign": {
+      "post": {
+        "operationId": "NotificationsController_assign",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "number" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AssignNotificationDto" }
+            }
+          }
+        },
+        "responses": { "200": { "description": "Notification assigned." } },
+        "security": [{ "bearer": [] }],
+        "summary": "Assign a notification to a user",
+        "tags": ["notifications"]
+      }
+    },
+    "/api/v1/notifications/{id}/unassign": {
+      "post": {
+        "operationId": "NotificationsController_unassign",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "number" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AssignNotificationDto" }
+            }
+          }
+        },
+        "responses": { "200": { "description": "Notification unassigned." } },
+        "security": [{ "bearer": [] }],
+        "summary": "Unassign a notification from a user",
+        "tags": ["notifications"]
+      }
+    },
+    "/api/v1/email/test": {
+      "post": {
+        "operationId": "EmailController_sendTestEmail",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/TestEmailDto" }
+            }
+          }
+        },
+        "responses": { "200": { "description": "Test email sent." } },
+        "security": [{ "bearer": [] }],
+        "summary": "Send a test email",
+        "tags": ["email"]
+      }
+    },
+    "/api/v1/openai-activity-logs": {
+      "get": {
+        "operationId": "OpenAIActivityLogController_list",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": { "default": 1, "type": "number" }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": { "default": 10, "type": "number" }
+          },
+          {
+            "name": "userIds",
+            "required": false,
+            "in": "query",
+            "description": "Filter by user IDs",
+            "schema": { "type": "array", "items": { "type": "string" } }
+          },
+          {
+            "name": "userNames",
+            "required": false,
+            "in": "query",
+            "description": "Filter by user names",
+            "schema": { "type": "array", "items": { "type": "string" } }
+          },
+          {
+            "name": "accountIds",
+            "required": false,
+            "in": "query",
+            "description": "Filter by account IDs",
+            "schema": { "type": "array", "items": { "type": "string" } }
+          },
+          {
+            "name": "accountNames",
+            "required": false,
+            "in": "query",
+            "description": "Filter by account names",
+            "schema": { "type": "array", "items": { "type": "string" } }
+          },
+          {
+            "name": "createdAtFrom",
+            "required": false,
+            "in": "query",
+            "description": "Start date (inclusive) for createdAt filter (ISO string)",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "createdAtTo",
+            "required": false,
+            "in": "query",
+            "description": "End date (inclusive) for createdAt filter (ISO string)",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "actionTypes",
+            "required": false,
+            "in": "query",
+            "description": "Filter by action types",
+            "schema": { "type": "array", "items": { "type": "string" } }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Successfully retrieved logs" },
+          "401": { "description": "Unauthorized / Invalid token" },
+          "403": { "description": "Forbidden" }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "List all OpenAI activity logs (Admin only)",
+        "tags": ["OpenAI Activity Logs"]
+      }
+    },
+    "/api/v1/activity-logs/test": {
+      "post": {
+        "operationId": "ActivityLoggerController_testLog",
+        "parameters": [],
+        "responses": { "200": { "description": "Activity log test ok." } },
+        "security": [{ "bearer": [] }],
+        "summary": "Test activity log insertion (auth required)",
+        "tags": ["activity-logs"]
+      }
+    },
+    "/api/v1/admin/users": {
+      "get": {
+        "operationId": "AdminController_listUsers",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": { "default": 1, "type": "number" }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": { "default": 20, "type": "number" }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "description": "Search by full name, account name, or account email",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "userType",
+            "required": false,
+            "in": "query",
+            "description": "Use parent/children (or PARENT/CHILD), or null/none for all non-admin users",
+            "schema": {
+              "nullable": true,
+              "type": "string",
+              "enum": ["PARENT", "CHILD"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminListUsersResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "List all non-admin users with filters (PARENT, CHILD, or all)",
+        "tags": ["admin"]
+      }
+    },
+    "/api/v1/admin/users/{id}": {
+      "patch": {
+        "operationId": "AdminController_updateSettings",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "number" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAccountSettingsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateAccountSettingsResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "Update account settings by user id (isActive and/or canUseAI)",
+        "tags": ["admin"]
+      }
+    },
+    "/api/v1/admin/users/export": {
+      "get": {
+        "operationId": "AdminController_exportUsers",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": { "default": 1, "type": "number" }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": { "default": 20, "type": "number" }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "description": "Search by full name, account name, or account email",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "userType",
+            "required": false,
+            "in": "query",
+            "description": "Use parent/children (or PARENT/CHILD), or null/none for all non-admin users",
+            "schema": {
+              "nullable": true,
+              "type": "string",
+              "enum": ["PARENT", "CHILD"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminExportResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "Export users list to Excel (PARENT, CHILD, or all via userType)",
+        "tags": ["admin"]
+      }
+    },
+    "/api/v1/admin/rules": {
+      "get": {
+        "operationId": "AdminController_listRules",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": { "default": 1, "type": "number" }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": { "default": 20, "type": "number" }
+          },
+          {
+            "name": "text",
+            "required": false,
+            "in": "query",
+            "description": "Filter by rule title text (matches bannedContent)",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "severity",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": ["Leve", "Moderada", "Grave", "Emergencia"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminListRulesResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "List rules with filters by text (title) and severity",
+        "tags": ["admin"]
+      }
+    },
+    "/api/v1/admin/accounts/{accountId}/rules": {
+      "post": {
+        "operationId": "AdminController_createRule",
+        "parameters": [
+          {
+            "name": "accountId",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "number" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CreateRuleDto" }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Rule created." } },
+        "security": [{ "bearer": [] }],
+        "summary": "Create a rule for the selected account",
+        "tags": ["admin"]
+      }
+    },
+    "/api/v1/admin/accounts/{accountId}/rules/{ruleId}": {
+      "put": {
+        "operationId": "AdminController_updateRule",
+        "parameters": [
+          {
+            "name": "accountId",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "number" }
+          },
+          {
+            "name": "ruleId",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "number" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UpdateRuleDto" }
+            }
+          }
+        },
+        "responses": { "200": { "description": "Rule updated." } },
+        "security": [{ "bearer": [] }],
+        "summary": "Edit a rule for the selected account",
+        "tags": ["admin"]
+      }
+    },
+    "/api/v1/admin/rules/{ruleId}": {
+      "delete": {
+        "operationId": "AdminController_removeRule",
+        "parameters": [
+          {
+            "name": "ruleId",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "number" }
+          }
+        ],
+        "responses": { "204": { "description": "Rule deleted." } },
+        "security": [{ "bearer": [] }],
+        "summary": "Delete a rule",
+        "tags": ["admin"]
+      }
+    },
+    "/api/v1/user-notifications/{notificationId}": {
+      "patch": {
+        "operationId": "UserNotificationsController_updateRead",
+        "parameters": [
+          {
+            "name": "notificationId",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "number" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserNotificationDto"
+              }
+            }
+          }
+        },
+        "responses": { "200": { "description": "Notification updated." } },
+        "security": [{ "bearer": [] }],
+        "summary": "Update notification read status",
+        "tags": ["user-notifications"]
+      }
+    }
+  },
+  "info": {
+    "title": "Socrates API",
+    "description": "Auth and user management API. Use integer identifiers.",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [
+    { "name": "auth", "description": "Authentication and token lifecycle" },
+    { "name": "users", "description": "User management" },
+    { "name": "secret-objects", "description": "Secret object catalog" },
+    { "name": "rules", "description": "User rules" },
+    { "name": "openai", "description": "OpenAI queries" }
+  ],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "bearer": { "scheme": "bearer", "bearerFormat": "JWT", "type": "http" }
+    },
+    "schemas": {
+      "CreateUserDto": {
+        "type": "object",
+        "properties": {
+          "fullName": { "type": "string", "example": "Hijo Perez" },
+          "birthday": { "type": "string", "example": "2015-06-20" }
+        },
+        "required": ["fullName", "birthday"]
+      },
+      "UserResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "number", "example": 1 },
+          "fullName": { "type": "string" },
+          "birthday": { "type": "string", "example": "2015-06-20" },
+          "role": {
+            "type": "string",
+            "enum": ["PARENT", "CHILD", "ADMIN"],
+            "example": "CHILD"
+          },
+          "accountId": { "type": "number", "example": 1 },
+          "parentUserId": { "type": "number", "example": 1 },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" },
+          "hasSecretObject": { "type": "boolean", "example": true }
+        },
+        "required": ["id", "fullName", "role", "createdAt", "updatedAt"]
+      },
+      "UpdateUserDto": {
+        "type": "object",
+        "properties": {
+          "fullName": { "type": "string" },
+          "birthday": { "type": "string", "example": "2015-06-20" }
+        }
+      },
+      "LoginDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "The email of the user",
+            "example": "user@example.com"
+          },
+          "password": {
+            "type": "string",
+            "description": "The password of the user",
+            "example": "password123"
+          }
+        },
+        "required": ["email", "password"]
+      },
+      "AccountSnapshotDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "number", "example": 1 },
+          "name": { "type": "string", "example": "My Account" },
+          "email": { "type": "string", "example": "admin@example.com" }
+        },
+        "required": ["id", "name", "email"]
+      },
+      "AccountLoginResponseDto": {
+        "type": "object",
+        "properties": {
+          "auth": { "type": "boolean", "example": true },
+          "token": {
+            "type": "string",
+            "description": "Account session token (JWT)",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          },
+          "refreshToken": {
+            "type": "string",
+            "description": "Refresh token (JWT)",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          },
+          "account": { "$ref": "#/components/schemas/AccountSnapshotDto" }
+        },
+        "required": ["auth", "token", "refreshToken", "account"]
+      },
+      "SelectProfileDto": {
+        "type": "object",
+        "properties": {
+          "userId": { "type": "number", "example": 123 },
+          "pin": {
+            "type": "string",
+            "description": "Required only if selected profile role is PARENT",
+            "example": "1234"
+          },
+          "secretObjectId": {
+            "type": "number",
+            "description": "Required only if selected profile role is CHILD",
+            "example": 3
+          }
+        },
+        "required": ["userId"]
+      },
+      "LoginResponseDto": {
+        "type": "object",
+        "properties": {
+          "auth": { "type": "boolean", "example": true },
+          "token": {
+            "type": "string",
+            "description": "Access token (JWT)",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          },
+          "refreshToken": {
+            "type": "string",
+            "description": "Refresh token (JWT)",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          },
+          "role": {
+            "type": "string",
+            "enum": ["PARENT", "CHILD", "ADMIN"],
+            "example": "CHILD"
+          }
+        },
+        "required": ["auth", "token", "refreshToken", "role"]
+      },
+      "AssignSecretObjectDto": {
+        "type": "object",
+        "properties": {
+          "userId": { "type": "number", "example": 12 },
+          "objectId": { "type": "number", "example": 3 }
+        },
+        "required": ["userId", "objectId"]
+      },
+      "RefreshTokenDto": {
+        "type": "object",
+        "properties": {
+          "refreshToken": {
+            "type": "string",
+            "description": "Refresh token issued during login",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          }
+        },
+        "required": ["refreshToken"]
+      },
+      "RefreshTokenResponseDto": {
+        "type": "object",
+        "properties": {
+          "auth": { "type": "boolean", "example": true },
+          "token": {
+            "type": "string",
+            "description": "Access token (JWT)",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          },
+          "refreshToken": {
+            "type": "string",
+            "description": "Refresh token (JWT)",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          },
+          "role": {
+            "type": "string",
+            "enum": ["PARENT", "CHILD", "ADMIN"],
+            "example": "CHILD",
+            "description": "Present only for profile sessions (select-profile refresh flow)."
+          }
+        },
+        "required": ["auth", "token", "refreshToken"]
+      },
+      "SignupDto": {
+        "type": "object",
+        "properties": {
+          "accountName": { "type": "string", "example": "My Account" },
+          "email": { "type": "string", "example": "admin@example.com" },
+          "fullName": { "type": "string", "example": "Juan Perez" },
+          "birthday": { "type": "string", "example": "1985-02-10" },
+          "password": { "type": "string", "example": "password123" },
+          "pin": { "type": "string", "example": "1234" }
+        },
+        "required": [
+          "accountName",
+          "email",
+          "fullName",
+          "birthday",
+          "password",
+          "pin"
+        ]
+      },
+      "SignupResponseDto": {
+        "type": "object",
+        "properties": {
+          "auth": { "type": "boolean", "example": true },
+          "token": {
+            "type": "string",
+            "description": "Account session token (JWT)",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          },
+          "refreshToken": {
+            "type": "string",
+            "description": "Refresh token (JWT)",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          },
+          "account": { "$ref": "#/components/schemas/AccountSnapshotDto" },
+          "userId": { "type": "number", "example": 123 }
+        },
+        "required": ["auth", "token", "refreshToken", "account", "userId"]
+      },
+      "SecretObjectResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "number", "example": 1 },
+          "imageUrl": {
+            "type": "string",
+            "example": "https://cdn.example.com/secret-objects/rocket.png"
+          }
+        },
+        "required": ["id", "imageUrl"]
+      },
+      "OpenAiQueryDto": {
+        "type": "object",
+        "properties": {
+          "input": {
+            "type": "string",
+            "description": "User input for the model"
+          },
+          "conversationThreadId": {
+            "type": "number",
+            "description": "Optional conversation id to continue a specific conversation",
+            "example": 12
+          },
+          "newConversation": {
+            "type": "boolean",
+            "description": "When true, starts a brand new conversation",
+            "example": false
+          }
+        },
+        "required": ["input"]
+      },
+      "CreateRuleDto": {
+        "type": "object",
+        "properties": {
+          "bannedContent": {
+            "type": "string",
+            "description": "Banned content"
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["Leve", "Moderada", "Grave", "Emergencia"],
+            "default": "Leve"
+          },
+          "responseType": {
+            "type": "string",
+            "enum": [
+              "Responder normalmente",
+              "Responder y sugerir hablar con un adulto",
+              "No responder y sugerir hablar con un adulto",
+              "Ante emergencias ayuda y avisa que se solicitara ayuda a un adulto"
+            ],
+            "default": "Responder normalmente"
+          },
+          "isBlocking": { "type": "boolean", "default": false },
+          "notify": { "type": "boolean", "default": false },
+          "typeOfNotification": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["IN_APP", "PUSH_NOTIFICATION", "EMAIL"]
+            }
+          }
+        },
+        "required": ["bannedContent"]
+      },
+      "UpdateRuleDto": {
+        "type": "object",
+        "properties": {
+          "bannedContent": {
+            "type": "string",
+            "description": "Banned content"
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["Leve", "Moderada", "Grave", "Emergencia"]
+          },
+          "responseType": {
+            "type": "string",
+            "enum": [
+              "Responder normalmente",
+              "Responder y sugerir hablar con un adulto",
+              "No responder y sugerir hablar con un adulto",
+              "Ante emergencias ayuda y avisa que se solicitara ayuda a un adulto"
+            ]
+          },
+          "isBlocking": { "type": "boolean" },
+          "notify": { "type": "boolean" },
+          "typeOfNotification": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["IN_APP", "PUSH_NOTIFICATION", "EMAIL"]
+            }
+          }
+        }
+      },
+      "AssignRuleDto": {
+        "type": "object",
+        "properties": { "userId": { "type": "number", "example": 1 } },
+        "required": ["userId"]
+      },
+      "CreateNotificationDto": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string" },
+          "message": { "type": "string" },
+          "userIds": {
+            "description": "Assign to user ids",
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        },
+        "required": ["title", "message"]
+      },
+      "UpdateNotificationDto": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string" },
+          "message": { "type": "string" }
+        }
+      },
+      "AssignNotificationDto": {
+        "type": "object",
+        "properties": { "userId": { "type": "number", "example": 1 } },
+        "required": ["userId"]
+      },
+      "TestEmailDto": {
+        "type": "object",
+        "properties": { "email": { "type": "string" } },
+        "required": ["email"]
+      },
+      "AdminUserListItemDto": {
+        "type": "object",
+        "properties": {
+          "userId": { "type": "number", "example": 10 },
+          "fullName": { "type": "string", "example": "Jane Doe" },
+          "birthday": { "type": "string", "example": "2013-05-10" },
+          "role": {
+            "type": "string",
+            "enum": ["PARENT", "CHILD", "ADMIN"],
+            "example": "CHILD"
+          },
+          "accountId": { "type": "number", "example": 3 },
+          "accountName": { "type": "string", "example": "Household Doe" },
+          "accountEmail": { "type": "string", "example": "parent@example.com" },
+          "isActive": { "type": "boolean", "example": true },
+          "canUseAI": { "type": "boolean", "example": true },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        },
+        "required": [
+          "userId",
+          "fullName",
+          "role",
+          "accountId",
+          "accountName",
+          "accountEmail",
+          "isActive",
+          "canUseAI",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "AdminListUsersResponseDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/AdminUserListItemDto" }
+          },
+          "total": { "type": "number", "example": 53 },
+          "page": { "type": "number", "example": 1 },
+          "limit": { "type": "number", "example": 20 }
+        },
+        "required": ["items", "total", "page", "limit"]
+      },
+      "UpdateAccountSettingsDto": {
+        "type": "object",
+        "properties": {
+          "isActive": { "type": "boolean", "example": false },
+          "canUseAI": { "type": "boolean", "example": true }
+        }
+      },
+      "UpdateAccountSettingsResponseDto": {
+        "type": "object",
+        "properties": {
+          "userId": { "type": "number", "example": 4 },
+          "accountId": { "type": "number", "example": 2 },
+          "isActive": { "type": "boolean", "example": true },
+          "canUseAI": { "type": "boolean", "example": true }
+        },
+        "required": ["userId", "accountId", "isActive", "canUseAI"]
+      },
+      "AdminExportResponseDto": {
+        "type": "object",
+        "properties": {
+          "fileName": {
+            "type": "string",
+            "example": "parents-2026-03-04.xlsx"
+          },
+          "mimeType": {
+            "type": "string",
+            "example": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+          },
+          "fileBase64": {
+            "type": "string",
+            "description": "Base64 encoded XLSX file content"
+          }
+        },
+        "required": ["fileName", "mimeType", "fileBase64"]
+      },
+      "AdminRuleListItemDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "number", "example": 1 },
+          "accountId": { "type": "number", "example": 3 },
+          "bannedContent": { "type": "string", "example": "Violencia" },
+          "severity": {
+            "type": "string",
+            "enum": ["Leve", "Moderada", "Grave", "Emergencia"]
+          },
+          "responseType": {
+            "type": "string",
+            "enum": [
+              "Responder normalmente",
+              "Responder y sugerir hablar con un adulto",
+              "No responder y sugerir hablar con un adulto",
+              "Ante emergencias ayuda y avisa que se solicitara ayuda a un adulto"
+            ]
+          },
+          "isBlocking": { "type": "boolean", "example": false },
+          "notify": { "type": "boolean", "example": true },
+          "typeOfNotification": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["IN_APP", "PUSH_NOTIFICATION", "EMAIL"]
+            }
+          },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        },
+        "required": [
+          "id",
+          "accountId",
+          "bannedContent",
+          "severity",
+          "responseType",
+          "isBlocking",
+          "notify",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "AdminListRulesResponseDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/AdminRuleListItemDto" }
+          },
+          "total": { "type": "number", "example": 10 },
+          "page": { "type": "number", "example": 1 },
+          "limit": { "type": "number", "example": 20 }
+        },
+        "required": ["items", "total", "page", "limit"]
+      },
+      "UpdateUserNotificationDto": {
+        "type": "object",
+        "properties": { "read": { "type": "boolean" } },
+        "required": ["read"]
+      }
+    }
+  }
+}

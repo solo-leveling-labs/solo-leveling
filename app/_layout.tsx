@@ -42,6 +42,18 @@ function RootNavigator() {
         />
       </Stack.Protected>
 
+      {/* TODO: Add guards when back end is ready */}
+      {/* <Stack.Protected guard={isAuthenticated && !isIdentityVerified}>
+        <Stack.Screen name="(verification)" />
+      </Stack.Protected> */}
+
+      {/* TODO: Add guards when back end is ready */}
+      {/* <Stack.Protected
+        guard={isAuthenticated && isIdentityVerified && !isProfileSetupComplete}
+      >
+        <Stack.Screen name="(first-profile-setup)" />
+      </Stack.Protected> */}
+
       <Stack.Protected guard={isAuthenticated}>
         <Stack.Screen name="(tabs)" />
       </Stack.Protected>

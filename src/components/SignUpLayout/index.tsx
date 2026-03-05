@@ -20,23 +20,31 @@ const BUHO_ASPECT_RATIO = 134 / 375;
 const BUHO_WIDTH_RATIO = 1;
 
 interface SignUpLayoutProps {
-  description: string;
+  title?: string;
+  subtitle?: string;
+  description?: string;
   children: ReactNode;
   onNext: () => void;
   onBack: () => void;
   isFormValid: boolean;
   nextLabel?: string;
+  nextLabelA11y?: string;
   backLabel?: string;
+  backLabelA11y?: string;
 }
 
 const SignUpLayout = ({
+  title,
+  subtitle,
   description,
   children,
   onNext,
   onBack,
   isFormValid,
   nextLabel,
+  nextLabelA11y,
   backLabel,
+  backLabelA11y,
 }: SignUpLayoutProps) => {
   const { t } = useTranslation();
   const { width: screenWidth } = useWindowDimensions();
@@ -60,16 +68,21 @@ const SignUpLayout = ({
           bounces
         >
           <View style={styles.header}>
-            <Text style={styles.title}>{t("auth.signUp.title")}</Text>
-            <Text style={styles.subtitle}>{t("auth.signUp.subtitle")}</Text>
+            <Text style={styles.title}>{title ?? t("auth.signUp.title")}</Text>
+            <Text style={styles.subtitle}>
+              {subtitle ?? t("auth.signUp.subtitle")}
+            </Text>
           </View>
 
           <View style={styles.form}>
-            <Text style={styles.description}>{description}</Text>
+            {description && (
+              <Text style={styles.description}>{description}</Text>
+            )}
             {children}
           </View>
 
           <View style={[styles.footer, { paddingBottom: safeBottom + 40 }]}>
+            {/* TODO: Fix insets problem */}
             <Pressable
               style={({ pressed }) => [
                 styles.nextButton,
@@ -78,7 +91,7 @@ const SignUpLayout = ({
               ]}
               onPress={onNext}
               disabled={!isFormValid}
-              accessibilityLabel={t("auth.signUp.nextA11y")}
+              accessibilityLabel={nextLabelA11y ?? t("auth.signUp.nextA11y")}
               accessibilityRole="button"
             >
               <Text
@@ -90,10 +103,9 @@ const SignUpLayout = ({
                 {nextLabel ?? t("auth.signUp.next")}
               </Text>
             </Pressable>
-
             <Pressable
               onPress={onBack}
-              accessibilityLabel={t("auth.signUp.backA11y")}
+              accessibilityLabel={backLabelA11y ?? t("auth.signUp.backA11y")}
               accessibilityRole="button"
               style={({ pressed }) => [
                 styles.backButton,
@@ -160,7 +172,7 @@ const styles = StyleSheet.create({
     borderRadius: 28,
     alignItems: "center",
     justifyContent: "center",
-    paddingHorizontal: 64,
+    paddingHorizontal: 32,
     width: "100%",
   },
   nextButtonDisabled: {
