@@ -46,7 +46,6 @@ export const useSignup = () => {
 
       useSignupStore.getState().reset();
       await login(userData.token, userData.refreshToken, user);
-      router.replace("/(tabs)");
     },
   });
 };
