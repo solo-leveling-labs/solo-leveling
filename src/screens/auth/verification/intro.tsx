@@ -36,7 +36,7 @@ const CameraVerificationIntroScreen = () => {
 
   const handleCancel = useCallback(() => {
     Alert.alert(
-      "¿Cancelar verificación aaa?",
+      "¿Cancelar verificación?",
       "Si salís ahora, tu sesión se cerrará. La próxima vez que inicies sesión podrás continuar desde acá.",
       [
         { text: "Seguir verificando" },

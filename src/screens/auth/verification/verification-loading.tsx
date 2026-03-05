@@ -48,6 +48,7 @@ const VerificationLoadingScreen = () => {
     const leftProfileImageUri = getIdentityPhotoUri("step3");
 
     if (!frontalImageUri || !rightProfileImageUri || !leftProfileImageUri) {
+      deleteIdentityPhotos();
       replace("/verification-error");
       return;
     }
