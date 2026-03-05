@@ -116,8 +116,10 @@
       "body2": "We will take a photo of your face using the front camera. The image will be processed securely and will not be stored.",
       "body3": "Make sure you have good lighting and are not wearing sunglasses.",
       "cameraButton": "Allow camera access",
+      "startButton": "Start",
       "cancel": "Cancel",
       "cameraButtonA11y": "Allow camera access for identity verification",
+      "startButtonA11y": "Start identity verification",
       "cancelA11y": "Cancel verification and go back to previous step",
       "permissionDenied": "Camera permission is required."
     },
@@ -125,9 +127,9 @@
       "step1Title": "Position your face within the oval and take the photo.",
       "step2Title": "Now, turn your head to the right and take the photo.",
       "step3Title": "Finally, turn your head to the left and take the photo.",
-      "takePhotoButton": "Take photo",
+      "takePhotoButton": "Ready",
       "cancel": "Cancel",
-      "takePhotoButtonA11y": "Take photo for identity verification",
+      "takePhotoButtonA11y": "Start countdown to take identity verification photo",
       "cameraCancelA11y": "Cancel verification and go back to previous step",
       "photoSaved": "Photo saved successfully."
     },

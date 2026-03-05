@@ -8,6 +8,8 @@ import {
   SelectProfileResponse,
   SignupRequest,
   SignupResponse,
+  ValidateIdentityRequest,
+  ValidateIdentityResponse,
 } from "./auth.types";
 
 export const authApi = {
@@ -34,6 +36,39 @@ export const authApi = {
       ENDPOINTS.auth.selectProfile,
       payload,
     );
+    return data;
+  },
+
+  validateIdentity: async (
+    payload: ValidateIdentityRequest,
+  ): Promise<ValidateIdentityResponse> => {
+    const formData = new FormData();
+    formData.append("frontalImage", {
+      uri: payload.frontalImageUri,
+      type: "image/jpeg",
+      name: "frontal.jpg",
+    } as unknown as Blob);
+    formData.append("rightProfileImage", {
+      uri: payload.rightProfileImageUri,
+      type: "image/jpeg",
+      name: "right-profile.jpg",
+    } as unknown as Blob);
+    formData.append("leftProfileImage", {
+      uri: payload.leftProfileImageUri,
+      type: "image/jpeg",
+      name: "left-profile.jpg",
+    } as unknown as Blob);
+
+    const { data } = await api.post<ValidateIdentityResponse>(
+      ENDPOINTS.auth.validateIdentity,
+      formData,
+      { headers: { "Content-Type": "multipart/form-data" } },
+    );
+
+    if (!data.data.validationPassed) {
+      throw new Error(data.data.message);
+    }
+
     return data;
   },
 };

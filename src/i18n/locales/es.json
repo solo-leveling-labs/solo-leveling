@@ -116,8 +116,10 @@
       "body2": "Vamos a tomar una foto de tu rostro usando la cámara frontal. La imagen se procesará de forma segura y no se almacenará.",
       "body3": "Asegurate de tener buena luz y no usar anteojos de sol.",
       "cameraButton": "Permitir acceso a la cámara",
+      "startButton": "Comenzar",
       "cancel": "Cancelar",
       "cameraButtonA11y": "Permitir acceso a la cámara para verificación de identidad",
+      "startButtonA11y": "Comenzar verificación de identidad",
       "cancelA11y": "Cancelar verificación y volver al paso anterior",
       "permissionDenied": "Se necesita permiso para acceder a la cámara."
     },
@@ -125,9 +127,9 @@
       "step1Title": "Ubicá tu cara dentro del óvalo y tomá la foto.",
       "step2Title": "Ahora, girá la cabeza hacia la derecha y tomá la foto.",
       "step3Title": "Por último, girá la cabeza hacia la izquierda y tomá la foto.",
-      "takePhotoButton": "Tomar foto",
+      "takePhotoButton": "Listo",
       "cancel": "Cancelar",
-      "takePhotoButtonA11y": "Tomar foto para verificación de identidad",
+      "takePhotoButtonA11y": "Iniciar cuenta regresiva para tomar foto de verificación",
       "cameraCancelA11y": "Cancelar verificación y volver al estado anterior",
       "photoSaved": "Foto guardada correctamente."
     },

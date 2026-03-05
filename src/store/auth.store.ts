@@ -7,6 +7,7 @@ import { createJSONStorage, persist } from "zustand/middleware";
 interface AuthStore {
   isAuthenticated: boolean;
   isIdentityVerified: boolean;
+  isProfileSetupComplete: boolean;
   isLoading: boolean;
   isInitialized: boolean;
   user: AuthUser | null;
@@ -19,6 +20,7 @@ interface AuthStore {
   ) => Promise<void>;
   logout: () => Promise<void>;
   setIdentityVerified: (verified: boolean) => void;
+  setProfileSetupComplete: (complete: boolean) => void;
   setUser: (user: AuthUser) => void;
   updateUser: (partial: Partial<AuthUser>) => void;
   reset: () => void;
@@ -27,6 +29,7 @@ interface AuthStore {
 const INITIAL_STATE = {
   isAuthenticated: false,
   isIdentityVerified: false,
+  isProfileSetupComplete: false,
   isLoading: false,
   isInitialized: false,
   user: null,
@@ -71,6 +74,10 @@ export const useAuthStore = create<AuthStore>()(
 
       setIdentityVerified: (verified: boolean) => {
         set({ isIdentityVerified: verified });
+      },
+
+      setProfileSetupComplete: (complete: boolean) => {
+        set({ isProfileSetupComplete: complete });
       },
 
       setUser: (user: AuthUser) => {

@@ -1,14 +1,16 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import BgDecorations from "@/assets/svg/bg-decorations.svg";
 import Buho from "@/assets/svg/buho.svg";
 import { colors } from "@/src/theme/colors";
 import { fonts } from "@/src/theme/fonts";
+import { haptics } from "@/src/utils/haptic-feedback";
 import {
   PhotoStep,
   saveIdentityPhoto,
 } from "@/src/utils/identity-photo-storage";
 import { CameraView } from "expo-camera";
 import type { ParseKeys } from "i18next";
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   Pressable,
@@ -22,7 +24,9 @@ import Animated, {
   FadeOut,
   useAnimatedStyle,
   useSharedValue,
+  withSequence,
   withTiming,
+  ZoomIn,
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -50,35 +54,67 @@ const CameraVerificationLayout = ({
   const { width: screenWidth } = useWindowDimensions();
   const { bottom: safeBottom } = useSafeAreaInsets();
   const cameraFeedOpacity = useSharedValue(0);
+  const flashOpacity = useSharedValue(0);
   const cameraFeedStyle = useAnimatedStyle(() => ({
     opacity: cameraFeedOpacity.value,
   }));
+  const flashStyle = useAnimatedStyle(() => ({
+    opacity: flashOpacity.value,
+  }));
 
   const [isCameraReady, setCameraReady] = useState(false);
+  const [isCountingDown, setIsCountingDown] = useState(false);
+  const [countValue, setCountValue] = useState<number | null>(null);
   const cameraRef = useRef<CameraView>(null);
   const isTakingPhoto = useRef(false);
+  const countdownTimers = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   const paddingHorizontal = 24;
   const frameWidth = screenWidth - paddingHorizontal * 2;
   const frameHeight = screenWidth;
   const ovalRx = frameWidth * OVAL_RX_RATIO;
 
-  const handleTakePhoto = useCallback(async () => {
-    if (isTakingPhoto.current || !cameraRef.current) return;
-    isTakingPhoto.current = true;
+  useEffect(() => {
+    return () => {
+      countdownTimers.current.forEach(clearTimeout);
+    };
+  }, []);
 
-    try {
-      const photo = await cameraRef.current.takePictureAsync({
-        quality: 0.8,
-      });
-      if (photo) {
-        saveIdentityPhoto(photoStep, photo.uri);
+  const handleStartCountdown = useCallback(() => {
+    if (!isCameraReady || isCountingDown) return;
+
+    setIsCountingDown(true);
+    setCountValue(3);
+
+    const t1 = setTimeout(() => setCountValue(2), 1000);
+    const t2 = setTimeout(() => setCountValue(1), 2000);
+    const t3 = setTimeout(async () => {
+      setCountValue(null);
+      flashOpacity.value = withSequence(
+        withTiming(1, { duration: 60 }),
+        withTiming(0, { duration: 350 }),
+      );
+      haptics.heavy();
+
+      try {
+        if (cameraRef.current && !isTakingPhoto.current) {
+          isTakingPhoto.current = true;
+          const photo = await cameraRef.current.takePictureAsync({
+            quality: 0.8,
+          });
+          if (photo) {
+            saveIdentityPhoto(photoStep, photo.uri);
+          }
+        }
+      } finally {
+        isTakingPhoto.current = false;
+        setIsCountingDown(false);
         onPhotoTaken();
       }
-    } finally {
-      isTakingPhoto.current = false;
-    }
-  }, [photoStep, onPhotoTaken]);
+    }, 3000);
+
+    countdownTimers.current = [t1, t2, t3];
+  }, [isCameraReady, isCountingDown, flashOpacity, onPhotoTaken]);
 
   const handleCameraReady = useCallback(() => {
     setCameraReady(true);
@@ -102,10 +138,7 @@ const CameraVerificationLayout = ({
         <View
           style={[
             styles.cameraFrame,
-            {
-              width: frameWidth,
-              height: frameHeight,
-            },
+            { width: frameWidth, height: frameHeight },
           ]}
         >
           <Text style={styles.cameraTitle}>{t(titleKey)}</Text>
@@ -137,35 +170,57 @@ const CameraVerificationLayout = ({
                 />
               </View>
             </View>
+
+            {countValue !== null && (
+              <Animated.View
+                key={countValue}
+                entering={ZoomIn.duration(250)}
+                exiting={FadeOut.duration(200)}
+                style={styles.countdownOverlay}
+                pointerEvents="none"
+              >
+                <Text style={styles.countdownNumber}>{countValue}</Text>
+              </Animated.View>
+            )}
           </Animated.View>
         </View>
 
         <View style={[styles.cameraFooter, { bottom: safeBottom + 40 }]}>
-          <Pressable
-            style={({ pressed }) => [
-              styles.primaryButton,
-              pressed && styles.buttonPressed,
-            ]}
-            onPress={handleTakePhoto}
-            accessibilityLabel={t(
-              "auth.cameraVerification.takePhotoButtonA11y",
-            )}
-            accessibilityRole="button"
-            disabled={!isCameraReady}
-            accessibilityState={{ disabled: !isCameraReady }}
-          >
-            <Text style={styles.primaryButtonText}>
-              {t("auth.cameraVerification.takePhotoButton")}
-            </Text>
-          </Pressable>
+          {!isCountingDown && (
+            <Pressable
+              style={({ pressed }) => [
+                styles.primaryButton,
+                !isCameraReady && styles.primaryButtonDisabled,
+                pressed && isCameraReady && styles.buttonPressed,
+              ]}
+              onPress={handleStartCountdown}
+              accessibilityLabel={t(
+                "auth.cameraVerification.takePhotoButtonA11y",
+              )}
+              accessibilityRole="button"
+              disabled={!isCameraReady}
+              accessibilityState={{ disabled: !isCameraReady }}
+            >
+              <Text
+                style={[
+                  styles.primaryButtonText,
+                  !isCameraReady && styles.primaryButtonTextDisabled,
+                ]}
+              >
+                {t("auth.cameraVerification.takePhotoButton")}
+              </Text>
+            </Pressable>
+          )}
 
           <Pressable
             onPress={onCancel}
             accessibilityLabel={t("auth.cameraVerification.cameraCancelA11y")}
             accessibilityRole="button"
+            disabled={isCountingDown}
             style={({ pressed }) => [
               styles.cancelButton,
-              pressed && styles.buttonPressed,
+              isCountingDown && styles.cancelButtonHidden,
+              pressed && !isCountingDown && styles.buttonPressed,
             ]}
           >
             <Text style={styles.cancelText}>
@@ -174,6 +229,11 @@ const CameraVerificationLayout = ({
           </Pressable>
         </View>
       </Animated.View>
+
+      <Animated.View
+        style={[StyleSheet.absoluteFill, styles.flashOverlay, flashStyle]}
+        pointerEvents="none"
+      />
     </View>
   );
 };
@@ -256,6 +316,34 @@ const styles = StyleSheet.create({
     borderRadius: 51,
     borderWidth: 1,
     borderColor: colors.accent.mainBlue,
+  },
+  countdownOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 51,
+    zIndex: 10,
+  },
+  countdownNumber: {
+    fontSize: 120,
+    fontFamily: fonts.raleway.extraBold,
+    color: colors.neutral.white,
+    textShadowColor: "rgba(0, 0, 0, 0.4)",
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 8,
+    lineHeight: 130,
+  },
+  flashOverlay: {
+    backgroundColor: colors.neutral.white,
+  },
+  primaryButtonDisabled: {
+    backgroundColor: colors.neutral.disabled,
+  },
+  primaryButtonTextDisabled: {
+    color: colors.neutral[700],
+  },
+  cancelButtonHidden: {
+    opacity: 0,
   },
   cameraFooter: {
     position: "absolute",

@@ -2,25 +2,25 @@ import CameraVerificationLayout from "@/src/components/CameraVerificationLayout"
 import { useRouter } from "expo-router";
 import React, { useCallback } from "react";
 
-const CameraVerificationStep1Screen = () => {
-  const { push, dismissTo } = useRouter();
+const CameraVerificationStep3Screen = () => {
+  const { dismissTo, push } = useRouter();
 
-  const handlePhotoTaken = useCallback(() => {
-    push("/(auth)/camera-verification-step-2");
-  }, [push]);
+  const handlePhotoTaken = () => {
+    push("/verification-loading");
+  };
 
   const handleCancel = useCallback(() => {
-    dismissTo("/sign-up-step-4");
+    dismissTo("/intro");
   }, [dismissTo]);
 
   return (
     <CameraVerificationLayout
-      titleKey="auth.cameraVerification.step1Title"
-      photoStep="step1"
+      titleKey="auth.cameraVerification.step3Title"
+      photoStep="step3"
       onPhotoTaken={handlePhotoTaken}
       onCancel={handleCancel}
     />
   );
 };
 
-export default CameraVerificationStep1Screen;
+export default CameraVerificationStep3Screen;

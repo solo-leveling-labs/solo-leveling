@@ -10,6 +10,7 @@ import {
   LoginRequest,
   SelectProfileRequest,
   SignupRequest,
+  ValidateIdentityRequest,
 } from "./auth.types";
 
 export const useLogin = () => {
@@ -46,6 +47,19 @@ export const useSignup = () => {
 
       useSignupStore.getState().reset();
       await login(userData.token, userData.refreshToken, user);
+    },
+  });
+};
+
+export const useValidateIdentity = () => {
+  return useMutation({
+    mutationFn: (payload: ValidateIdentityRequest) =>
+      authApi.validateIdentity(payload),
+    onSuccess: (data) => {
+      console.log("[useValidateIdentity] success:", data);
+    },
+    onError: (error) => {
+      console.log("[useValidateIdentity] error:", error);
     },
   });
 };

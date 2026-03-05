@@ -68,13 +68,14 @@ const SignUpStep3Screen = () => {
   };
 
   const handleSignUpError = (e: unknown) => {
-    console.log("eror from signup", e);
-    if (isAxiosError(e)) {
-      console.log("axios error", e.request, e.response);
-    }
+    const backendMessage =
+      isAxiosError(e) && typeof e.response?.data?.message === "string"
+        ? e.response.data.message
+        : null;
+
     Alert.alert(
       t("common.errors.title"),
-      t("auth.signUpStep3.errorSignupFailed"),
+      backendMessage ?? t("auth.signUpStep3.errorSignupFailed"),
     );
   };
 
@@ -108,6 +109,7 @@ const SignUpStep3Screen = () => {
       pin,
     };
     signup(credentials, { onError: handleSignUpError });
+    // push("/intro");
   };
 
   return (
