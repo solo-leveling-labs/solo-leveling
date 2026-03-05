@@ -59,7 +59,7 @@ export const authApi = {
       name: "left-profile.jpg",
     } as unknown as Blob);
 
-    const { data } = await api.post<ValidateIdentityResponse>(
+    const { data } = await apiSecure.post<ValidateIdentityResponse>(
       ENDPOINTS.auth.validateIdentity,
       formData,
       { headers: { "Content-Type": "multipart/form-data" } },
