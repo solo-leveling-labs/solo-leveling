@@ -7,6 +7,7 @@ import {
   deleteIdentityPhotos,
   getIdentityPhotoUri,
 } from "@/src/utils/identity-photo-storage";
+import { isAxiosError } from "axios";
 import { useRouter } from "expo-router";
 import React, { useCallback, useEffect } from "react";
 import { StyleSheet, Text, View, useWindowDimensions } from "react-native";
@@ -48,6 +49,7 @@ const VerificationLoadingScreen = () => {
     const leftProfileImageUri = getIdentityPhotoUri("step3");
 
     if (!frontalImageUri || !rightProfileImageUri || !leftProfileImageUri) {
+      deleteIdentityPhotos();
       replace("/verification-error");
       return;
     }
@@ -59,8 +61,14 @@ const VerificationLoadingScreen = () => {
           deleteIdentityPhotos();
           completeAndNavigate("/verification-success");
         },
-        onError: () => {
-          deleteIdentityPhotos();
+        onError: (error) => {
+          // Only delete photos if the server responded (validation failure).
+          // On network/timeout errors, keep photos so the user can retry without re-capturing.
+          const serverResponded =
+            isAxiosError(error) && error.response !== undefined;
+          if (serverResponded) {
+            deleteIdentityPhotos();
+          }
           completeAndNavigate("/verification-error");
         },
       },
