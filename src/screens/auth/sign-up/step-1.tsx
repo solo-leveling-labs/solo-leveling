@@ -1,5 +1,6 @@
 import CalendarIcon from "@/assets/svg/calendar.svg";
 import SignUpLayout from "@/src/components/SignUpLayout";
+import { useSignupStore } from "@/src/store/signup.store";
 import { colors } from "@/src/theme/colors";
 import { fonts } from "@/src/theme/fonts";
 import { useRouter } from "expo-router";
@@ -41,9 +42,17 @@ const formatDate = (date: Date): string => {
   return `${day}/${month}/${year}`;
 };
 
+const toISODate = (date: Date): string => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
 const SignUpStep1Screen = () => {
   const { back, push } = useRouter();
   const { t } = useTranslation();
+  const { setStep1 } = useSignupStore();
 
   const [name, setName] = useState("");
   const [birthDate, setBirthDate] = useState<Date | null>(null);
@@ -73,6 +82,10 @@ const SignUpStep1Screen = () => {
       push("/(auth)/underage");
       return;
     }
+
+    const formattedBirthday = toISODate(birthDate);
+
+    setStep1(name.trim(), formattedBirthday);
     push("/(auth)/sign-up-step-2");
   };
 
@@ -170,6 +183,8 @@ const styles = StyleSheet.create({
     color: colors.neutral[300],
     height: 56,
     paddingHorizontal: 20,
+    lineHeight: 22,
+    includeFontPadding: false,
   },
   dateText: {
     flex: 1,

@@ -1,4 +1,5 @@
 import SignUpLayout from "@/src/components/SignUpLayout";
+import { useSignupStore } from "@/src/store/signup.store";
 import { colors } from "@/src/theme/colors";
 import { fonts } from "@/src/theme/fonts";
 import { Ionicons } from "@expo/vector-icons";
@@ -19,6 +20,7 @@ interface FormErrors {
 const SignUpStep2Screen = () => {
   const { back, push } = useRouter();
   const { t } = useTranslation();
+  const { setStep2 } = useSignupStore();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -71,6 +73,7 @@ const SignUpStep2Screen = () => {
       return;
     }
 
+    setStep2(email.trim(), password);
     push("/(auth)/sign-up-step-3");
   };
 
@@ -223,6 +226,8 @@ const styles = StyleSheet.create({
     height: 56,
     paddingHorizontal: 20,
     borderRadius: 100,
+    lineHeight: 22,
+    includeFontPadding: false,
   },
   eyeIcon: {
     position: "absolute",

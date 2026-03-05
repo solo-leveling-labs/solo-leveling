@@ -1,12 +1,21 @@
+import { useSignup } from "@/src/api/auth/auth.hooks";
 import SignUpLayout from "@/src/components/SignUpLayout";
-import { useAuth } from "@/src/contexts/AuthContext";
+import { useSignupStore } from "@/src/store/signup.store";
 import { colors } from "@/src/theme/colors";
 import { fonts } from "@/src/theme/fonts";
 import { Ionicons } from "@expo/vector-icons";
+import { isAxiosError } from "axios";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import {
+  Alert,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 
 const PIN_LENGTH = 6;
 
@@ -18,8 +27,9 @@ interface FormErrors {
 
 const SignUpStep3Screen = () => {
   const { back } = useRouter();
-  const { register } = useAuth();
   const { t } = useTranslation();
+  const { mutate: signup, isPending } = useSignup();
+  const { formData } = useSignupStore();
 
   const [pin, setPin] = useState("");
   const [repeatPin, setRepeatPin] = useState("");
@@ -57,6 +67,18 @@ const SignUpStep3Screen = () => {
     clearFieldError("terms");
   };
 
+  const handleSignUpError = (e: unknown) => {
+    const backendMessage =
+      isAxiosError(e) && typeof e.response?.data?.message === "string"
+        ? e.response.data.message
+        : null;
+
+    Alert.alert(
+      t("common.errors.title"),
+      backendMessage ?? t("auth.signUpStep3.errorSignupFailed"),
+    );
+  };
+
   const handleNext = () => {
     const newErrors: FormErrors = {};
 
@@ -77,7 +99,17 @@ const SignUpStep3Screen = () => {
       return;
     }
 
-    register();
+    useSignupStore.getState().setStep3(pin);
+    const credentials = {
+      accountName: formData.fullName,
+      email: formData.email,
+      fullName: formData.fullName,
+      birthday: formData.birthday,
+      password: formData.password,
+      pin,
+    };
+    signup(credentials, { onError: handleSignUpError });
+    // push("/intro");
   };
 
   return (
@@ -85,7 +117,7 @@ const SignUpStep3Screen = () => {
       description={t("auth.signUpStep3.description")}
       onNext={handleNext}
       onBack={back}
-      isFormValid={isFormFilled}
+      isFormValid={isFormFilled && !isPending}
     >
       <View style={styles.fieldGroup}>
         <Text style={[styles.label, errors.pin && styles.labelError]}>
@@ -193,9 +225,7 @@ const SignUpStep3Screen = () => {
           {t("auth.signUpStep3.termsCheckbox")}
         </Text>
       </Pressable>
-      {errors.terms && (
-        <Text style={styles.errorText}>{errors.terms}</Text>
-      )}
+      {errors.terms && <Text style={styles.errorText}>{errors.terms}</Text>}
     </SignUpLayout>
   );
 };
@@ -230,6 +260,8 @@ const styles = StyleSheet.create({
     color: colors.neutral[300],
     height: 56,
     paddingHorizontal: 20,
+    lineHeight: 22,
+    includeFontPadding: false,
   },
   eyeIcon: {
     position: "absolute",

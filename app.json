@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "socrates-mobile",
-    "slug": "socrates-mobile",
+    "name": "socrates",
+    "slug": "socrates",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -9,7 +9,22 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.zapiens.socrates",
+      "infoPlist": {
+        "CFBundleLocalizations": ["es", "en"],
+        "NSAppTransportSecurity": {
+          "NSExceptionDomains": {
+            "socrates-api-dev-env.eba-mwdng3jr.us-east-1.elasticbeanstalk.com": {
+              "NSExceptionAllowsInsecureHTTPLoads": true
+            }
+          }
+        }
+      }
+    },
+    "locales": {
+      "es": "./assets/locales/es/InfoPlist.strings",
+      "en": "./assets/locales/en/InfoPlist.strings"
     },
     "android": {
       "adaptiveIcon": {
@@ -19,7 +34,9 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.zapiens.socrates",
+      "permissions": ["android.permission.CAMERA"]
     },
     "web": {
       "output": "static",
@@ -27,6 +44,13 @@
     },
     "plugins": [
       "expo-router",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Necesitamos acceder a tu cámara para verificar tu identidad.",
+          "recordAudioAndroid": false
+        }
+      ],
       [
         "expo-splash-screen",
         {
@@ -40,7 +64,8 @@
         }
       ],
       "expo-font",
-      "@react-native-community/datetimepicker"
+      "@react-native-community/datetimepicker",
+      "expo-secure-store"
     ],
     "experiments": {
       "typedRoutes": true,

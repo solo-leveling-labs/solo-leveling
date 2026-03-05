@@ -52,6 +52,7 @@
       "title": "Bienvenido de nuevo",
       "subtitle": "Inicia sesión para continuar",
       "footerText": "¿No tienes una cuenta?",
+      "errorInvalidCredentials": "Correo electrónico o contraseña incorrectos. Por favor intenta de nuevo.",
       "emailInputA11y": "Campo de correo electrónico",
       "passwordInputA11y": "Campo de contraseña",
       "submitA11y": "Botón de iniciar sesión",
@@ -105,7 +106,32 @@
       "repeatPinInputA11y": "Campo de repetir pin de acceso",
       "togglePinA11y": "Mostrar u ocultar pin",
       "toggleRepeatPinA11y": "Mostrar u ocultar repetir pin",
-      "termsCheckboxA11y": "Aceptar términos y condiciones"
+      "termsCheckboxA11y": "Aceptar términos y condiciones",
+      "errorSignupFailed": "Algo salió mal al crear tu cuenta. Por favor intenta de nuevo."
+    },
+    "signUpStep4": {
+      "title": "Verificación de identidad",
+      "subtitle": "Antes de empezar, necesitamos verificar que eres una persona adulta.",
+      "body1": "Para proteger la seguridad de niños y niñas, usamos un sistema de reconocimiento facial que confirma que quien administra la cuenta es un mayor de edad.",
+      "body2": "Vamos a tomar una foto de tu rostro usando la cámara frontal. La imagen se procesará de forma segura y no se almacenará.",
+      "body3": "Asegurate de tener buena luz y no usar anteojos de sol.",
+      "cameraButton": "Permitir acceso a la cámara",
+      "startButton": "Comenzar",
+      "cancel": "Cancelar",
+      "cameraButtonA11y": "Permitir acceso a la cámara para verificación de identidad",
+      "startButtonA11y": "Comenzar verificación de identidad",
+      "cancelA11y": "Cancelar verificación y volver al paso anterior",
+      "permissionDenied": "Se necesita permiso para acceder a la cámara."
+    },
+    "cameraVerification": {
+      "step1Title": "Ubicá tu cara dentro del óvalo y tomá la foto.",
+      "step2Title": "Ahora, girá la cabeza hacia la derecha y tomá la foto.",
+      "step3Title": "Por último, girá la cabeza hacia la izquierda y tomá la foto.",
+      "takePhotoButton": "Listo",
+      "cancel": "Cancelar",
+      "takePhotoButtonA11y": "Iniciar cuenta regresiva para tomar foto de verificación",
+      "cameraCancelA11y": "Cancelar verificación y volver al estado anterior",
+      "photoSaved": "Foto guardada correctamente."
     },
     "underage": {
       "title": "¡Pedile ayuda a un adulto!",
