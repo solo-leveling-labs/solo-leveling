@@ -20,6 +20,14 @@ export const colors = {
     black: "#000000",
     disabled: "#D0D0D0",
   },
+  system: {
+    iosBlue: "#0081FF",
+  },
+  overlay: {
+    press: "rgba(0, 0, 0, 0.03)",
+    selected: "rgba(0, 0, 0, 0.05)",
+    bannerGreen: "rgba(23, 111, 57, 0.1)",
+  },
   error: "#811123",
   transparent: "transparent",
 } as const;

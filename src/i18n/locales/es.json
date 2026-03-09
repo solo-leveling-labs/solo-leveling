@@ -17,7 +17,8 @@
     "errors": {
       "title": "Error",
       "requiredFields": "Por favor completa todos los campos."
-    }
+    },
+    "backA11y": "Volver atrás"
   },
   "auth": {
     "welcome": {
@@ -121,7 +122,11 @@
       "cameraButtonA11y": "Permitir acceso a la cámara para verificación de identidad",
       "startButtonA11y": "Comenzar verificación de identidad",
       "cancelA11y": "Cancelar verificación y volver al paso anterior",
-      "permissionDenied": "Se necesita permiso para acceder a la cámara."
+      "permissionDenied": "Se necesita permiso para acceder a la cámara.",
+      "cancelAlertTitle": "¿Cancelar verificación?",
+      "cancelAlertMessage": "Si salís ahora, tu sesión se cerrará. La próxima vez que inicies sesión podrás continuar desde acá.",
+      "cancelAlertContinue": "Seguir verificando",
+      "cancelAlertExit": "Salir"
     },
     "cameraVerification": {
       "step1Title": "Ubicá tu cara dentro del óvalo y tomá la foto.",

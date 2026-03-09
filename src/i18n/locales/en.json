@@ -17,7 +17,8 @@
     "errors": {
       "title": "Error",
       "requiredFields": "Please fill in all fields."
-    }
+    },
+    "backA11y": "Go back"
   },
   "auth": {
     "welcome": {
@@ -121,7 +122,11 @@
       "cameraButtonA11y": "Allow camera access for identity verification",
       "startButtonA11y": "Start identity verification",
       "cancelA11y": "Cancel verification and go back to previous step",
-      "permissionDenied": "Camera permission is required."
+      "permissionDenied": "Camera permission is required.",
+      "cancelAlertTitle": "Cancel verification?",
+      "cancelAlertMessage": "If you leave now, your session will be closed. Next time you sign in, you can continue from here.",
+      "cancelAlertContinue": "Continue verifying",
+      "cancelAlertExit": "Exit"
     },
     "cameraVerification": {
       "step1Title": "Position your face within the oval and take the photo.",

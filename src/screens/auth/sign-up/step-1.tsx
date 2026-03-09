@@ -1,5 +1,5 @@
 import CalendarIcon from "@/assets/svg/calendar.svg";
-import SignUpLayout from "@/src/components/SignUpLayout";
+import AuthLayout from "@/src/components/AuthLayout";
 import { useSignupStore } from "@/src/store/signup.store";
 import { colors } from "@/src/theme/colors";
 import { fonts } from "@/src/theme/fonts";
@@ -90,7 +90,7 @@ const SignUpStep1Screen = () => {
   };
 
   return (
-    <SignUpLayout
+    <AuthLayout
       description={t("auth.signUp.description")}
       onNext={handleNext}
       onBack={back}
@@ -155,7 +155,7 @@ const SignUpStep1Screen = () => {
           </Pressable>
         )}
       />
-    </SignUpLayout>
+    </AuthLayout>
   );
 };
 
@@ -208,11 +208,11 @@ const styles = StyleSheet.create({
     borderTopColor: colors.neutral[700],
   },
   datePickerConfirmPressed: {
-    backgroundColor: "rgba(0, 0, 0, 0.05)",
+    backgroundColor: colors.overlay.selected,
   },
   datePickerConfirmText: {
     fontSize: 20,
-    color: "#0081FF",
+    color: colors.system.iosBlue,
   },
   calendarIcon: {
     position: "absolute",

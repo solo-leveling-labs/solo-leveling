@@ -1,5 +1,5 @@
 import { useSignup } from "@/src/api/auth/auth.hooks";
-import SignUpLayout from "@/src/components/SignUpLayout";
+import AuthLayout from "@/src/components/AuthLayout";
 import { useSignupStore } from "@/src/store/signup.store";
 import { colors } from "@/src/theme/colors";
 import { fonts } from "@/src/theme/fonts";
@@ -26,7 +26,7 @@ interface FormErrors {
 }
 
 const SignUpStep3Screen = () => {
-  const { back } = useRouter();
+  const { back, push } = useRouter();
   const { t } = useTranslation();
   const { mutate: signup, isPending } = useSignup();
   const { formData } = useSignupStore();
@@ -109,11 +109,11 @@ const SignUpStep3Screen = () => {
       pin,
     };
     signup(credentials, { onError: handleSignUpError });
-    // push("/intro");
+    push("/(verification)/intro");
   };
 
   return (
-    <SignUpLayout
+    <AuthLayout
       description={t("auth.signUpStep3.description")}
       onNext={handleNext}
       onBack={back}
@@ -226,7 +226,7 @@ const SignUpStep3Screen = () => {
         </Text>
       </Pressable>
       {errors.terms && <Text style={styles.errorText}>{errors.terms}</Text>}
-    </SignUpLayout>
+    </AuthLayout>
   );
 };
 

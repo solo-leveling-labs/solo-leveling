@@ -1,4 +1,4 @@
-import SignUpLayout from "@/src/components/SignUpLayout";
+import AuthLayout from "@/src/components/AuthLayout";
 import { useAuthStore } from "@/src/store/auth.store";
 import { colors } from "@/src/theme/colors";
 import { fonts } from "@/src/theme/fonts";
@@ -36,21 +36,21 @@ const CameraVerificationIntroScreen = () => {
 
   const handleCancel = useCallback(() => {
     Alert.alert(
-      "¿Cancelar verificación aaa?",
-      "Si salís ahora, tu sesión se cerrará. La próxima vez que inicies sesión podrás continuar desde acá.",
+      t("auth.signUpStep4.cancelAlertTitle"),
+      t("auth.signUpStep4.cancelAlertMessage"),
       [
-        { text: "Seguir verificando" },
+        { text: t("auth.signUpStep4.cancelAlertContinue") },
         {
-          text: "Salir",
+          text: t("auth.signUpStep4.cancelAlertExit"),
           style: "destructive",
           onPress: () => logout(),
         },
       ],
     );
-  }, [logout]);
+  }, [logout, t]);
 
   return (
-    <SignUpLayout
+    <AuthLayout
       title={t("auth.signUpStep4.title")}
       subtitle={t("auth.signUpStep4.subtitle")}
       onNext={handleAllowCameraAccess}
@@ -74,7 +74,7 @@ const CameraVerificationIntroScreen = () => {
         <Text style={styles.bodyText}>{t("auth.signUpStep4.body2")}</Text>
         <Text style={styles.bodyText}>{t("auth.signUpStep4.body3")}</Text>
       </View>
-    </SignUpLayout>
+    </AuthLayout>
   );
 };
 

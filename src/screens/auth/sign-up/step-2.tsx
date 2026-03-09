@@ -1,4 +1,4 @@
-import SignUpLayout from "@/src/components/SignUpLayout";
+import AuthLayout from "@/src/components/AuthLayout";
 import { useSignupStore } from "@/src/store/signup.store";
 import { colors } from "@/src/theme/colors";
 import { fonts } from "@/src/theme/fonts";
@@ -78,7 +78,7 @@ const SignUpStep2Screen = () => {
   };
 
   return (
-    <SignUpLayout
+    <AuthLayout
       description={t("auth.signUpStep2.description")}
       onNext={handleNext}
       onBack={back}
@@ -191,7 +191,7 @@ const SignUpStep2Screen = () => {
           <Text style={styles.errorText}>{errors.repeatPassword}</Text>
         )}
       </View>
-    </SignUpLayout>
+    </AuthLayout>
   );
 };
 
