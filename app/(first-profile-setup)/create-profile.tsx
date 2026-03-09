@@ -1,1 +1,1 @@
-export { default } from "@/src/screens/auth/verification/create-profile";
+export { default } from "@/src/screens/auth/first-profile-setup/create-profile";
