@@ -26,7 +26,7 @@ interface FormErrors {
 }
 
 const SignUpStep3Screen = () => {
-  const { back, push } = useRouter();
+  const { back } = useRouter();
   const { t } = useTranslation();
   const { mutate: signup, isPending } = useSignup();
   const { formData } = useSignupStore();
