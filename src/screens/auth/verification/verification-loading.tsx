@@ -3,7 +3,10 @@ import Buho from "@/assets/svg/buho.svg";
 import { useValidateIdentity } from "@/src/api/auth/auth.hooks";
 import { colors } from "@/src/theme/colors";
 import { fonts } from "@/src/theme/fonts";
-import { getIdentityPhotoUri } from "@/src/utils/identity-photo-storage";
+import {
+  deleteIdentityPhotos,
+  getIdentityPhotoUri,
+} from "@/src/utils/identity-photo-storage";
 import { useRouter } from "expo-router";
 import React, { useCallback, useEffect } from "react";
 import { StyleSheet, Text, View, useWindowDimensions } from "react-native";
@@ -45,6 +48,7 @@ const VerificationLoadingScreen = () => {
     const leftProfileImageUri = getIdentityPhotoUri("step3");
 
     if (!frontalImageUri || !rightProfileImageUri || !leftProfileImageUri) {
+      deleteIdentityPhotos();
       replace("/verification-error");
       return;
     }
@@ -52,8 +56,14 @@ const VerificationLoadingScreen = () => {
     validateIdentity(
       { frontalImageUri, rightProfileImageUri, leftProfileImageUri },
       {
-        onSuccess: () => completeAndNavigate("/verification-success"),
-        onError: () => completeAndNavigate("/verification-error"),
+        onSuccess: () => {
+          deleteIdentityPhotos();
+          completeAndNavigate("/verification-success");
+        },
+        onError: () => {
+          deleteIdentityPhotos();
+          completeAndNavigate("/verification-error");
+        },
       },
     );
   }, []);

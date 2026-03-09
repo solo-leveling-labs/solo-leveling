@@ -11,12 +11,7 @@ SplashScreen.preventAutoHideAsync();
 const queryClient = new QueryClient();
 
 function RootNavigator() {
-  const {
-    isAuthenticated,
-    isIdentityVerified,
-    isProfileSetupComplete,
-    isInitialized,
-  } = useAuthStore();
+  const { isAuthenticated, isInitialized } = useAuthStore();
 
   const [fontsLoaded, fontsError] = useFonts({
     "Poppins-Bold": require("../assets/fonts/Poppins-Bold.ttf"),
@@ -49,19 +44,19 @@ function RootNavigator() {
         />
       </Stack.Protected>
 
-      <Stack.Protected guard={isAuthenticated && !isIdentityVerified}>
+      {/* TODO: Add guards when back end is ready */}
+      {/* <Stack.Protected guard={isAuthenticated && !isIdentityVerified}>
         <Stack.Screen name="(verification)" />
-      </Stack.Protected>
+      </Stack.Protected> */}
 
-      <Stack.Protected
+      {/* TODO: Add guards when back end is ready */}
+      {/* <Stack.Protected
         guard={isAuthenticated && isIdentityVerified && !isProfileSetupComplete}
       >
         <Stack.Screen name="(first-profile-setup)" />
-      </Stack.Protected>
+      </Stack.Protected> */}
 
-      <Stack.Protected
-        guard={isAuthenticated && isIdentityVerified && isProfileSetupComplete}
-      >
+      <Stack.Protected guard={isAuthenticated}>
         <Stack.Screen name="(tabs)" />
       </Stack.Protected>
     </Stack>
