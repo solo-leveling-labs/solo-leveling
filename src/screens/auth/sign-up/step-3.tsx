@@ -109,7 +109,6 @@ const SignUpStep3Screen = () => {
       pin,
     };
     signup(credentials, { onError: handleSignUpError });
-    push("/(verification)/intro");
   };
 
   return (
