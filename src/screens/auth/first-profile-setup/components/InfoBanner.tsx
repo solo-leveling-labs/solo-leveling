@@ -21,7 +21,11 @@ const InfoBanner = () => {
           pressed && styles.sectionTitlePressed,
         ]}
         onPress={handleToggleBanner}
-        accessibilityLabel={t("profileSetup.configureAlerts.openBannerA11y")}
+        accessibilityLabel={t(
+          isBannerVisible
+            ? "profileSetup.configureAlerts.closeBannerA11y"
+            : "profileSetup.configureAlerts.openBannerA11y",
+        )}
         accessibilityRole="button"
       >
         <Text style={styles.sectionTitleText}>

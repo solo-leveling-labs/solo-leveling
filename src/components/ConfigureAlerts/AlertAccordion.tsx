@@ -64,7 +64,10 @@ const AlertAccordion = ({
   return (
     <Animated.View style={styles.card} layout={LinearTransition.duration(200)}>
       <Pressable
-        style={styles.header}
+        style={({ pressed }) => [
+          styles.header,
+          pressed && styles.headerPressed,
+        ]}
         onPress={onToggleExpand}
         accessibilityLabel={t(
           "profileSetup.configureAlerts.alertAccordionA11y",
@@ -73,7 +76,10 @@ const AlertAccordion = ({
         accessibilityRole="button"
       >
         <Pressable
-          onPress={onToggleSelect}
+          onPress={(e) => {
+            e.stopPropagation();
+            onToggleSelect();
+          }}
           accessibilityLabel={t(
             "profileSetup.configureAlerts.alertCheckboxA11y",
             { alert: title },
@@ -98,22 +104,13 @@ const AlertAccordion = ({
         <View style={[styles.severityChip, { backgroundColor: severityColor }]}>
           <Text style={styles.severityChipText}>{severityLabel}</Text>
         </View>
-        <Pressable
-          onPress={onToggleExpand}
-          accessibilityLabel={t(
-            "profileSetup.configureAlerts.alertAccordionA11y",
-            { alert: title },
-          )}
-          accessibilityRole="button"
-        >
-          <Animated.View style={chevronStyle}>
-            <Ionicons
-              name="chevron-down"
-              size={24}
-              color={colors.neutral[300]}
-            />
-          </Animated.View>
-        </Pressable>
+        <Animated.View style={chevronStyle}>
+          <Ionicons
+            name="chevron-down"
+            size={24}
+            color={colors.neutral[300]}
+          />
+        </Animated.View>
       </Pressable>
 
       {isExpanded && (
@@ -191,6 +188,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     padding: 16,
     gap: 8,
+  },
+  headerPressed: {
+    backgroundColor: colors.overlay.press,
   },
   alertTitle: {
     flex: 1,
