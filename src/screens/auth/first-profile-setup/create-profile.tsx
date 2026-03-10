@@ -50,8 +50,8 @@ const CreateProfileScreen = () => {
 
   const handleNext = useCallback(() => {
     if (!isFormValid) return;
-    push("/configure-alerts");
-  }, [isFormValid, push]);
+    push({ pathname: "/configure-alerts", params: { childName: name.trim() } });
+  }, [isFormValid, push, name]);
 
   const handleCancel = useCallback(() => {
     dismissTo("/(tabs)");

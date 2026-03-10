@@ -2,11 +2,11 @@ import { colors } from "@/src/theme/colors";
 import React, { useEffect } from "react";
 import { Pressable, StyleProp, ViewStyle } from "react-native";
 import Animated, {
-    Easing,
-    interpolateColor,
-    useAnimatedStyle,
-    useSharedValue,
-    withTiming,
+  Easing,
+  interpolateColor,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
 } from "react-native-reanimated";
 
 interface Props {
@@ -40,7 +40,7 @@ export const Switch = ({
 
   useEffect(() => {
     progress.value = withTiming(value ? 1 : 0, {
-      duration: 180,
+      duration: 300,
       easing: Easing.out(Easing.cubic),
     });
   }, [value, progress]);
@@ -66,14 +66,7 @@ export const Switch = ({
 
   const thumbAnimatedStyle = useAnimatedStyle(() => {
     return {
-      transform: [
-        {
-          translateX: withTiming(progress.value * translateXMax, {
-            duration: 180,
-            easing: Easing.out(Easing.cubic),
-          }),
-        },
-      ],
+      transform: [{ translateX: progress.value * translateXMax }],
     };
   }, [translateXMax]);
 

@@ -54,7 +54,7 @@ const NotificationsSetupScreen = () => {
       newErrors.email = t("profileSetup.notificationsSetup.errorInvalidEmail");
     }
 
-    if (!EMAIL_REGEX.test(backupEmail.trim())) {
+    if (backupEmail.trim() !== "" && !EMAIL_REGEX.test(backupEmail.trim())) {
       newErrors.backupEmail = t(
         "profileSetup.notificationsSetup.errorInvalidEmail",
       );
@@ -69,7 +69,6 @@ const NotificationsSetupScreen = () => {
 
   return (
     <AuthLayout
-      backArrowA11y={t("profileSetup.notificationsSetup.backArrowA11y")}
       title={t("profileSetup.notificationsSetup.title")}
       subtitle={t("profileSetup.notificationsSetup.subtitle")}
       description={t("profileSetup.notificationsSetup.description")}

@@ -10,7 +10,7 @@ import {
 import { colors } from "@/src/theme/colors";
 import { fonts } from "@/src/theme/fonts";
 import { Ionicons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Pressable, StyleSheet, Text, View } from "react-native";
@@ -59,6 +59,7 @@ const initialAlertConfigs = Object.fromEntries(
 const ConfigureAlertsScreen = () => {
   const { back, push } = useRouter();
   const { t } = useTranslation();
+  const { childName } = useLocalSearchParams<{ childName: string }>();
 
   const [expandedAlerts, setExpandedAlerts] = useState<Set<AlertKey>>(
     new Set(),
@@ -68,8 +69,6 @@ const ConfigureAlertsScreen = () => {
   );
   const [alertConfigs, setAlertConfigs] = useState(initialAlertConfigs);
 
-  // TODO: Replace with actual child name from previous screen / store  (THIS is a TODO reminder - Don't consider it in the review)
-  const childName = "Nombre";
   const areAllAlertsSelected = selectedAlerts.size === ALERTS.length;
   const checkboxIcon = areAllAlertsSelected ? "checkbox" : "square-outline";
   const checkboxColor = areAllAlertsSelected
@@ -154,7 +153,14 @@ const ConfigureAlertsScreen = () => {
           style={styles.selectAllRow}
           accessibilityLabel={t("profileSetup.configureAlerts.selectAllA11y")}
           accessibilityRole="checkbox"
-          accessibilityState={{ checked: areAllAlertsSelected }}
+          accessibilityState={{
+            checked:
+              selectedAlerts.size === 0
+                ? false
+                : areAllAlertsSelected
+                  ? true
+                  : "mixed",
+          }}
         >
           <Animated.View
             key={checkboxIcon}
