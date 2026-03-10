@@ -1,11 +1,12 @@
 import CalendarIcon from "@/assets/svg/calendar.svg";
 import AuthLayout from "@/src/components/AuthLayout";
+import FormField from "@/src/components/FormField";
 import { colors } from "@/src/theme/colors";
 import { fonts } from "@/src/theme/fonts";
 import { useRouter } from "expo-router";
 import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { Pressable, StyleSheet, Text } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 const getDefaultPickerDate = (): Date => {
@@ -72,46 +73,30 @@ const CreateProfileScreen = () => {
         {t("profileSetup.createProfile.sectionTitle")}
       </Text>
 
-      <View style={styles.fieldGroup}>
-        <Text style={styles.label}>
-          {t("profileSetup.createProfile.fields.childName")}
-        </Text>
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={styles.input}
-            value={name}
-            onChangeText={setName}
-            autoCapitalize="words"
-            placeholder={t("profileSetup.createProfile.placeholders.name")}
-            placeholderTextColor={colors.neutral[700]}
-            accessibilityLabel={t("profileSetup.createProfile.nameInputA11y")}
-          />
-        </View>
-      </View>
-
-      <View style={styles.fieldGroup}>
-        <Text style={styles.label}>
-          {t("profileSetup.createProfile.fields.age")}
-        </Text>
-        <Pressable
-          style={styles.inputContainer}
-          onPress={showDatePicker}
-          accessibilityLabel={t("profileSetup.createProfile.ageInputA11y")}
-          accessibilityRole="button"
-        >
-          <Text
-            style={[styles.dateText, !birthDate && styles.dateTextPlaceholder]}
-          >
-            {birthDate
-              ? formatDate(birthDate)
-              : t("profileSetup.createProfile.selectDate")}
-          </Text>
+      <FormField
+        label={t("profileSetup.createProfile.fields.childName")}
+        value={name}
+        onChangeText={setName}
+        autoCapitalize="words"
+        placeholder={t("profileSetup.createProfile.placeholders.name")}
+        labelA11y={t("profileSetup.createProfile.nameInputA11y")}
+      />
+      <FormField
+        isDatePickerInput
+        label={t("profileSetup.createProfile.fields.age")}
+        onPress={showDatePicker}
+        labelA11y={t("profileSetup.createProfile.ageInputA11y")}
+        isPlaceholder={!birthDate}
+        displayValue={
+          birthDate
+            ? formatDate(birthDate)
+            : t("profileSetup.createProfile.selectDate")
+        }
+        helperText={t("profileSetup.createProfile.helperAge")}
+        rightIconElement={
           <CalendarIcon width={22} height={22} style={styles.calendarIcon} />
-        </Pressable>
-        <Text style={styles.helperText}>
-          {t("profileSetup.createProfile.helperAge")}
-        </Text>
-      </View>
+        }
+      />
 
       <DateTimePickerModal
         isVisible={isDatePickerVisible}
@@ -151,54 +136,9 @@ const styles = StyleSheet.create({
     color: colors.accent.mainBlue,
     lineHeight: 22,
   },
-  fieldGroup: {
-    gap: 6,
-  },
-  label: {
-    fontSize: 14,
-    fontFamily: fonts.poppins.regular,
-    color: colors.neutral[300],
-  },
-  inputContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    borderRadius: 28,
-    borderWidth: 1.5,
-    borderColor: colors.accent.mainBlue,
-    backgroundColor: colors.transparent,
-  },
-  input: {
-    flex: 1,
-    fontSize: 16,
-    fontFamily: fonts.poppins.regular,
-    color: colors.neutral[300],
-    height: 56,
-    paddingHorizontal: 20,
-    lineHeight: 22,
-    includeFontPadding: false,
-  },
-  dateText: {
-    flex: 1,
-    fontSize: 16,
-    fontFamily: fonts.poppins.regular,
-    color: colors.neutral[300],
-    paddingHorizontal: 20,
-    lineHeight: 56,
-  },
-  dateTextPlaceholder: {
-    color: colors.neutral[700],
-  },
   calendarIcon: {
     position: "absolute",
     right: 20,
-  },
-  helperText: {
-    fontSize: 12,
-    fontFamily: fonts.poppins.regular,
-    color: colors.neutral[500],
-    lineHeight: 16,
-    letterSpacing: 0.4,
-    paddingHorizontal: 20,
   },
   datePickerIOS: {
     alignItems: "center",

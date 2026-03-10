@@ -1,12 +1,12 @@
 import CalendarIcon from "@/assets/svg/calendar.svg";
 import AuthLayout from "@/src/components/AuthLayout";
+import FormField from "@/src/components/FormField";
 import { useSignupStore } from "@/src/store/signup.store";
 import { colors } from "@/src/theme/colors";
-import { fonts } from "@/src/theme/fonts";
 import { useRouter } from "expo-router";
 import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { Pressable, StyleSheet, Text } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 const MINIMUM_AGE = 18;
@@ -96,37 +96,27 @@ const SignUpStep1Screen = () => {
       onBack={back}
       isFormValid={isFormValid}
     >
-      <View style={styles.fieldGroup}>
-        <Text style={styles.label}>{t("common.fields.name")}</Text>
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={styles.input}
-            value={name}
-            onChangeText={setName}
-            autoCapitalize="words"
-            placeholder={t("common.fields.name")}
-            placeholderTextColor={colors.neutral[700]}
-            accessibilityLabel={t("auth.signUp.nameInputA11y")}
-          />
-        </View>
-      </View>
-
-      <View style={styles.fieldGroup}>
-        <Text style={styles.label}>{t("common.fields.birthDate")}</Text>
-        <Pressable
-          style={styles.inputContainer}
-          onPress={showDatePicker}
-          accessibilityLabel={t("auth.signUp.birthDateInputA11y")}
-          accessibilityRole="button"
-        >
-          <Text
-            style={[styles.dateText, !birthDate && styles.dateTextPlaceholder]}
-          >
-            {birthDate ? formatDate(birthDate) : t("auth.signUp.selectDate")}
-          </Text>
+      <FormField
+        label={t("common.fields.name")}
+        value={name}
+        onChangeText={setName}
+        autoCapitalize="words"
+        placeholder={t("common.fields.name")}
+        labelA11y={t("auth.signUp.nameInputA11y")}
+      />
+      <FormField
+        isDatePickerInput
+        label={t("common.fields.birthDate")}
+        onPress={showDatePicker}
+        labelA11y={t("auth.signUp.birthDateInputA11y")}
+        isPlaceholder={!birthDate}
+        displayValue={
+          birthDate ? formatDate(birthDate) : t("auth.signUp.selectDate")
+        }
+        rightIconElement={
           <CalendarIcon width={22} height={22} style={styles.calendarIcon} />
-        </Pressable>
-      </View>
+        }
+      />
 
       <DateTimePickerModal
         isVisible={isDatePickerVisible}
@@ -160,43 +150,6 @@ const SignUpStep1Screen = () => {
 };
 
 const styles = StyleSheet.create({
-  fieldGroup: {
-    gap: 6,
-  },
-  label: {
-    fontSize: 14,
-    fontFamily: fonts.poppins.regular,
-    color: colors.neutral[300],
-  },
-  inputContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    borderRadius: 28,
-    borderWidth: 1.5,
-    borderColor: colors.accent.mainBlue,
-    backgroundColor: colors.transparent,
-  },
-  input: {
-    flex: 1,
-    fontSize: 16,
-    fontFamily: fonts.poppins.regular,
-    color: colors.neutral[300],
-    height: 56,
-    paddingHorizontal: 20,
-    lineHeight: 22,
-    includeFontPadding: false,
-  },
-  dateText: {
-    flex: 1,
-    fontSize: 16,
-    fontFamily: fonts.poppins.regular,
-    color: colors.neutral[300],
-    paddingHorizontal: 20,
-    lineHeight: 56,
-  },
-  dateTextPlaceholder: {
-    color: colors.neutral[700],
-  },
   datePickerIOS: {
     alignItems: "center",
   },
