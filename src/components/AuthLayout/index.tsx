@@ -28,6 +28,7 @@ interface AuthLayoutProps {
   backArrowA11y?: string;
   scrollStyle?: "form" | "content";
   description?: string;
+  descriptionInHeader?: boolean;
   children: ReactNode;
   onNext: () => void;
   onBack: () => void;
@@ -45,6 +46,7 @@ const AuthLayout = ({
   backArrowA11y,
   scrollStyle = "form",
   description,
+  descriptionInHeader = false,
   children,
   onNext,
   onBack,
@@ -76,7 +78,7 @@ const AuthLayout = ({
           contentContainerStyle={[
             styles.content,
             { paddingTop },
-            scrollStyle === "form" && styles.scrollStyleContent,
+            scrollStyle === "form" && styles.scrollStyleForm,
           ]}
           keyboardShouldPersistTaps="handled"
         >
@@ -96,22 +98,36 @@ const AuthLayout = ({
               </Pressable>
             </View>
           )}
-          <View style={styles.header}>
+          <View
+            style={[
+              styles.header,
+              !descriptionInHeader && styles.headerWithoutDescription,
+            ]}
+          >
             <Text style={styles.title}>{title ?? t("auth.signUp.title")}</Text>
             <Text style={styles.subtitle}>
               {subtitle ?? t("auth.signUp.subtitle")}
             </Text>
+            {description && descriptionInHeader && (
+              <Text style={styles.description}>{description}</Text>
+            )}
           </View>
 
           <View style={styles.form}>
-            {description && (
-              <Text style={styles.description}>{description}</Text>
+            {description && !descriptionInHeader && (
+              <Text style={[styles.description, styles.formDescription]}>
+                {description}
+              </Text>
             )}
             {children}
           </View>
 
           <Animated.View
-            style={[styles.footer, { paddingBottom: safeBottom + 40 }]}
+            style={[
+              styles.footer,
+              scrollStyle === "content" && styles.footerContentSpacing,
+              { paddingBottom: safeBottom + 40 },
+            ]}
             layout={LinearTransition.duration(200)}
           >
             {/* TODO: Fix insets problem */}
@@ -167,7 +183,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingHorizontal: 24,
   },
-  scrollStyleContent: {
+  scrollStyleForm: {
     justifyContent: "space-between",
   },
   topBar: {
@@ -179,6 +195,8 @@ const styles = StyleSheet.create({
   },
   header: {
     gap: 8,
+  },
+  headerWithoutDescription: {
     marginBottom: 48,
   },
   title: {
@@ -190,6 +208,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontFamily: fonts.raleway.bold,
     color: colors.accent.mainBlue,
+    marginTop: 4,
   },
   form: {
     gap: 16,
@@ -199,11 +218,15 @@ const styles = StyleSheet.create({
     fontFamily: fonts.poppins.regular,
     color: colors.neutral.black,
     lineHeight: 22,
+  },
+  formDescription: {
     marginBottom: 16,
   },
   footer: {
     alignItems: "center",
     gap: 16,
+  },
+  footerContentSpacing: {
     marginTop: 56,
   },
   nextButton: {

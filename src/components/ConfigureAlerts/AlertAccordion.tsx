@@ -38,7 +38,10 @@ const AlertAccordion = ({
     getAlertOptions(t, isLocked);
 
   const chevronRotation = useSharedValue(isExpanded ? 1 : 0);
-  const checkboxIcon = isSelected ? "checkbox-outline" : "square-outline";
+  const checkboxIcon = isSelected ? "checkbox" : "square-outline";
+  const checkboxColor = isSelected
+    ? colors.accent.mainBlue
+    : colors.neutral[500];
   const severityColor = SEVERITY_COLORS[config.severity];
   const severityLabel = t(
     `profileSetup.configureAlerts.severity.${config.severity}`,
@@ -93,11 +96,7 @@ const AlertAccordion = ({
               transform: [{ scale: 0.8 }],
             })}
           >
-            <Ionicons
-              name={checkboxIcon}
-              size={24}
-              color={colors.neutral[500]}
-            />
+            <Ionicons name={checkboxIcon} size={24} color={checkboxColor} />
           </Animated.View>
         </Pressable>
         <Text style={styles.alertTitle}>{title}</Text>
@@ -105,11 +104,7 @@ const AlertAccordion = ({
           <Text style={styles.severityChipText}>{severityLabel}</Text>
         </View>
         <Animated.View style={chevronStyle}>
-          <Ionicons
-            name="chevron-down"
-            size={24}
-            color={colors.neutral[300]}
-          />
+          <Ionicons name="chevron-down" size={24} color={colors.neutral[300]} />
         </Animated.View>
       </Pressable>
 

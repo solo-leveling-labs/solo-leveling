@@ -1,5 +1,12 @@
 import AuthLayout from "@/src/components/AuthLayout";
 import AlertAccordion from "@/src/components/ConfigureAlerts/AlertAccordion";
+import InfoBanner from "@/src/screens/auth/first-profile-setup/components/InfoBanner";
+import {
+  AlertConfig,
+  AlertDefinition,
+  AlertKey,
+  SeverityLevel,
+} from "@/src/screens/auth/first-profile-setup/types";
 import { colors } from "@/src/theme/colors";
 import { fonts } from "@/src/theme/fonts";
 import { Ionicons } from "@expo/vector-icons";
@@ -8,13 +15,6 @@ import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import Animated, { FadeIn, LinearTransition } from "react-native-reanimated";
-import InfoBanner from "@/src/screens/auth/first-profile-setup/components/InfoBanner";
-import {
-  AlertConfig,
-  AlertDefinition,
-  AlertKey,
-  SeverityLevel,
-} from "@/src/screens/auth/first-profile-setup/types";
 
 const ALERTS: AlertDefinition[] = [
   { key: "selfHarm", defaultSeverity: "severe" },
@@ -57,7 +57,7 @@ const initialAlertConfigs = Object.fromEntries(
 ) as Record<AlertKey, AlertConfig>;
 
 const ConfigureAlertsScreen = () => {
-  const { back } = useRouter();
+  const { back, push } = useRouter();
   const { t } = useTranslation();
 
   const [expandedAlerts, setExpandedAlerts] = useState<Set<AlertKey>>(
@@ -71,9 +71,10 @@ const ConfigureAlertsScreen = () => {
   // TODO: Replace with actual child name from previous screen / store  (THIS is a TODO reminder - Don't consider it in the review)
   const childName = "Nombre";
   const areAllAlertsSelected = selectedAlerts.size === ALERTS.length;
-  const checkboxIcon = areAllAlertsSelected
-    ? "checkbox-outline"
-    : "square-outline";
+  const checkboxIcon = areAllAlertsSelected ? "checkbox" : "square-outline";
+  const checkboxColor = areAllAlertsSelected
+    ? colors.accent.mainBlue
+    : colors.neutral[500];
 
   const handleConfigChange = useCallback(
     (key: AlertKey, field: keyof AlertConfig, value: string) => {
@@ -125,8 +126,9 @@ const ConfigureAlertsScreen = () => {
   );
 
   const handleNext = useCallback(() => {
-    // TODO: Save alert configuration and navigate to next screen (THIS is a TODO reminder - Don't consider it in the review)
-  }, []);
+    // TODO: Save alert configuration before navigating (THIS is a TODO reminder - Don't consider it in the review)
+    push("/notifications-setup");
+  }, [push]);
 
   return (
     <AuthLayout
@@ -160,11 +162,7 @@ const ConfigureAlertsScreen = () => {
               transform: [{ scale: 0.8 }],
             })}
           >
-            <Ionicons
-              name={checkboxIcon}
-              size={24}
-              color={colors.neutral[500]}
-            />
+            <Ionicons name={checkboxIcon} size={24} color={checkboxColor} />
           </Animated.View>
           <Text style={styles.selectAllText}>
             {t("profileSetup.configureAlerts.selectAll")}
@@ -192,7 +190,10 @@ const ConfigureAlertsScreen = () => {
           ))}
         </View>
 
-        <View style={styles.addAlertRow}>
+        <Animated.View
+          style={styles.addAlertRow}
+          layout={LinearTransition.duration(200)}
+        >
           <Pressable
             style={({ pressed }) => [pressed && styles.addAlertPressed]}
             accessibilityLabel={t(
@@ -204,7 +205,7 @@ const ConfigureAlertsScreen = () => {
               {t("profileSetup.configureAlerts.addCustomAlert")}
             </Text>
           </Pressable>
-        </View>
+        </Animated.View>
       </Animated.View>
     </AuthLayout>
   );
