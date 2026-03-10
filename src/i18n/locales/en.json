@@ -235,6 +235,30 @@
       "backA11y": "Go back to the previous screen",
       "addCustomAlertA11y": "Add a custom alert",
       "dropdownOptionA11y": "Select {{option}}"
+    },
+    "notificationsSetup": {
+      "title": "Notifications",
+      "subtitle": "Contact methods setup.",
+      "description": "We will use these contact methods to send you notifications about the alerts you have configured.",
+      "fields": {
+        "email": "Email",
+        "backupEmail": "Backup email (optional)",
+        "emailPlaceholder": "email@gmail.com",
+        "backupEmailHelper": "It will be used to sign in to your parental profile."
+      },
+      "pushNotifications": {
+        "title": "Enable push notifications on your phone.",
+        "description": "Notifications will be sent to your phone only for the alerts you specify."
+      },
+      "next": "Confirm",
+      "back": "Go back",
+      "errorInvalidEmail": "The email entered is incorrect.",
+      "nextA11y": "Confirm notification settings and go to the next step",
+      "backA11y": "Go back to the previous screen",
+      "backArrowA11y": "Go back to the previous screen",
+      "emailInputA11y": "Email input",
+      "backupEmailInputA11y": "Backup email input",
+      "pushToggleA11y": "Enable or disable push notifications"
     }
   },
   "home": {

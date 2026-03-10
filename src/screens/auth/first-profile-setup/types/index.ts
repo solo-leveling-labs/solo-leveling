@@ -67,3 +67,8 @@ export interface AlertDefinition {
   key: AlertKey;
   defaultSeverity: SeverityLevel;
 }
+
+export interface FormErrors {
+  email?: string;
+  backupEmail?: string;
+}

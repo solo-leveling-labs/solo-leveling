@@ -235,6 +235,30 @@
       "backA11y": "Volver a la pantalla anterior",
       "addCustomAlertA11y": "Agregar una alerta personalizada",
       "dropdownOptionA11y": "Seleccionar {{option}}"
+    },
+    "notificationsSetup": {
+      "title": "Notificaciones",
+      "subtitle": "Configuración de medios de contacto.",
+      "description": "Utilizaremos estos medios de contacto para enviarte notificaciones sobre las alertas que hayas configurado.",
+      "fields": {
+        "email": "Email",
+        "backupEmail": "Email de respaldo (opcional)",
+        "emailPlaceholder": "correo@gmail.com",
+        "backupEmailHelper": "Se usará para ingresar a tu perfil parental."
+      },
+      "pushNotifications": {
+        "title": "Activar notificaciones push en tu celular.",
+        "description": "Se enviarán notificaciones a tu celular solo en las alertas que lo indiques."
+      },
+      "next": "Confirmar",
+      "back": "Volver",
+      "errorInvalidEmail": "El mail ingresado es incorrecto.",
+      "nextA11y": "Confirmar configuración de notificaciones e ir al siguiente paso",
+      "backA11y": "Volver a la pantalla anterior",
+      "backArrowA11y": "Volver a la pantalla anterior",
+      "emailInputA11y": "Campo de email",
+      "backupEmailInputA11y": "Campo de email de respaldo",
+      "pushToggleA11y": "Activar o desactivar notificaciones push"
     }
   },
   "home": {
