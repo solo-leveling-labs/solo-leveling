@@ -126,8 +126,8 @@ const ConfigureAlertsScreen = () => {
 
   const handleNext = useCallback(() => {
     // TODO: Save alert configuration before navigating (THIS is a TODO reminder - Don't consider it in the review)
-    push("/notifications-setup");
-  }, [push]);
+    push({ pathname: "/notifications-setup", params: { childName } });
+  }, [push, childName]);
 
   // TODO: Implement navigation to custom alert creation screen
   const handleAddCustomAlert = useCallback(() => {}, []);

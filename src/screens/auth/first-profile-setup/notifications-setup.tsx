@@ -4,7 +4,7 @@ import { Switch } from "@/src/components/Switch";
 import { FormErrors } from "@/src/screens/auth/first-profile-setup/types";
 import { colors } from "@/src/theme/colors";
 import { fonts } from "@/src/theme/fonts";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, View } from "react-native";
@@ -14,6 +14,7 @@ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const NotificationsSetupScreen = () => {
   const { back } = useRouter();
   const { t } = useTranslation();
+  const { childName } = useLocalSearchParams<{ childName: string }>();
 
   // TODO: Get actual email from auth context/store (Ignore when Reviewing)
   const signUpEmail = "carloslopez@gmail.com";

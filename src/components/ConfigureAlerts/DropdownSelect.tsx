@@ -189,7 +189,6 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   dropdownWrapper: {
-    borderRadius: 28,
     backgroundColor: colors.neutral.white,
   },
   dropdownWrapperOpen: {
@@ -199,6 +198,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     backgroundColor: colors.neutral.white,
     elevation: 4,
+    borderRadius: 28,
   },
   trigger: {
     flexDirection: "row",
