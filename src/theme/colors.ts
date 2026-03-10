@@ -28,6 +28,10 @@ export const colors = {
     selected: "rgba(0, 0, 0, 0.05)",
     bannerGreen: "rgba(23, 111, 57, 0.1)",
   },
+  border: {
+    default: "rgba(0, 0, 0, 0.65)",
+    focused: "rgba(0, 0, 0, 0.9)",
+  },
   error: "#811123",
   transparent: "transparent",
 } as const;
