@@ -91,6 +91,8 @@ const SignUpStep1Screen = () => {
 
   return (
     <AuthLayout
+      title={t("auth.signUp.title")}
+      subtitle={t("auth.signUp.subtitle")}
       description={t("auth.signUp.description")}
       onNext={handleNext}
       onBack={back}

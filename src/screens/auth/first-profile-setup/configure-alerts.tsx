@@ -129,6 +129,8 @@ const ConfigureAlertsScreen = () => {
     push("/notifications-setup");
   }, [push]);
 
+  // TODO: Implement navigation to custom alert creation screen
+  const handleAddCustomAlert = useCallback(() => {}, []);
   return (
     <AuthLayout
       showBackArrow
@@ -202,6 +204,7 @@ const ConfigureAlertsScreen = () => {
         >
           <Pressable
             style={({ pressed }) => [pressed && styles.addAlertPressed]}
+            onPress={handleAddCustomAlert}
             accessibilityLabel={t(
               "profileSetup.configureAlerts.addCustomAlertA11y",
             )}

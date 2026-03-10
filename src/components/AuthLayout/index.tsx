@@ -104,10 +104,8 @@ const AuthLayout = ({
               !descriptionInHeader && styles.headerWithoutDescription,
             ]}
           >
-            <Text style={styles.title}>{title ?? t("auth.signUp.title")}</Text>
-            <Text style={styles.subtitle}>
-              {subtitle ?? t("auth.signUp.subtitle")}
-            </Text>
+            {title && <Text style={styles.title}>{title}</Text>}
+            {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
             {description && descriptionInHeader && (
               <Text style={styles.description}>{description}</Text>
             )}
