@@ -17,7 +17,8 @@
     "errors": {
       "title": "Error",
       "requiredFields": "Por favor completa todos los campos."
-    }
+    },
+    "backA11y": "Volver atrás"
   },
   "auth": {
     "welcome": {
@@ -121,7 +122,11 @@
       "cameraButtonA11y": "Permitir acceso a la cámara para verificación de identidad",
       "startButtonA11y": "Comenzar verificación de identidad",
       "cancelA11y": "Cancelar verificación y volver al paso anterior",
-      "permissionDenied": "Se necesita permiso para acceder a la cámara."
+      "permissionDenied": "Se necesita permiso para acceder a la cámara.",
+      "cancelAlertTitle": "¿Cancelar verificación?",
+      "cancelAlertMessage": "Si salís ahora, tu sesión se cerrará. La próxima vez que inicies sesión podrás continuar desde acá.",
+      "cancelAlertContinue": "Seguir verificando",
+      "cancelAlertExit": "Salir"
     },
     "cameraVerification": {
       "step1Title": "Ubicá tu cara dentro del óvalo y tomá la foto.",
@@ -138,6 +143,134 @@
       "subtitle": "¡Avisale a un adulto que queres comenzar a usar Zapienz!",
       "back": "Volver",
       "backA11y": "Volver a la pantalla anterior"
+    }
+  },
+  "profileSetup": {
+    "createProfile": {
+      "title": "Creá un perfil",
+      "subtitle": "Configurá el perfil de tu hijo o hija para que comience a usar Zapienz.",
+      "sectionTitle": "Datos",
+      "fields": {
+        "childName": "Nombre del menor",
+        "age": "Edad"
+      },
+      "placeholders": {
+        "name": "Nombre"
+      },
+      "selectDate": "DD/MM/AAAA",
+      "helperAge": "Zapienz adapta sus respuestas para que sean fáciles de entender según la edad.",
+      "next": "Siguiente",
+      "back": "Omitir",
+      "nameInputA11y": "Campo de nombre del menor",
+      "ageInputA11y": "Campo de edad del menor. Toca para abrir selector de fecha",
+      "nextA11y": "Ir al siguiente paso de la configuración del perfil",
+      "backA11y": "Omitir configuración de perfil e ir a inicio"
+    },
+    "configureAlerts": {
+      "title": "Configura alertas para {{name}}",
+      "sectionTitle": "Alertas",
+      "infoBanner": {
+        "title": "¿Cómo funciona?",
+        "description": "Cuando Zapienz detecte comportamientos, frases o sentimientos relacionados con alguna de las alertas configuradas, te enviará una notificación."
+      },
+      "selectAll": "Seleccionar todas",
+      "addCustomAlert": "Agregar alerta personalizada",
+      "next": "Siguiente",
+      "back": "Volver",
+      "alerts": {
+        "selfHarm": "Autolesión y riesgo físico",
+        "grooming": "Grooming y riesgos digitales",
+        "abuse": "Abuso y maltrato",
+        "bullying": "Bullying y exclusión",
+        "emotionalHealth": "Salud emocional",
+        "drugs": "Drogas y sustancias",
+        "violence": "Violencia y agresión",
+        "discrimination": "Discriminación y odio",
+        "religion": "Religión y espiritualidad",
+        "emergencies": "Emergencias médicas y policiales"
+      },
+      "severity": {
+        "severe": "Grave",
+        "moderate": "Moderada",
+        "mild": "Leve",
+        "emergency": "Emergencia"
+      },
+      "descriptions": {
+        "selfHarm": "Diseñado para detectar signos de depresión y alertar de forma temprana sobre riesgos de autolesión o pensamientos suicidas.",
+        "grooming": "Ideado para detectar engaños digitales y manipulación en línea, alertando sobre riesgos de acoso, interacciones con extraños o otros conflictos digitales críticos.",
+        "abuse": "Detecta señales de abuso físico, emocional o sexual, y alerta sobre situaciones de maltrato en el entorno del menor.",
+        "bullying": "Identifica patrones de acoso escolar, exclusión social y hostigamiento entre pares.",
+        "emotionalHealth": "Monitorea indicadores de bienestar emocional, ansiedad, estrés y cambios anímicos significativos.",
+        "drugs": "Detecta menciones o interés en sustancias controladas, alcohol y drogas.",
+        "violence": "Identifica contenido relacionado con violencia física, amenazas y comportamiento agresivo.",
+        "discrimination": "Detecta expresiones de odio, discriminación y prejuicios por raza, género, orientación u origen.",
+        "religion": "Monitorea conversaciones sobre temas religiosos y espirituales que puedan requerir atención parental.",
+        "emergencies": "Alerta ante situaciones que requieran intervención médica o policial inmediata."
+      },
+      "dropdowns": {
+        "severity": "Gravedad",
+        "response": "Respuesta de Zapienz",
+        "notifications": "Notificaciones"
+      },
+      "responseOptions": {
+        "respondNormally": "Responder normalmente",
+        "respondAndSuggest": "Responder y sugerir hablar con un adulto",
+        "dontRespondAndSuggest": "No responder y sugerir hablar con un adulto",
+        "emergencyResponse": "Ante emergencias, instruye al menor y le informa que ha solicitado ayuda de un adulto."
+      },
+      "notificationOptions": {
+        "appOnly": "Solo en la app",
+        "appAndEmail": "En la app y por email",
+        "appEmailAndPush": "En la app, por email y notificación al celular",
+        "emergencyNotification": "Notificaciones persistentes al celular hasta confirmar su lectura."
+      },
+      "dropdownA11y": "Abrir selector de {{field}}",
+      "backArrowA11y": "Volver a la pantalla anterior",
+      "selectAllA11y": "Seleccionar o deseleccionar todas las alertas",
+      "alertCheckboxA11y": "Activar o desactivar alerta de {{alert}}",
+      "alertAccordionA11y": "Expandir o contraer detalles de alerta {{alert}}",
+      "closeBannerA11y": "Cerrar banner informativo",
+      "openBannerA11y": "Abrir banner informativo",
+      "nextA11y": "Confirmar alertas e ir al siguiente paso",
+      "backA11y": "Volver a la pantalla anterior",
+      "addCustomAlertA11y": "Agregar una alerta personalizada",
+      "dropdownOptionA11y": "Seleccionar {{option}}"
+    },
+    "notificationsSetup": {
+      "title": "Notificaciones",
+      "subtitle": "Configuración de medios de contacto.",
+      "description": "Utilizaremos estos medios de contacto para enviarte notificaciones sobre las alertas que hayas configurado.",
+      "fields": {
+        "email": "Email",
+        "backupEmail": "Email de respaldo (opcional)",
+        "emailPlaceholder": "correo@gmail.com",
+        "backupEmailHelper": "Se usará para ingresar a tu perfil parental."
+      },
+      "pushNotifications": {
+        "title": "Activar notificaciones push en tu celular.",
+        "description": "Se enviarán notificaciones a tu celular solo en las alertas que lo indiques."
+      },
+      "next": "Confirmar",
+      "back": "Volver",
+      "errorInvalidEmail": "El mail ingresado es incorrecto.",
+      "nextA11y": "Confirmar configuración de notificaciones e ir al siguiente paso",
+      "backA11y": "Volver a la pantalla anterior",
+      "backArrowA11y": "Volver a la pantalla anterior",
+      "emailInputA11y": "Campo de email",
+      "backupEmailInputA11y": "Campo de email de respaldo",
+      "pushToggleA11y": "Activar o desactivar notificaciones push"
+    },
+    "profileComplete": {
+      "title": "¡Todo listo!",
+      "subtitle": "Perfil creado con éxito. Ya puede empezar a usar Zapienz.",
+      "instructionsTitle": "¿Cómo seguir?",
+      "childDevice": "En el celu de tu hija/o: ",
+      "childDeviceDescription": "Descargá Zapienz, ingresá con tu usuario y contraseña, y seleccioná su perfil.",
+      "parentDevice": "En tu propio celu: ",
+      "parentDeviceDescription": "Seleccioná su perfil en la siguiente pantalla. Tené en cuenta que las alertas se pausan mientras el perfil de menor esté activo.",
+      "closingMessage": "¡Es hora de comenzar!",
+      "accept": "Aceptar",
+      "acceptA11y": "Aceptar y continuar a la pantalla principal"
     }
   },
   "home": {

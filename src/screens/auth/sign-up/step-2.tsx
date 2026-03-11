@@ -1,12 +1,9 @@
-import SignUpLayout from "@/src/components/SignUpLayout";
+import AuthLayout from "@/src/components/AuthLayout";
+import FormField from "@/src/components/FormField";
 import { useSignupStore } from "@/src/store/signup.store";
-import { colors } from "@/src/theme/colors";
-import { fonts } from "@/src/theme/fonts";
-import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
 const MIN_PASSWORD_LENGTH = 8;
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -78,169 +75,57 @@ const SignUpStep2Screen = () => {
   };
 
   return (
-    <SignUpLayout
+    <AuthLayout
+      title={t("auth.signUp.title")}
+      subtitle={t("auth.signUp.subtitle")}
       description={t("auth.signUpStep2.description")}
       onNext={handleNext}
       onBack={back}
       isFormValid={isFormFilled}
     >
-      <View style={styles.fieldGroup}>
-        <Text style={[styles.label, errors.email && styles.labelError]}>
-          {t("auth.signUpStep2.fields.mail")}
-        </Text>
-        <View
-          style={[
-            styles.inputContainer,
-            errors.email && styles.inputContainerError,
-          ]}
-        >
-          <TextInput
-            style={styles.input}
-            value={email}
-            onChangeText={handleEmailChange}
-            keyboardType="email-address"
-            autoCapitalize="none"
-            autoCorrect={false}
-            autoComplete="off"
-            textContentType="none"
-            placeholder={t("auth.signUpStep2.fields.mail")}
-            placeholderTextColor={colors.neutral[700]}
-            accessibilityLabel={t("auth.signUpStep2.mailInputA11y")}
-          />
-        </View>
-        {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
-      </View>
+      <FormField
+        label={t("auth.signUpStep2.fields.mail")}
+        value={email}
+        onChangeText={handleEmailChange}
+        keyboardType="email-address"
+        autoCapitalize="none"
+        autoComplete="off"
+        textContentType="none"
+        placeholder={t("auth.signUpStep2.fields.mail")}
+        labelA11y={t("auth.signUpStep2.mailInputA11y")}
+        errorText={errors.email}
+      />
+      <FormField
+        label={t("auth.signUpStep2.fields.password")}
+        value={password}
+        onChangeText={handlePasswordChange}
+        secureTextEntry={!showPassword}
+        autoComplete="off"
+        textContentType="none"
+        placeholder={t("auth.signUpStep2.fields.password")}
+        labelA11y={t("auth.signUpStep2.passwordInputA11y")}
+        errorText={errors.password}
+        pressableA11y={t("auth.signUpStep2.togglePasswordA11y")}
+        rightIconName={showPassword ? "eye-off-outline" : "eye-outline"}
+        onRightIconPress={() => setShowPassword((prev) => !prev)}
+      />
 
-      <View style={styles.fieldGroup}>
-        <Text style={[styles.label, errors.password && styles.labelError]}>
-          {t("auth.signUpStep2.fields.password")}
-        </Text>
-        <View
-          style={[
-            styles.inputContainer,
-            errors.password && styles.inputContainerError,
-          ]}
-        >
-          <TextInput
-            style={styles.input}
-            value={password}
-            onChangeText={handlePasswordChange}
-            secureTextEntry={!showPassword}
-            autoComplete="off"
-            textContentType="none"
-            placeholder={t("auth.signUpStep2.fields.password")}
-            placeholderTextColor={colors.neutral[700]}
-            accessibilityLabel={t("auth.signUpStep2.passwordInputA11y")}
-          />
-          <Pressable
-            onPress={() => setShowPassword((prev) => !prev)}
-            style={styles.eyeIcon}
-            accessibilityLabel={t("auth.signUpStep2.togglePasswordA11y")}
-            accessibilityRole="button"
-          >
-            <Ionicons
-              name={showPassword ? "eye-off-outline" : "eye-outline"}
-              size={22}
-              color={colors.neutral[500]}
-            />
-          </Pressable>
-        </View>
-        {errors.password && (
-          <Text style={styles.errorText}>{errors.password}</Text>
-        )}
-      </View>
-
-      <View style={styles.fieldGroup}>
-        <Text
-          style={[styles.label, errors.repeatPassword && styles.labelError]}
-        >
-          {t("auth.signUpStep2.fields.repeatPassword")}
-        </Text>
-        <View
-          style={[
-            styles.inputContainer,
-            errors.repeatPassword && styles.inputContainerError,
-          ]}
-        >
-          <TextInput
-            style={styles.input}
-            value={repeatPassword}
-            onChangeText={handleRepeatPasswordChange}
-            secureTextEntry={!showRepeatPassword}
-            autoComplete="off"
-            textContentType="none"
-            placeholder={t("auth.signUpStep2.fields.repeatPassword")}
-            placeholderTextColor={colors.neutral[700]}
-            accessibilityLabel={t("auth.signUpStep2.repeatPasswordInputA11y")}
-          />
-          {/* TODO: Add svg icon for eye toggle */}
-          <Pressable
-            onPress={() => setShowRepeatPassword((prev) => !prev)}
-            style={styles.eyeIcon}
-            accessibilityLabel={t("auth.signUpStep2.toggleRepeatPasswordA11y")}
-            accessibilityRole="button"
-          >
-            <Ionicons
-              name={showRepeatPassword ? "eye-off-outline" : "eye-outline"}
-              size={22}
-              color={colors.neutral[500]}
-            />
-          </Pressable>
-        </View>
-        {errors.repeatPassword && (
-          <Text style={styles.errorText}>{errors.repeatPassword}</Text>
-        )}
-      </View>
-    </SignUpLayout>
+      <FormField
+        label={t("auth.signUpStep2.fields.repeatPassword")}
+        value={repeatPassword}
+        onChangeText={handleRepeatPasswordChange}
+        secureTextEntry={!showRepeatPassword}
+        autoComplete="off"
+        textContentType="none"
+        placeholder={t("auth.signUpStep2.fields.repeatPassword")}
+        labelA11y={t("auth.signUpStep2.repeatPasswordInputA11y")}
+        errorText={errors.repeatPassword}
+        pressableA11y={t("auth.signUpStep2.toggleRepeatPasswordA11y")}
+        rightIconName={showRepeatPassword ? "eye-off-outline" : "eye-outline"}
+        onRightIconPress={() => setShowRepeatPassword((prev) => !prev)}
+      />
+    </AuthLayout>
   );
 };
-
-const styles = StyleSheet.create({
-  fieldGroup: {
-    gap: 6,
-  },
-  label: {
-    fontSize: 14,
-    fontFamily: fonts.poppins.regular,
-    color: colors.neutral[300],
-  },
-  labelError: {
-    color: colors.error,
-  },
-  inputContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    borderRadius: 100,
-    borderWidth: 1.5,
-    borderColor: colors.accent.mainBlue,
-    backgroundColor: colors.transparent,
-  },
-  inputContainerError: {
-    borderColor: colors.error,
-  },
-  input: {
-    flex: 1,
-    fontSize: 16,
-    fontFamily: fonts.poppins.regular,
-    color: colors.neutral[300],
-    height: 56,
-    paddingHorizontal: 20,
-    borderRadius: 100,
-    lineHeight: 22,
-    includeFontPadding: false,
-  },
-  eyeIcon: {
-    position: "absolute",
-    right: 20,
-  },
-  errorText: {
-    fontSize: 12,
-    fontFamily: fonts.poppins.regular,
-    color: colors.error,
-    paddingHorizontal: 24,
-    lineHeight: 16,
-    letterSpacing: 0.4,
-  },
-});
 
 export default SignUpStep2Screen;

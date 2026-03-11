@@ -1,37 +1,17 @@
 import CalendarIcon from "@/assets/svg/calendar.svg";
 import AuthLayout from "@/src/components/AuthLayout";
 import FormField from "@/src/components/FormField";
-import { useSignupStore } from "@/src/store/signup.store";
 import { colors } from "@/src/theme/colors";
+import { fonts } from "@/src/theme/fonts";
 import { useRouter } from "expo-router";
 import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Pressable, StyleSheet, Text } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
-const MINIMUM_AGE = 18;
-
-const getAge = (birthDate: Date): number => {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
-  const normalizedBirth = new Date(birthDate);
-  normalizedBirth.setHours(0, 0, 0, 0);
-
-  let age = today.getFullYear() - normalizedBirth.getFullYear();
-  const monthDiff = today.getMonth() - normalizedBirth.getMonth();
-  if (
-    monthDiff < 0 ||
-    (monthDiff === 0 && today.getDate() < normalizedBirth.getDate())
-  ) {
-    age--;
-  }
-  return age;
-};
-
 const getDefaultPickerDate = (): Date => {
   const date = new Date();
-  date.setFullYear(date.getFullYear() - MINIMUM_AGE);
+  date.setFullYear(date.getFullYear() - 8);
   return date;
 };
 
@@ -42,21 +22,14 @@ const formatDate = (date: Date): string => {
   return `${day}/${month}/${year}`;
 };
 
-const toISODate = (date: Date): string => {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-};
-
-const SignUpStep1Screen = () => {
-  const { back, push } = useRouter();
+const CreateProfileScreen = () => {
+  const { push, dismissTo } = useRouter();
   const { t } = useTranslation();
-  const { setStep1 } = useSignupStore();
 
   const [name, setName] = useState("");
   const [birthDate, setBirthDate] = useState<Date | null>(null);
   const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
+
   const isFormValid = name.trim().length > 0 && birthDate !== null;
 
   const showDatePicker = useCallback(() => {
@@ -75,46 +48,51 @@ const SignUpStep1Screen = () => {
     [hideDatePicker],
   );
 
-  const handleNext = () => {
-    if (!birthDate) return;
-    const age = getAge(birthDate);
-    if (age < MINIMUM_AGE) {
-      push("/(auth)/underage");
-      return;
-    }
+  const handleNext = useCallback(() => {
+    if (!isFormValid) return;
+    push({ pathname: "/configure-alerts", params: { childName: name.trim() } });
+  }, [isFormValid, push, name]);
 
-    const formattedBirthday = toISODate(birthDate);
-
-    setStep1(name.trim(), formattedBirthday);
-    push("/(auth)/sign-up-step-2");
-  };
+  const handleCancel = useCallback(() => {
+    dismissTo("/(tabs)");
+  }, [dismissTo]);
 
   return (
     <AuthLayout
-      title={t("auth.signUp.title")}
-      subtitle={t("auth.signUp.subtitle")}
-      description={t("auth.signUp.description")}
+      title={t("profileSetup.createProfile.title")}
+      subtitle={t("profileSetup.createProfile.subtitle")}
       onNext={handleNext}
-      onBack={back}
+      onBack={handleCancel}
       isFormValid={isFormValid}
+      nextLabel={t("profileSetup.createProfile.next")}
+      backLabel={t("profileSetup.createProfile.back")}
+      nextLabelA11y={t("profileSetup.createProfile.nextA11y")}
+      backLabelA11y={t("profileSetup.createProfile.backA11y")}
     >
+      <Text style={styles.sectionTitle}>
+        {t("profileSetup.createProfile.sectionTitle")}
+      </Text>
+
       <FormField
-        label={t("common.fields.name")}
+        label={t("profileSetup.createProfile.fields.childName")}
         value={name}
         onChangeText={setName}
         autoCapitalize="words"
-        placeholder={t("common.fields.name")}
-        labelA11y={t("auth.signUp.nameInputA11y")}
+        placeholder={t("profileSetup.createProfile.placeholders.name")}
+        labelA11y={t("profileSetup.createProfile.nameInputA11y")}
       />
       <FormField
         isDatePickerInput
-        label={t("common.fields.birthDate")}
+        label={t("profileSetup.createProfile.fields.age")}
         onPress={showDatePicker}
-        labelA11y={t("auth.signUp.birthDateInputA11y")}
+        labelA11y={t("profileSetup.createProfile.ageInputA11y")}
         isPlaceholder={!birthDate}
         displayValue={
-          birthDate ? formatDate(birthDate) : t("auth.signUp.selectDate")
+          birthDate
+            ? formatDate(birthDate)
+            : t("profileSetup.createProfile.selectDate")
         }
+        helperText={t("profileSetup.createProfile.helperAge")}
         rightIconElement={
           <CalendarIcon width={22} height={22} style={styles.calendarIcon} />
         }
@@ -152,6 +130,16 @@ const SignUpStep1Screen = () => {
 };
 
 const styles = StyleSheet.create({
+  sectionTitle: {
+    fontSize: 16,
+    fontFamily: fonts.poppins.bold,
+    color: colors.accent.mainBlue,
+    lineHeight: 22,
+  },
+  calendarIcon: {
+    position: "absolute",
+    right: 20,
+  },
   datePickerIOS: {
     alignItems: "center",
   },
@@ -167,12 +155,9 @@ const styles = StyleSheet.create({
   },
   datePickerConfirmText: {
     fontSize: 20,
+    fontFamily: fonts.poppins.regular,
     color: colors.system.iosBlue,
-  },
-  calendarIcon: {
-    position: "absolute",
-    right: 20,
   },
 });
 
-export default SignUpStep1Screen;
+export default CreateProfileScreen;

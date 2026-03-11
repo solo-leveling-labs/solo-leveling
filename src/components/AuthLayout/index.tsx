@@ -2,6 +2,7 @@ import BgDecorations from "@/assets/svg/bg-decorations.svg";
 import Buho from "@/assets/svg/buho.svg";
 import { colors } from "@/src/theme/colors";
 import { fonts } from "@/src/theme/fonts";
+import { Ionicons } from "@expo/vector-icons";
 import React, { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -14,41 +15,56 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
+import Animated, { LinearTransition } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const BUHO_ASPECT_RATIO = 134 / 375;
 const BUHO_WIDTH_RATIO = 1;
 
-interface SignUpLayoutProps {
+interface AuthLayoutProps {
   title?: string;
   subtitle?: string;
+  showBackArrow?: boolean;
+  backArrowA11y?: string;
   description?: string;
+  descriptionInHeader?: boolean;
   children: ReactNode;
   onNext: () => void;
   onBack: () => void;
-  isFormValid: boolean;
+  isFormValid?: boolean;
   nextLabel?: string;
   nextLabelA11y?: string;
   backLabel?: string;
   backLabelA11y?: string;
+  hideBackButton?: boolean;
+  headerBottomSpacing?: number;
+  footerTopSpacing?: number;
 }
 
-const SignUpLayout = ({
+const AuthLayout = ({
   title,
   subtitle,
+  showBackArrow,
+  backArrowA11y,
   description,
+  descriptionInHeader = false,
   children,
   onNext,
   onBack,
-  isFormValid,
+  isFormValid = true,
   nextLabel,
   nextLabelA11y,
   backLabel,
   backLabelA11y,
-}: SignUpLayoutProps) => {
+  hideBackButton = false,
+  headerBottomSpacing = 0,
+  footerTopSpacing = 0,
+}: AuthLayoutProps) => {
   const { t } = useTranslation();
   const { width: screenWidth } = useWindowDimensions();
-  const { bottom: safeBottom } = useSafeAreaInsets();
+  const { bottom: safeBottom, top: safeTop } = useSafeAreaInsets();
+
+  const paddingTop = safeTop + (showBackArrow ? 12 : 48);
 
   return (
     <View style={styles.container}>
@@ -63,25 +79,49 @@ const SignUpLayout = ({
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
         <ScrollView
-          contentContainerStyle={styles.content}
+          contentContainerStyle={[styles.content, { paddingTop }]}
           keyboardShouldPersistTaps="handled"
-          bounces
         >
-          <View style={styles.header}>
-            <Text style={styles.title}>{title ?? t("auth.signUp.title")}</Text>
-            <Text style={styles.subtitle}>
-              {subtitle ?? t("auth.signUp.subtitle")}
-            </Text>
+          {showBackArrow && (
+            <View style={styles.topBar}>
+              <Pressable
+                onPress={onBack}
+                style={({ pressed }) => [pressed && styles.backArrowPressed]}
+                accessibilityLabel={backArrowA11y ?? t("common.backA11y")}
+                accessibilityRole="button"
+              >
+                <Ionicons
+                  name="arrow-back"
+                  size={24}
+                  color={colors.accent.mainBlue}
+                />
+              </Pressable>
+            </View>
+          )}
+          <View style={[styles.header, { marginBottom: headerBottomSpacing }]}>
+            {title && <Text style={styles.title}>{title}</Text>}
+            {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
+            {description && descriptionInHeader && (
+              <Text style={styles.description}>{description}</Text>
+            )}
           </View>
 
           <View style={styles.form}>
-            {description && (
-              <Text style={styles.description}>{description}</Text>
+            {description && !descriptionInHeader && (
+              <Text style={[styles.description, styles.formDescription]}>
+                {description}
+              </Text>
             )}
             {children}
           </View>
 
-          <View style={[styles.footer, { paddingBottom: safeBottom + 40 }]}>
+          <Animated.View
+            style={[
+              styles.footer,
+              { marginTop: footerTopSpacing, paddingBottom: safeBottom + 40 },
+            ]}
+            layout={LinearTransition.duration(200)}
+          >
             {/* TODO: Fix insets problem */}
             <Pressable
               style={({ pressed }) => [
@@ -107,16 +147,19 @@ const SignUpLayout = ({
               onPress={onBack}
               accessibilityLabel={backLabelA11y ?? t("auth.signUp.backA11y")}
               accessibilityRole="button"
+              accessible={!hideBackButton}
+              disabled={hideBackButton}
               style={({ pressed }) => [
                 styles.backButton,
-                pressed && styles.buttonPressed,
+                hideBackButton && styles.backButtonHidden,
+                pressed && !hideBackButton && styles.buttonPressed,
               ]}
             >
               <Text style={styles.backText}>
                 {backLabel ?? t("auth.signUp.back")}
               </Text>
             </Pressable>
-          </View>
+          </Animated.View>
         </ScrollView>
       </KeyboardAvoidingView>
     </View>
@@ -134,12 +177,17 @@ const styles = StyleSheet.create({
   content: {
     flexGrow: 1,
     paddingHorizontal: 24,
-    paddingTop: "25%",
     justifyContent: "space-between",
   },
+  topBar: {
+    flexDirection: "row",
+    marginBottom: 15,
+  },
+  backArrowPressed: {
+    opacity: 0.8,
+  },
   header: {
-    gap: 8,
-    marginBottom: 48,
+    gap: 12,
   },
   title: {
     fontSize: 40,
@@ -159,12 +207,13 @@ const styles = StyleSheet.create({
     fontFamily: fonts.poppins.regular,
     color: colors.neutral.black,
     lineHeight: 22,
+  },
+  formDescription: {
     marginBottom: 16,
   },
   footer: {
     alignItems: "center",
     gap: 16,
-    marginTop: 56,
   },
   nextButton: {
     backgroundColor: colors.accent.mainBlue,
@@ -172,7 +221,6 @@ const styles = StyleSheet.create({
     borderRadius: 28,
     alignItems: "center",
     justifyContent: "center",
-    paddingHorizontal: 32,
     width: "100%",
   },
   nextButtonDisabled: {
@@ -185,6 +233,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: fonts.poppins.bold,
     color: colors.neutral.white,
+    textAlignVertical: "center",
+    includeFontPadding: false,
   },
   nextButtonTextDisabled: {
     color: colors.neutral[700],
@@ -192,6 +242,9 @@ const styles = StyleSheet.create({
   backButton: {
     width: "100%",
     alignItems: "center",
+  },
+  backButtonHidden: {
+    opacity: 0,
   },
   backText: {
     fontSize: 16,
@@ -210,4 +263,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignUpLayout;
+export default AuthLayout;
