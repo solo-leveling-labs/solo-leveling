@@ -259,6 +259,18 @@
       "emailInputA11y": "Email input",
       "backupEmailInputA11y": "Backup email input",
       "pushToggleA11y": "Enable or disable push notifications"
+    },
+    "profileComplete": {
+      "title": "All set!",
+      "subtitle": "Profile created successfully. You can now start using Zapienz.",
+      "instructionsTitle": "What's next?",
+      "childDevice": "On your child's phone: ",
+      "childDeviceDescription": "Download Zapienz, sign in with your username and password, and select their profile.",
+      "parentDevice": "On your own phone: ",
+      "parentDeviceDescription": "Select their profile on the next screen. Keep in mind that alerts are paused while the child's profile is active.",
+      "closingMessage": "It's time to get started!",
+      "accept": "Accept",
+      "acceptA11y": "Accept and continue to the home screen"
     }
   },
   "home": {

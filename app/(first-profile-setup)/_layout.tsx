@@ -6,6 +6,10 @@ export default function FirstProfileSetupLayout() {
       <Stack.Screen name="create-profile" />
       <Stack.Screen name="configure-alerts" />
       <Stack.Screen name="notifications-setup" />
+      <Stack.Screen
+        name="profile-complete"
+        options={{ gestureEnabled: false }}
+      />
     </Stack>
   );
 }

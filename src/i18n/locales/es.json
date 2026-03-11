@@ -259,6 +259,18 @@
       "emailInputA11y": "Campo de email",
       "backupEmailInputA11y": "Campo de email de respaldo",
       "pushToggleA11y": "Activar o desactivar notificaciones push"
+    },
+    "profileComplete": {
+      "title": "¡Todo listo!",
+      "subtitle": "Perfil creado con éxito. Ya puede empezar a usar Zapienz.",
+      "instructionsTitle": "¿Cómo seguir?",
+      "childDevice": "En el celu de tu hija/o: ",
+      "childDeviceDescription": "Descargá Zapienz, ingresá con tu usuario y contraseña, y seleccioná su perfil.",
+      "parentDevice": "En tu propio celu: ",
+      "parentDeviceDescription": "Seleccioná su perfil en la siguiente pantalla. Tené en cuenta que las alertas se pausan mientras el perfil de menor esté activo.",
+      "closingMessage": "¡Es hora de comenzar!",
+      "accept": "Aceptar",
+      "acceptA11y": "Aceptar y continuar a la pantalla principal"
     }
   },
   "home": {

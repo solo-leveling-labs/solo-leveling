@@ -12,7 +12,7 @@ import { StyleSheet, Text, View } from "react-native";
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const NotificationsSetupScreen = () => {
-  const { back } = useRouter();
+  const { back, replace } = useRouter();
   const { t } = useTranslation();
   const { childName } = useLocalSearchParams<{ childName: string }>();
 
@@ -65,7 +65,7 @@ const NotificationsSetupScreen = () => {
       setErrors(newErrors);
       return;
     }
-    // TODO: Navigate to "profile-setup-success" when created  (Ignore when Reviewing)
+    replace({ pathname: "/profile-complete", params: { childName } });
   };
 
   return (

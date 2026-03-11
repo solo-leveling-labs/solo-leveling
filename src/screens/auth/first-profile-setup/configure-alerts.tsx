@@ -135,7 +135,6 @@ const ConfigureAlertsScreen = () => {
     <AuthLayout
       showBackArrow
       backArrowA11y={t("profileSetup.configureAlerts.backArrowA11y")}
-      scrollStyle="content"
       title={t("profileSetup.configureAlerts.title", { name: childName })}
       onNext={handleNext}
       onBack={back}
@@ -143,6 +142,8 @@ const ConfigureAlertsScreen = () => {
       backLabel={t("profileSetup.configureAlerts.back")}
       nextLabelA11y={t("profileSetup.configureAlerts.nextA11y")}
       backLabelA11y={t("profileSetup.configureAlerts.backA11y")}
+      headerBottomSpacing={36}
+      footerTopSpacing={36}
     >
       <InfoBanner />
 

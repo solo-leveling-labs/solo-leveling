@@ -26,7 +26,6 @@ interface AuthLayoutProps {
   subtitle?: string;
   showBackArrow?: boolean;
   backArrowA11y?: string;
-  scrollStyle?: "form" | "content";
   description?: string;
   descriptionInHeader?: boolean;
   children: ReactNode;
@@ -37,6 +36,9 @@ interface AuthLayoutProps {
   nextLabelA11y?: string;
   backLabel?: string;
   backLabelA11y?: string;
+  hideBackButton?: boolean;
+  headerBottomSpacing?: number;
+  footerTopSpacing?: number;
 }
 
 const AuthLayout = ({
@@ -44,7 +46,6 @@ const AuthLayout = ({
   subtitle,
   showBackArrow,
   backArrowA11y,
-  scrollStyle = "form",
   description,
   descriptionInHeader = false,
   children,
@@ -55,12 +56,15 @@ const AuthLayout = ({
   nextLabelA11y,
   backLabel,
   backLabelA11y,
+  hideBackButton = false,
+  headerBottomSpacing = 0,
+  footerTopSpacing = 0,
 }: AuthLayoutProps) => {
   const { t } = useTranslation();
   const { width: screenWidth } = useWindowDimensions();
   const { bottom: safeBottom, top: safeTop } = useSafeAreaInsets();
 
-  const paddingTop = scrollStyle === "form" ? "25%" : safeTop;
+  const paddingTop = safeTop + (showBackArrow ? 12 : 48);
 
   return (
     <View style={styles.container}>
@@ -75,11 +79,7 @@ const AuthLayout = ({
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
         <ScrollView
-          contentContainerStyle={[
-            styles.content,
-            { paddingTop },
-            scrollStyle === "form" && styles.scrollStyleForm,
-          ]}
+          contentContainerStyle={[styles.content, { paddingTop }]}
           keyboardShouldPersistTaps="handled"
         >
           {showBackArrow && (
@@ -98,12 +98,7 @@ const AuthLayout = ({
               </Pressable>
             </View>
           )}
-          <View
-            style={[
-              styles.header,
-              !descriptionInHeader && styles.headerWithoutDescription,
-            ]}
-          >
+          <View style={[styles.header, { marginBottom: headerBottomSpacing }]}>
             {title && <Text style={styles.title}>{title}</Text>}
             {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
             {description && descriptionInHeader && (
@@ -123,8 +118,7 @@ const AuthLayout = ({
           <Animated.View
             style={[
               styles.footer,
-              scrollStyle === "content" && styles.footerContentSpacing,
-              { paddingBottom: safeBottom + 40 },
+              { marginTop: footerTopSpacing, paddingBottom: safeBottom + 40 },
             ]}
             layout={LinearTransition.duration(200)}
           >
@@ -153,9 +147,12 @@ const AuthLayout = ({
               onPress={onBack}
               accessibilityLabel={backLabelA11y ?? t("auth.signUp.backA11y")}
               accessibilityRole="button"
+              accessible={!hideBackButton}
+              disabled={hideBackButton}
               style={({ pressed }) => [
                 styles.backButton,
-                pressed && styles.buttonPressed,
+                hideBackButton && styles.backButtonHidden,
+                pressed && !hideBackButton && styles.buttonPressed,
               ]}
             >
               <Text style={styles.backText}>
@@ -180,8 +177,6 @@ const styles = StyleSheet.create({
   content: {
     flexGrow: 1,
     paddingHorizontal: 24,
-  },
-  scrollStyleForm: {
     justifyContent: "space-between",
   },
   topBar: {
@@ -192,10 +187,7 @@ const styles = StyleSheet.create({
     opacity: 0.8,
   },
   header: {
-    gap: 8,
-  },
-  headerWithoutDescription: {
-    marginBottom: 48,
+    gap: 12,
   },
   title: {
     fontSize: 40,
@@ -206,7 +198,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontFamily: fonts.raleway.bold,
     color: colors.accent.mainBlue,
-    marginTop: 4,
   },
   form: {
     gap: 16,
@@ -223,9 +214,6 @@ const styles = StyleSheet.create({
   footer: {
     alignItems: "center",
     gap: 16,
-  },
-  footerContentSpacing: {
-    marginTop: 56,
   },
   nextButton: {
     backgroundColor: colors.accent.mainBlue,
@@ -254,6 +242,9 @@ const styles = StyleSheet.create({
   backButton: {
     width: "100%",
     alignItems: "center",
+  },
+  backButtonHidden: {
+    opacity: 0,
   },
   backText: {
     fontSize: 16,
