@@ -1,7 +1,7 @@
 import { colors } from "@/src/theme/colors";
 import { fonts } from "@/src/theme/fonts";
 import { Ionicons } from "@expo/vector-icons";
-import { ComponentProps, ReactNode, useState } from "react";
+import { ComponentProps, useState } from "react";
 import {
   KeyboardTypeOptions,
   Pressable,
@@ -24,15 +24,10 @@ interface FormFieldProps {
   errorText?: string;
   secureTextEntry?: boolean;
   rightIconName?: ComponentProps<typeof Ionicons>["name"];
-  rightIconElement?: ReactNode;
   onRightIconPress?: () => void;
   helperText?: string;
   pressableA11y?: string;
   maxLength?: number;
-  isDatePickerInput?: boolean;
-  onPress?: () => void;
-  isPlaceholder?: boolean;
-  displayValue?: string;
 }
 
 const FormField = ({
@@ -48,15 +43,10 @@ const FormField = ({
   errorText,
   secureTextEntry,
   rightIconName,
-  rightIconElement,
   onRightIconPress,
   helperText,
   pressableA11y,
   maxLength,
-  isDatePickerInput = false,
-  onPress,
-  isPlaceholder,
-  displayValue,
 }: FormFieldProps) => {
   const [isFocused, setIsFocused] = useState(false);
 
@@ -65,63 +55,44 @@ const FormField = ({
       <Text style={[styles.label, errorText && styles.labelError]}>
         {label}
       </Text>
-      {!isDatePickerInput ? (
-        <View
-          style={[
-            styles.inputContainer,
-            isFocused && styles.inputContainerFocused,
-            errorText && styles.inputContainerError,
-          ]}
-        >
-          <TextInput
-            style={styles.input}
-            value={value}
-            onChangeText={onChangeText}
-            onFocus={() => setIsFocused(true)}
-            onBlur={() => setIsFocused(false)}
-            secureTextEntry={secureTextEntry}
-            keyboardType={keyboardType}
-            textContentType={textContentType}
-            autoCapitalize={autoCapitalize}
-            autoComplete={autoComplete}
-            placeholder={placeholder}
-            maxLength={maxLength}
-            placeholderTextColor={colors.neutral[700]}
-            accessibilityLabel={labelA11y}
-          />
-          {rightIconName && (
-            <Pressable
-              onPress={onRightIconPress}
-              style={styles.eyeIcon}
-              accessibilityLabel={pressableA11y}
-              accessibilityRole="button"
-            >
-              <Ionicons
-                name={rightIconName}
-                size={22}
-                color={colors.neutral[500]}
-              />
-            </Pressable>
-          )}
-        </View>
-      ) : (
-        <Pressable
-          style={styles.inputContainer}
-          onPress={onPress}
+      <View
+        style={[
+          styles.inputContainer,
+          isFocused && styles.inputContainerFocused,
+          errorText && styles.inputContainerError,
+        ]}
+      >
+        <TextInput
+          style={styles.input}
+          value={value}
+          onChangeText={onChangeText}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+          secureTextEntry={secureTextEntry}
+          keyboardType={keyboardType}
+          textContentType={textContentType}
+          autoCapitalize={autoCapitalize}
+          autoComplete={autoComplete}
+          placeholder={placeholder}
+          maxLength={maxLength}
+          placeholderTextColor={colors.neutral[700]}
           accessibilityLabel={labelA11y}
-          accessibilityRole="button"
-        >
-          <Text
-            style={[
-              styles.dateText,
-              isPlaceholder && styles.dateTextPlaceholder,
-            ]}
+        />
+        {rightIconName && (
+          <Pressable
+            onPress={onRightIconPress}
+            style={styles.eyeIcon}
+            accessibilityLabel={pressableA11y}
+            accessibilityRole="button"
           >
-            {displayValue}
-          </Text>
-          {rightIconElement}
-        </Pressable>
-      )}
+            <Ionicons
+              name={rightIconName}
+              size={22}
+              color={colors.neutral[500]}
+            />
+          </Pressable>
+        )}
+      </View>
       {errorText ? (
         <Text style={styles.errorText}>{errorText}</Text>
       ) : helperText ? (
@@ -185,17 +156,6 @@ const styles = StyleSheet.create({
     color: colors.neutral[500],
     paddingHorizontal: 24,
     lineHeight: 16,
-  },
-  dateText: {
-    flex: 1,
-    fontSize: 16,
-    fontFamily: fonts.poppins.regular,
-    color: colors.neutral[300],
-    paddingHorizontal: 20,
-    lineHeight: 56,
-  },
-  dateTextPlaceholder: {
-    color: colors.neutral[700],
   },
 });
 

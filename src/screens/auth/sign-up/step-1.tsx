@@ -1,5 +1,6 @@
 import CalendarIcon from "@/assets/svg/calendar.svg";
 import AuthLayout from "@/src/components/AuthLayout";
+import DatePickerField from "@/src/components/DatePickerField";
 import FormField from "@/src/components/FormField";
 import { useSignupStore } from "@/src/store/signup.store";
 import { colors } from "@/src/theme/colors";
@@ -106,8 +107,7 @@ const SignUpStep1Screen = () => {
         placeholder={t("common.fields.name")}
         labelA11y={t("auth.signUp.nameInputA11y")}
       />
-      <FormField
-        isDatePickerInput
+      <DatePickerField
         label={t("common.fields.birthDate")}
         onPress={showDatePicker}
         labelA11y={t("auth.signUp.birthDateInputA11y")}
