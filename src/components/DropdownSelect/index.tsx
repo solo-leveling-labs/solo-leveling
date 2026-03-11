@@ -30,7 +30,7 @@ interface DropdownSelectProps {
 
 const WARNING_COLORS = new Set<string>([colors.accent.mainRed, colors.error]);
 
-const DropdownSelect = ({
+export const DropdownSelect = ({
   label,
   options,
   selectedKey,
@@ -274,5 +274,3 @@ const styles = StyleSheet.create({
     lineHeight: 26,
   },
 });
-
-export default DropdownSelect;

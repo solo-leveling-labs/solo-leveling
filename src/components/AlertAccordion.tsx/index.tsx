@@ -20,7 +20,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import DropdownSelect from "../DropdownSelect";
+import { DropdownSelect } from "../DropdownSelect";
 
 const AlertAccordion = ({
   title,
