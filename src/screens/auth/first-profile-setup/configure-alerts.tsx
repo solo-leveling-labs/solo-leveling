@@ -128,8 +128,9 @@ const ConfigureAlertsScreen = () => {
     push({ pathname: "/notifications-setup", params: { childName } });
   }, [push, childName]);
 
-  // TODO: Implement navigation to custom alert creation screen
-  const handleAddCustomAlert = useCallback(() => {}, []);
+  const handleAddCustomAlert = useCallback(() => {
+    push("/create-custom-alert");
+  }, [push]);
 
   return (
     <AuthLayout

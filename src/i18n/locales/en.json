@@ -246,6 +246,46 @@
       "addCustomAlertA11y": "Add a custom alert",
       "dropdownOptionA11y": "Select {{option}}"
     },
+    "createCustomAlert": {
+      "title": "Create custom alert",
+      "subtitle": "Define a custom topic for Zapienz to monitor.",
+      "next": "Save",
+      "nextA11y": "Save custom alert",
+      "fields": {
+        "bannedContent": "Topic to monitor",
+        "bannedContentPlaceholder": "e.g. inappropriate language, gambling...",
+        "description": "Description",
+        "descriptionPlaceholder": "Briefly describe what Zapienz should detect...",
+        "severity": "Severity",
+        "responseType": "Response type",
+        "isBlocking": "Block content",
+        "isBlockingDescription": "Zapienz won't respond to this content.",
+        "notify": "Receive notifications",
+        "notifyDescription": "We'll notify you when this content is detected.",
+        "notificationType": "Notification channels"
+      },
+      "severity": {
+        "Leve": "Mild",
+        "Moderada": "Moderate",
+        "Grave": "Severe",
+        "Emergencia": "Emergency"
+      },
+      "responseType": {
+        "Responder normalmente": "Respond normally",
+        "Responder y sugerir hablar con un adulto": "Respond and suggest talking to an adult",
+        "No responder y sugerir hablar con un adulto": "Don't respond and suggest talking to an adult",
+        "Ante emergencias ayuda y avisa que se solicitara ayuda a un adulto": "Emergency: help and notify an adult"
+      },
+      "notificationType": {
+        "IN_APP": "In-app",
+        "EMAIL": "Email",
+        "PUSH_NOTIFICATION": "Push"
+      },
+      "severityA11y": "Select severity",
+      "responseTypeA11y": "Select response type",
+      "isBlockingA11y": "Toggle block content",
+      "notifyA11y": "Toggle notifications"
+    },
     "notificationsSetup": {
       "title": "Notifications",
       "subtitle": "Contact methods setup.",

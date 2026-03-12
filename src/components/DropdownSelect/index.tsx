@@ -190,6 +190,7 @@ const styles = StyleSheet.create({
   },
   dropdownWrapper: {
     backgroundColor: colors.neutral.white,
+    borderRadius: 28,
   },
   dropdownWrapperOpen: {
     shadowColor: colors.neutral.black,

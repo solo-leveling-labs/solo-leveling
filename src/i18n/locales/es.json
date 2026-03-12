@@ -246,6 +246,46 @@
       "addCustomAlertA11y": "Agregar una alerta personalizada",
       "dropdownOptionA11y": "Seleccionar {{option}}"
     },
+    "createCustomAlert": {
+      "title": "Crear alerta personalizada",
+      "subtitle": "Definí un tema personalizado para que Zapienz monitoree.",
+      "next": "Guardar",
+      "nextA11y": "Guardar alerta personalizada",
+      "fields": {
+        "bannedContent": "Tema a monitorear",
+        "bannedContentPlaceholder": "Ej. lenguaje inapropiado, apuestas...",
+        "description": "Descripción",
+        "descriptionPlaceholder": "Describí brevemente qué debe detectar Zapienz...",
+        "severity": "Severidad",
+        "responseType": "Tipo de respuesta",
+        "isBlocking": "Bloquear contenido",
+        "isBlockingDescription": "Zapienz no responderá ante este contenido.",
+        "notify": "Recibir notificaciones",
+        "notifyDescription": "Te avisaremos cuando se detecte este contenido.",
+        "notificationType": "Canales de notificación"
+      },
+      "severity": {
+        "Leve": "Leve",
+        "Moderada": "Moderada",
+        "Grave": "Grave",
+        "Emergencia": "Emergencia"
+      },
+      "responseType": {
+        "Responder normalmente": "Responder normalmente",
+        "Responder y sugerir hablar con un adulto": "Responder y sugerir hablar con un adulto",
+        "No responder y sugerir hablar con un adulto": "No responder y sugerir hablar con un adulto",
+        "Ante emergencias ayuda y avisa que se solicitara ayuda a un adulto": "Emergencia: ayudar y avisar a un adulto"
+      },
+      "notificationType": {
+        "IN_APP": "En la app",
+        "EMAIL": "Email",
+        "PUSH_NOTIFICATION": "Push"
+      },
+      "severityA11y": "Seleccionar severidad",
+      "responseTypeA11y": "Seleccionar tipo de respuesta",
+      "isBlockingA11y": "Activar o desactivar bloqueo de contenido",
+      "notifyA11y": "Activar o desactivar notificaciones"
+    },
     "notificationsSetup": {
       "title": "Notificaciones",
       "subtitle": "Configuración de medios de contacto.",
