@@ -66,7 +66,7 @@ const CreateProfileScreen = () => {
       ]);
       push({
         pathname: "/configure-alerts",
-        params: { childName: data.data.fullName },
+        params: { childName: data.data.fullName, childId: data.data.id },
       });
     } catch {
       Alert.alert(

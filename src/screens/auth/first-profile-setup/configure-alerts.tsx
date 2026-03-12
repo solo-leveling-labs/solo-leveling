@@ -59,7 +59,10 @@ const initialAlertConfigs = Object.fromEntries(
 const ConfigureAlertsScreen = () => {
   const { back, push } = useRouter();
   const { t } = useTranslation();
-  const { childName } = useLocalSearchParams<{ childName: string }>();
+  const { childName, childId } = useLocalSearchParams<{
+    childName: string;
+    childId: string;
+  }>();
 
   const [expandedAlerts, setExpandedAlerts] = useState<Set<AlertKey>>(
     new Set(),
@@ -125,11 +128,12 @@ const ConfigureAlertsScreen = () => {
   );
 
   const handleNext = useCallback(() => {
-    push({ pathname: "/notifications-setup", params: { childName } });
-  }, [push, childName]);
+    push({ pathname: "/notifications-setup", params: { childName, childId } });
+  }, [push, childName, childId]);
 
   const handleAddCustomAlert = useCallback(() => {
-    push("/create-custom-alert");
+    console.log("childId", childId);
+    // push("/create-custom-alert");
   }, [push]);
 
   return (
