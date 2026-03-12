@@ -16,7 +16,8 @@
     },
     "errors": {
       "title": "Error",
-      "requiredFields": "Por favor completa todos los campos."
+      "requiredFields": "Por favor completa todos los campos.",
+      "genericMessage": "Algo salió mal. Por favor intentá de nuevo."
     },
     "backA11y": "Volver atrás"
   },
@@ -152,17 +153,20 @@
       "sectionTitle": "Datos",
       "fields": {
         "childName": "Nombre del menor",
-        "age": "Edad"
+        "birthDate": "Fecha de nacimiento"
       },
       "placeholders": {
-        "name": "Nombre",
-        "age": "Ej. 8"
+        "name": "Nombre"
       },
-      "helperAge": "Zapienz adapta sus respuestas para que sean fáciles de entender según la edad.",
+      "helperBirthDate": "Zapienz adapta sus respuestas para que sean fáciles de entender según la edad.",
+      "selectDate": "Seleccioná una fecha",
+      "datePickerConfirm": "Confirmar",
+      "datePickerCancel": "Cancelar",
+      "datePickerLocale": "es",
       "next": "Siguiente",
       "back": "Omitir",
       "nameInputA11y": "Campo de nombre del menor",
-      "ageInputA11y": "Campo de edad del menor",
+      "birthDateInputA11y": "Campo de fecha de nacimiento del menor",
       "nextA11y": "Ir al siguiente paso de la configuración del perfil",
       "backA11y": "Omitir configuración de perfil e ir a inicio",
       "skipAlert": {

@@ -16,7 +16,8 @@
     },
     "errors": {
       "title": "Error",
-      "requiredFields": "Please fill in all fields."
+      "requiredFields": "Please fill in all fields.",
+      "genericMessage": "Something went wrong. Please try again."
     },
     "backA11y": "Go back"
   },
@@ -152,17 +153,20 @@
       "sectionTitle": "Details",
       "fields": {
         "childName": "Child's name",
-        "age": "Age"
+        "birthDate": "Date of birth"
       },
       "placeholders": {
-        "name": "Name",
-        "age": "e.g. 8"
+        "name": "Name"
       },
-      "helperAge": "Zapienz adapts its responses so they're easy to understand based on age.",
+      "helperBirthDate": "Zapienz adapts its responses so they're easy to understand based on age.",
+      "selectDate": "Select a date",
+      "datePickerConfirm": "Confirm",
+      "datePickerCancel": "Cancel",
+      "datePickerLocale": "en",
       "next": "Next",
       "back": "Skip",
       "nameInputA11y": "Child's name input",
-      "ageInputA11y": "Child's age input",
+      "birthDateInputA11y": "Child's date of birth input",
       "nextA11y": "Go to the next profile setup step",
       "backA11y": "Skip profile setup and go to home",
       "skipAlert": {

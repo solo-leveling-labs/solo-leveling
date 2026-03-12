@@ -6,6 +6,7 @@ import { Ionicons } from "@expo/vector-icons";
 import React, { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import {
+  ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -39,6 +40,7 @@ interface AuthLayoutProps {
   hideBackButton?: boolean;
   headerBottomSpacing?: number;
   footerTopSpacing?: number;
+  isLoading?: boolean;
 }
 
 const AuthLayout = ({
@@ -59,6 +61,7 @@ const AuthLayout = ({
   hideBackButton = false,
   headerBottomSpacing = 0,
   footerTopSpacing = 0,
+  isLoading = false,
 }: AuthLayoutProps) => {
   const { t } = useTranslation();
   const { width: screenWidth } = useWindowDimensions();
@@ -126,22 +129,26 @@ const AuthLayout = ({
             <Pressable
               style={({ pressed }) => [
                 styles.nextButton,
-                !isFormValid && styles.nextButtonDisabled,
-                pressed && isFormValid && styles.buttonPressed,
+                (!isFormValid || isLoading) && styles.nextButtonDisabled,
+                pressed && isFormValid && !isLoading && styles.buttonPressed,
               ]}
               onPress={onNext}
-              disabled={!isFormValid}
+              disabled={!isFormValid || isLoading}
               accessibilityLabel={nextLabelA11y ?? t("auth.signUp.nextA11y")}
               accessibilityRole="button"
             >
-              <Text
-                style={[
-                  styles.nextButtonText,
-                  !isFormValid && styles.nextButtonTextDisabled,
-                ]}
-              >
-                {nextLabel ?? t("auth.signUp.next")}
-              </Text>
+              {isLoading ? (
+                <ActivityIndicator color={colors.neutral[700]} />
+              ) : (
+                <Text
+                  style={[
+                    styles.nextButtonText,
+                    !isFormValid && styles.nextButtonTextDisabled,
+                  ]}
+                >
+                  {nextLabel ?? t("auth.signUp.next")}
+                </Text>
+              )}
             </Pressable>
             <Pressable
               onPress={onBack}
