@@ -1,13 +1,15 @@
+import { useUpdateAccount } from "@/src/api/accounts/accounts.hooks";
 import AuthLayout from "@/src/components/AuthLayout";
 import FormField from "@/src/components/FormField";
 import { Switch } from "@/src/components/Switch";
+import { minDelay } from "@/src/utils/min-delay";
 import { FormErrors } from "@/src/screens/auth/first-profile-setup/types";
 import { colors } from "@/src/theme/colors";
 import { fonts } from "@/src/theme/fonts";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { StyleSheet, Text, View } from "react-native";
+import { Alert, StyleSheet, Text, View } from "react-native";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -15,6 +17,7 @@ const NotificationsSetupScreen = () => {
   const { back, replace } = useRouter();
   const { t } = useTranslation();
   const { childName } = useLocalSearchParams<{ childName: string }>();
+  const { mutateAsync: updateAccount } = useUpdateAccount();
 
   // TODO: Get actual email from auth context/store (Ignore when Reviewing)
   const signUpEmail = "carloslopez@gmail.com";
@@ -23,6 +26,7 @@ const NotificationsSetupScreen = () => {
   const [backupEmail, setBackupEmail] = useState("");
   const [isPushEnabled, setIsPushEnabled] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
+  const [isLoading, setIsLoading] = useState(false);
 
   const isFormFilled = email.trim().length > 0;
 
@@ -47,8 +51,7 @@ const NotificationsSetupScreen = () => {
     setIsPushEnabled(value);
   }, []);
 
-  const handleNext = () => {
-    // TODO: Save notification settings and complete profile setup  (Ignore when Reviewing)
+  const handleNext = async () => {
     const newErrors: FormErrors = {};
 
     if (!EMAIL_REGEX.test(email.trim())) {
@@ -65,7 +68,22 @@ const NotificationsSetupScreen = () => {
       setErrors(newErrors);
       return;
     }
-    replace({ pathname: "/profile-complete", params: { childName } });
+
+    setIsLoading(true);
+    try {
+      await Promise.all([
+        updateAccount({
+          notificationsEmail: email.trim(),
+          backupEmail: backupEmail.trim(),
+        }),
+        minDelay(),
+      ]);
+      replace({ pathname: "/profile-complete", params: { childName } });
+    } catch {
+      Alert.alert(t("common.errors.title"), t("common.errors.genericMessage"));
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -81,6 +99,7 @@ const NotificationsSetupScreen = () => {
       nextLabelA11y={t("profileSetup.notificationsSetup.nextA11y")}
       backLabelA11y={t("profileSetup.notificationsSetup.backA11y")}
       isFormValid={isFormFilled}
+      isLoading={isLoading}
     >
       <FormField
         label={t("profileSetup.notificationsSetup.fields.email")}

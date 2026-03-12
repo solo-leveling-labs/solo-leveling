@@ -37,4 +37,7 @@ export const ENDPOINTS = {
   secretObjects: {
     base: "secret-objects",
   },
+  accounts: {
+    base: "accounts",
+  },
 } as const;
