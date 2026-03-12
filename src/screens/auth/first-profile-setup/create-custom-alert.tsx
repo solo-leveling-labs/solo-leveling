@@ -2,6 +2,7 @@ import AuthLayout from "@/src/components/AuthLayout";
 import { DropdownSelect } from "@/src/components/DropdownSelect";
 import FormField from "@/src/components/FormField";
 import { Switch } from "@/src/components/Switch";
+import { useCreateRule } from "@/src/api/rules/rules.hooks";
 import {
   CreateRuleRequest,
   NotificationType,
@@ -17,9 +18,10 @@ import { colors } from "@/src/theme/colors";
 import { fonts } from "@/src/theme/fonts";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import { minDelay } from "@/src/utils/min-delay";
 import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
 import Animated, { FadeIn, FadeOut, LinearTransition } from "react-native-reanimated";
 
 const SEVERITY_COLOR_MAP: Record<RuleSeverity, string> = {
@@ -41,6 +43,8 @@ const RESPONSE_TYPE_COLOR_MAP: Record<RuleResponseType, string> = {
 const CreateCustomAlertScreen = () => {
   const { back } = useRouter();
   const { t } = useTranslation();
+  const { mutateAsync: createRule } = useCreateRule();
+  const [isLoading, setIsLoading] = useState(false);
 
   const [bannedContent, setBannedContent] = useState("");
   const [description, setDescription] = useState("");
@@ -75,10 +79,10 @@ const CreateCustomAlertScreen = () => {
     );
   }, []);
 
-  const handleNext = useCallback(() => {
+  const handleNext = useCallback(async () => {
     if (!isFormValid) return;
 
-    const _payload: CreateRuleRequest = {
+    const payload: CreateRuleRequest = {
       bannedContent: bannedContent.trim(),
       description: description.trim(),
       severity,
@@ -88,7 +92,15 @@ const CreateCustomAlertScreen = () => {
       typeOfNotification,
     };
 
-    // TODO: Call create rule API with _payload
+    setIsLoading(true);
+    try {
+      await Promise.all([createRule(payload), minDelay()]);
+      back();
+    } catch {
+      Alert.alert(t("common.errors.title"), t("common.errors.genericMessage"));
+    } finally {
+      setIsLoading(false);
+    }
   }, [
     isFormValid,
     bannedContent,
@@ -98,6 +110,9 @@ const CreateCustomAlertScreen = () => {
     isBlocking,
     notify,
     typeOfNotification,
+    createRule,
+    back,
+    t,
   ]);
 
   return (
@@ -109,6 +124,7 @@ const CreateCustomAlertScreen = () => {
       onNext={handleNext}
       onBack={back}
       isFormValid={isFormValid}
+      isLoading={isLoading}
       nextLabel={t("profileSetup.createCustomAlert.next")}
       nextLabelA11y={t("profileSetup.createCustomAlert.nextA11y")}
       hideBackButton

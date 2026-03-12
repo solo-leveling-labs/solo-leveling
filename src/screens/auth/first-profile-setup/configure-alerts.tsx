@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useGetRules } from "@/src/api/rules/rules.hooks";
+import { useAssignRules, useGetRules } from "@/src/api/rules/rules.hooks";
 import {
   NotificationType,
   Rule,
@@ -23,11 +23,13 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   ActivityIndicator,
+  Alert,
   Pressable,
   StyleSheet,
   Text,
   View,
 } from "react-native";
+import { minDelay } from "@/src/utils/min-delay";
 import Animated, { FadeIn, LinearTransition } from "react-native-reanimated";
 
 const SEVERITY_MAP: Record<RuleSeverity, SeverityLevel> = {
@@ -70,8 +72,9 @@ const ConfigureAlertsScreen = () => {
     childId: string;
   }>();
 
-  const { data: rulesResponse, isLoading } = useGetRules();
-  const rules = rulesResponse?.data ?? [];
+  const { data: rulesResponse, isLoading: isLoadingRules } = useGetRules();
+  const { mutateAsync: assignRules } = useAssignRules();
+  const rules = rulesResponse?.data.slice().reverse() ?? [];
 
   const [expandedAlerts, setExpandedAlerts] = useState<Set<number>>(new Set());
   const [selectedAlerts, setSelectedAlerts] = useState<Set<number>>(new Set());
@@ -138,9 +141,23 @@ const ConfigureAlertsScreen = () => {
     [toggleInSet],
   );
 
-  const handleNext = useCallback(() => {
-    push({ pathname: "/notifications-setup", params: { childName, childId } });
-  }, [push, childName, childId]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleNext = useCallback(async () => {
+    setIsSubmitting(true);
+
+    try {
+      await Promise.all([
+        assignRules({ userId: childId, ruleIds: [...selectedAlerts] }),
+        minDelay(),
+      ]);
+      push({ pathname: "/notifications-setup", params: { childName, childId } });
+    } catch {
+      Alert.alert(t("common.errors.title"), t("common.errors.genericMessage"));
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [assignRules, childId, selectedAlerts, push, childName, t]);
 
   const handleAddCustomAlert = useCallback(() => {
     push("/create-custom-alert");
@@ -157,7 +174,8 @@ const ConfigureAlertsScreen = () => {
       backLabel={t("profileSetup.configureAlerts.back")}
       nextLabelA11y={t("profileSetup.configureAlerts.nextA11y")}
       backLabelA11y={t("profileSetup.configureAlerts.backA11y")}
-      isFormValid={!isLoading}
+      isFormValid={!isLoadingRules}
+      isLoading={isSubmitting}
       headerBottomSpacing={36}
       footerTopSpacing={36}
     >
@@ -167,7 +185,7 @@ const ConfigureAlertsScreen = () => {
         style={styles.alertsContainer}
         layout={LinearTransition.duration(200)}
       >
-        {isLoading ? (
+        {isLoadingRules ? (
           <ActivityIndicator
             size="large"
             color={colors.accent.mainBlue}
