@@ -8,6 +8,11 @@ import {
   RuleResponseType,
   RuleSeverity,
 } from "@/src/api/rules/rules.types";
+import {
+  RULE_NOTIFICATION_TYPES,
+  RULE_RESPONSE_TYPES,
+  RULE_SEVERITIES,
+} from "@/src/constants/rules";
 import { colors } from "@/src/theme/colors";
 import { fonts } from "@/src/theme/fonts";
 import { Ionicons } from "@expo/vector-icons";
@@ -32,11 +37,6 @@ const RESPONSE_TYPE_COLOR_MAP: Record<RuleResponseType, string> = {
     colors.error,
 };
 
-const NOTIFICATION_TYPES: NotificationType[] = [
-  "IN_APP",
-  "EMAIL",
-  "PUSH_NOTIFICATION",
-];
 
 const CreateCustomAlertScreen = () => {
   const { back } = useRouter();
@@ -59,16 +59,12 @@ const CreateCustomAlertScreen = () => {
     description.trim().length > 0 &&
     (!notify || typeOfNotification.length > 0);
 
-  const severityOptions = (
-    Object.keys(SEVERITY_COLOR_MAP) as RuleSeverity[]
-  ).map((key) => ({
+  const severityOptions = RULE_SEVERITIES.map((key) => ({
     key,
     label: t(`profileSetup.createCustomAlert.severity.${key}`),
   }));
 
-  const responseTypeOptions = (
-    Object.keys(RESPONSE_TYPE_COLOR_MAP) as RuleResponseType[]
-  ).map((key) => ({
+  const responseTypeOptions = RULE_RESPONSE_TYPES.map((key) => ({
     key,
     label: t(`profileSetup.createCustomAlert.responseType.${key}`),
   }));
@@ -204,7 +200,7 @@ const CreateCustomAlertScreen = () => {
             {t("profileSetup.createCustomAlert.fields.notificationType")}
           </Text>
           <View style={styles.notificationTypesPills}>
-            {NOTIFICATION_TYPES.map((type) => {
+            {RULE_NOTIFICATION_TYPES.map((type) => {
               const isSelected = typeOfNotification.includes(type);
               return (
                 <Pressable

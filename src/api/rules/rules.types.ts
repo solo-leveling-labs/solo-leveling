@@ -15,21 +15,29 @@ export interface Rule {
   description: string;
   severity: RuleSeverity;
   responseType: RuleResponseType;
-  isBlocking: boolean;
-  notify: boolean;
+  isActive: boolean;
   default: boolean;
   typeOfNotification: NotificationType[];
   createdAt: string;
   updatedAt: string;
+  users: { id: number; fullName: string }[];
 }
 
-export type CreateRuleRequest = Pick<
-  Rule,
-  | "bannedContent"
-  | "description"
-  | "severity"
-  | "responseType"
-  | "isBlocking"
-  | "notify"
-  | "typeOfNotification"
->;
+export interface RuleListResponse {
+  statusCode: number;
+  data: Rule[];
+}
+
+export interface CreateRuleRequest {
+  bannedContent: string;
+  description: string;
+  severity: RuleSeverity;
+  responseType: RuleResponseType;
+  isBlocking: boolean;
+  notify: boolean;
+  typeOfNotification: NotificationType[];
+}
+
+export interface AssignRulesRequest {
+  ruleIds: number[];
+}
