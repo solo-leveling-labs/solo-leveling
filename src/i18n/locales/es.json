@@ -273,6 +273,14 @@
       "acceptA11y": "Aceptar y continuar a la pantalla principal"
     }
   },
+  "selectProfile": {
+    "title": "¿Quién quiere usar Zapienz?",
+    "addProfile": "Agregar perfil",
+    "parentAccess": "Ingreso para padres",
+    "profileCardA11y": "Seleccionar perfil de {{name}}",
+    "addProfileA11y": "Agregar un nuevo perfil",
+    "parentAccessA11y": "Ingresar como padre o madre"
+  },
   "home": {
     "title": "Inicio",
     "subtitle": "¡Has iniciado sesión!",

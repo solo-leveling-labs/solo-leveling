@@ -1,5 +1,5 @@
+import { AlertAccordion } from "@/src/components/AlertAccordion/AlertAccordion";
 import AuthLayout from "@/src/components/AuthLayout";
-import AlertAccordion from "@/src/components/ConfigureAlerts/AlertAccordion";
 import InfoBanner from "@/src/screens/auth/first-profile-setup/components/InfoBanner";
 import {
   AlertConfig,

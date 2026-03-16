@@ -36,7 +36,8 @@ const OnboardingScreen = () => {
   }, [isLastSlide, replace]);
 
   const handleSkip = useCallback(() => {
-    replace("/welcome");
+    // replace("/welcome");
+    replace("/(first-profile-setup)/create-profile");
   }, [replace]);
 
   return (

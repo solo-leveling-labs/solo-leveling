@@ -273,6 +273,14 @@
       "acceptA11y": "Accept and continue to the home screen"
     }
   },
+  "selectProfile": {
+    "title": "Who wants to use Zapienz?",
+    "addProfile": "Add profile",
+    "parentAccess": "Parent access",
+    "profileCardA11y": "Select {{name}}'s profile",
+    "addProfileA11y": "Add a new profile",
+    "parentAccessA11y": "Enter as a parent"
+  },
   "home": {
     "title": "Home",
     "subtitle": "You are logged in!",

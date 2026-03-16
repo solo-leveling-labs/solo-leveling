@@ -1,0 +1,97 @@
+import SelectProfileIcon1 from "@/assets/svg/select-profile-icon-1.svg";
+import SelectProfileIcon2 from "@/assets/svg/select-profile-icon-2.svg";
+import SelectProfileIcon3 from "@/assets/svg/select-profile-icon-3.svg";
+import SelectProfileIcon4 from "@/assets/svg/select-profile-icon-4.svg";
+import SelectProfileIcon5 from "@/assets/svg/select-profile-icon-5.svg";
+import { colors } from "@/src/theme/colors";
+import { fonts } from "@/src/theme/fonts";
+import { ComponentType } from "react";
+import { useTranslation } from "react-i18next";
+import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
+import { SvgProps } from "react-native-svg";
+
+const AVATAR_CONFIGS: Record<
+  1 | 2 | 3 | 4 | 5,
+  { SvgComponent: ComponentType<SvgProps>; frameColor: string }
+> = {
+  1: { SvgComponent: SelectProfileIcon1, frameColor: colors.deco.decoYellow },
+  2: { SvgComponent: SelectProfileIcon2, frameColor: colors.deco.decoGreen },
+  3: { SvgComponent: SelectProfileIcon3, frameColor: colors.deco.decoBlue },
+  4: { SvgComponent: SelectProfileIcon4, frameColor: colors.accent.skyblue },
+  5: { SvgComponent: SelectProfileIcon5, frameColor: colors.deco.decoViolet },
+};
+
+interface ProfileCardProps {
+  name: string;
+  avatarIndex: 1 | 2 | 3 | 4 | 5;
+  onPress: () => void;
+}
+
+export const ProfileCard = ({
+  name,
+  avatarIndex,
+  onPress,
+}: ProfileCardProps) => {
+  const { t } = useTranslation();
+  const { SvgComponent, frameColor } = AVATAR_CONFIGS[avatarIndex];
+
+  return (
+    <Pressable
+      style={({ pressed }) => [
+        styles.container,
+        pressed && styles.containerPressed,
+      ]}
+      onPress={onPress}
+      accessibilityLabel={t("selectProfile.profileCardA11y", { name })}
+      accessibilityRole="button"
+    >
+      <View
+        style={[
+          styles.frame,
+          { borderColor: frameColor },
+          Platform.OS === "android" && styles.frameShadowAndroid,
+        ]}
+      >
+        <SvgComponent width={110} height={110} />
+      </View>
+      <Text style={styles.name} numberOfLines={1}>
+        {name}
+      </Text>
+    </Pressable>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    alignItems: "center",
+    gap: 8,
+  },
+  containerPressed: {
+    opacity: 0.8,
+  },
+  frame: {
+    width: 128,
+    height: 128,
+    borderRadius: 12,
+    borderWidth: 11,
+    backgroundColor: colors.accent.lightBackground,
+    overflow: "hidden",
+    alignItems: "center",
+    justifyContent: "center",
+    // iOS shadow
+    shadowColor: colors.neutral.black,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+  },
+  frameShadowAndroid: {
+    elevation: 4,
+  },
+  name: {
+    fontFamily: fonts.poppins.bold,
+    fontSize: 16,
+    lineHeight: 22.4,
+    color: colors.neutral.black,
+    textAlign: "center",
+  },
+});

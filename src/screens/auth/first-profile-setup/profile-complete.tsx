@@ -29,8 +29,8 @@ const ProfileCompleteScreen = () => {
 
   const handleAccept = useCallback(() => {
     setProfileSetupComplete(true);
-    dismissTo("/(tabs)");
-  }, [dismissTo, setProfileSetupComplete]);
+    dismissTo({ pathname: "/(select-profile)", params: { childName } });
+  }, [dismissTo, setProfileSetupComplete, childName]);
 
   return (
     <AuthLayout
