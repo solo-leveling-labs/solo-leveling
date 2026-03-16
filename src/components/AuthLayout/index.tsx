@@ -44,7 +44,7 @@ interface AuthLayoutProps {
   isLoading?: boolean;
 }
 
-const AuthLayout = ({
+export const AuthLayout = ({
   title,
   subtitle,
   showBackArrow,
@@ -276,5 +276,3 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
 });
-
-export default AuthLayout;

@@ -1,4 +1,4 @@
-import CameraVerificationLayout from "@/src/components/CameraVerificationLayout";
+import { CameraVerificationLayout } from "@/src/components/CameraVerificationLayout";
 import { useRouter } from "expo-router";
 import React, { useCallback } from "react";
 

@@ -1,4 +1,4 @@
-import AuthLayout from "@/src/components/AuthLayout";
+import { AuthLayout } from "@/src/components/AuthLayout";
 import { useAuthStore } from "@/src/store/auth.store";
 import { colors } from "@/src/theme/colors";
 import { fonts } from "@/src/theme/fonts";

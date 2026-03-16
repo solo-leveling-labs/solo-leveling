@@ -44,7 +44,7 @@ interface CameraVerificationLayoutProps {
   onCancel: () => void;
 }
 
-const CameraVerificationLayout = ({
+export const CameraVerificationLayout = ({
   titleKey,
   photoStep,
   onPhotoTaken,
@@ -353,5 +353,3 @@ const styles = StyleSheet.create({
     gap: 16,
   },
 });
-
-export default CameraVerificationLayout;

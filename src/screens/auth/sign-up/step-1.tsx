@@ -1,7 +1,7 @@
 import CalendarIcon from "@/assets/svg/calendar.svg";
-import AuthLayout from "@/src/components/AuthLayout";
-import DatePickerField from "@/src/components/DatePickerField";
-import FormField from "@/src/components/FormField";
+import { AuthLayout } from "@/src/components/AuthLayout";
+import { DatePickerField } from "@/src/components/DatePickerField";
+import { FormField } from "@/src/components/FormField";
 import { useSignupStore } from "@/src/store/signup.store";
 import { colors } from "@/src/theme/colors";
 import { useRouter } from "expo-router";
