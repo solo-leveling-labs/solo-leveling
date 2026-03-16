@@ -26,6 +26,7 @@ export const ENDPOINTS = {
     byId: (id: string) => `rules/${id}`,
     assign: (id: string) => `rules/${id}/assign`,
     unassign: (id: string) => `rules/${id}/unassign`,
+    assignToUser: (userId: string | number) => `rules/assign/${userId}`,
   },
   openai: {
     query: "openai/query",
@@ -35,5 +36,8 @@ export const ENDPOINTS = {
   },
   secretObjects: {
     base: "secret-objects",
+  },
+  accounts: {
+    base: "accounts",
   },
 } as const;
