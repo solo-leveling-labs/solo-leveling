@@ -1,5 +1,6 @@
 import "@/src/i18n";
 import { useAuthStore } from "@/src/store/auth.store";
+import { Ionicons } from "@expo/vector-icons";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
@@ -17,6 +18,7 @@ function RootNavigator() {
     "Poppins-Regular": require("../assets/fonts/Poppins-Regular.ttf"),
     "Raleway-Bold": require("../assets/fonts/Raleway-Bold.ttf"),
     "Raleway-ExtraBold": require("../assets/fonts/Raleway-ExtraBold.ttf"),
+    ...Ionicons.font,
   });
 
   useEffect(() => {

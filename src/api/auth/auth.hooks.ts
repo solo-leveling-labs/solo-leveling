@@ -26,7 +26,11 @@ export const useLogin = () => {
         email: data.data.account.email,
       };
       await login(data.data.token, data.data.refreshToken, user);
-      router.replace("/(tabs)");
+      if (!data.data.account.isIdentityVerified) {
+        router.replace("/(verification)/intro");
+      } else {
+        router.replace("/(tabs)");
+      }
     },
   });
 };
