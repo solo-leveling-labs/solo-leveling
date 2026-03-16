@@ -14,7 +14,7 @@ interface DatePickerFieldProps {
   rightIconElement?: ReactNode;
 }
 
-const DatePickerField = ({
+export const DatePickerField = ({
   label,
   labelA11y,
   onPress,
@@ -101,5 +101,3 @@ const styles = StyleSheet.create({
     lineHeight: 16,
   },
 });
-
-export default DatePickerField;

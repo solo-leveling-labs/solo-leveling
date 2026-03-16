@@ -1,12 +1,12 @@
 import CalendarIcon from "@/assets/svg/calendar.svg";
-import AuthLayout from "@/src/components/AuthLayout";
-import DatePickerField from "@/src/components/DatePickerField";
-import FormField from "@/src/components/FormField";
 import { useCreateUser } from "@/src/api/users/users.hooks";
-import { minDelay } from "@/src/utils/min-delay";
+import { AuthLayout } from "@/src/components/AuthLayout";
+import { DatePickerField } from "@/src/components/DatePickerField";
+import { FormField } from "@/src/components/FormField";
 import { colors } from "@/src/theme/colors";
 import { fonts } from "@/src/theme/fonts";
-import { useRouter } from "expo-router";
+import { minDelay } from "@/src/utils/min-delay";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Alert, Pressable, StyleSheet, Text } from "react-native";
@@ -27,9 +27,10 @@ const toISODate = (date: Date): string => {
 };
 
 const CreateProfileScreen = () => {
-  const { push, dismissTo } = useRouter();
+  const { push, dismissTo, back } = useRouter();
   const { t } = useTranslation();
   const { mutateAsync: createUser } = useCreateUser();
+  const { source } = useLocalSearchParams<{ source: string }>();
 
   const [name, setName] = useState("");
   const [birthDate, setBirthDate] = useState<Date | null>(null);
@@ -37,6 +38,7 @@ const CreateProfileScreen = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const isFormValid = name.trim().length > 0 && birthDate !== null;
+  const isFromSelectProfile = source === "select-profile";
 
   const showDatePicker = useCallback(() => {
     setIsDatePickerVisible(true);
@@ -69,10 +71,7 @@ const CreateProfileScreen = () => {
         params: { childName: data.data.fullName, childId: data.data.id },
       });
     } catch {
-      Alert.alert(
-        t("common.errors.title"),
-        t("common.errors.genericMessage"),
-      );
+      Alert.alert(t("common.errors.title"), t("common.errors.genericMessage"));
     } finally {
       setIsLoading(false);
     }
@@ -101,13 +100,21 @@ const CreateProfileScreen = () => {
       title={t("profileSetup.createProfile.title")}
       subtitle={t("profileSetup.createProfile.subtitle")}
       onNext={handleNext}
-      onBack={handleCancel}
+      onBack={isFromSelectProfile ? back : handleCancel}
       isFormValid={isFormValid}
       isLoading={isLoading}
       nextLabel={t("profileSetup.createProfile.next")}
-      backLabel={t("profileSetup.createProfile.back")}
+      backLabel={
+        isFromSelectProfile
+          ? t("profileSetup.createProfile.back")
+          : t("profileSetup.createProfile.skip")
+      }
       nextLabelA11y={t("profileSetup.createProfile.nextA11y")}
-      backLabelA11y={t("profileSetup.createProfile.backA11y")}
+      backLabelA11y={
+        isFromSelectProfile
+          ? t("common.backA11y")
+          : t("profileSetup.createProfile.backA11y")
+      }
     >
       <Text style={styles.sectionTitle}>
         {t("profileSetup.createProfile.sectionTitle")}
@@ -157,7 +164,9 @@ const CreateProfileScreen = () => {
               pressed && styles.datePickerConfirmPressed,
             ]}
             accessibilityRole="button"
-            accessibilityLabel={t("profileSetup.createProfile.datePickerConfirm")}
+            accessibilityLabel={t(
+              "profileSetup.createProfile.datePickerConfirm",
+            )}
           >
             <Text style={styles.datePickerConfirmText}>
               {t("profileSetup.createProfile.datePickerConfirm")}

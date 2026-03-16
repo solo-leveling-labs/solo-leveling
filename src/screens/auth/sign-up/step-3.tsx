@@ -1,6 +1,6 @@
 import { useSignup } from "@/src/api/auth/auth.hooks";
-import AuthLayout from "@/src/components/AuthLayout";
-import FormField from "@/src/components/FormField";
+import { AuthLayout } from "@/src/components/AuthLayout";
+import { FormField } from "@/src/components/FormField";
 import { useSignupStore } from "@/src/store/signup.store";
 import { colors } from "@/src/theme/colors";
 import { fonts } from "@/src/theme/fonts";

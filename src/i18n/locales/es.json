@@ -164,7 +164,8 @@
       "datePickerCancel": "Cancelar",
       "datePickerLocale": "es",
       "next": "Siguiente",
-      "back": "Omitir",
+      "back": "Volver",
+      "skip": "Omitir",
       "nameInputA11y": "Campo de nombre del menor",
       "birthDateInputA11y": "Campo de fecha de nacimiento del menor",
       "nextA11y": "Ir al siguiente paso de la configuración del perfil",
@@ -322,6 +323,14 @@
       "accept": "Aceptar",
       "acceptA11y": "Aceptar y continuar a la pantalla principal"
     }
+  },
+  "selectProfile": {
+    "title": "¿Quién quiere usar Zapienz?",
+    "addProfile": "Agregar perfil",
+    "parentAccess": "Ingreso para padres",
+    "profileCardA11y": "Seleccionar perfil de {{name}}",
+    "addProfileA11y": "Agregar un nuevo perfil",
+    "parentAccessA11y": "Ingresar como padre o madre"
   },
   "home": {
     "title": "Inicio",
