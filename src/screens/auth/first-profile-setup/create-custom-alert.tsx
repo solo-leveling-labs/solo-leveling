@@ -1,7 +1,3 @@
-import AuthLayout from "@/src/components/AuthLayout";
-import { DropdownSelect } from "@/src/components/DropdownSelect";
-import FormField from "@/src/components/FormField";
-import { Switch } from "@/src/components/Switch";
 import { useCreateRule } from "@/src/api/rules/rules.hooks";
 import {
   CreateRuleRequest,
@@ -9,6 +5,10 @@ import {
   RuleResponseType,
   RuleSeverity,
 } from "@/src/api/rules/rules.types";
+import AuthLayout from "@/src/components/AuthLayout";
+import { DropdownSelect } from "@/src/components/DropdownSelect";
+import FormField from "@/src/components/FormField";
+import { Switch } from "@/src/components/Switch";
 import {
   RULE_NOTIFICATION_TYPES,
   RULE_RESPONSE_TYPES,
@@ -16,13 +16,17 @@ import {
 } from "@/src/constants/rules";
 import { colors } from "@/src/theme/colors";
 import { fonts } from "@/src/theme/fonts";
+import { minDelay } from "@/src/utils/min-delay";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import { minDelay } from "@/src/utils/min-delay";
 import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
-import Animated, { FadeIn, FadeOut, LinearTransition } from "react-native-reanimated";
+import Animated, {
+  FadeIn,
+  FadeOut,
+  LinearTransition,
+} from "react-native-reanimated";
 
 const SEVERITY_COLOR_MAP: Record<RuleSeverity, string> = {
   Leve: colors.deco.decoGreen,
@@ -38,7 +42,6 @@ const RESPONSE_TYPE_COLOR_MAP: Record<RuleResponseType, string> = {
   "Ante emergencias ayuda y avisa que se solicitara ayuda a un adulto":
     colors.error,
 };
-
 
 const CreateCustomAlertScreen = () => {
   const { back } = useRouter();
@@ -121,6 +124,8 @@ const CreateCustomAlertScreen = () => {
       backArrowA11y={t("common.backA11y")}
       title={t("profileSetup.createCustomAlert.title")}
       subtitle={t("profileSetup.createCustomAlert.subtitle")}
+      headerBottomSpacing={24}
+      footerTopSpacing={24}
       onNext={handleNext}
       onBack={back}
       isFormValid={isFormValid}
@@ -149,6 +154,7 @@ const CreateCustomAlertScreen = () => {
         )}
         labelA11y={t("profileSetup.createCustomAlert.fields.description")}
         autoCapitalize="sentences"
+        autoComplete="off"
       />
 
       <DropdownSelect
@@ -236,7 +242,9 @@ const CreateCustomAlertScreen = () => {
                   <Ionicons
                     name={isSelected ? "checkbox" : "square-outline"}
                     size={18}
-                    color={isSelected ? colors.accent.mainBlue : colors.neutral[500]}
+                    color={
+                      isSelected ? colors.accent.mainBlue : colors.neutral[500]
+                    }
                   />
                   <Text
                     style={[
@@ -244,7 +252,9 @@ const CreateCustomAlertScreen = () => {
                       isSelected && styles.pillTextSelected,
                     ]}
                   >
-                    {t(`profileSetup.createCustomAlert.notificationType.${type}`)}
+                    {t(
+                      `profileSetup.createCustomAlert.notificationType.${type}`,
+                    )}
                   </Text>
                 </Pressable>
               );
@@ -315,7 +325,6 @@ const styles = StyleSheet.create({
   },
   pillTextSelected: {
     color: colors.accent.mainBlue,
-    fontFamily: fonts.poppins.bold,
   },
 });
 

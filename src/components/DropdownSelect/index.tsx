@@ -1,13 +1,11 @@
 import { colors } from "@/src/theme/colors";
 import { fonts } from "@/src/theme/fonts";
 import { Ionicons } from "@expo/vector-icons";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import Animated, {
-  FadeIn,
-  FadeOut,
-  LinearTransition,
+  Easing,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
@@ -41,11 +39,13 @@ export const DropdownSelect = ({
 }: DropdownSelectProps) => {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
-  const [triggerHeight, setTriggerHeight] = useState(0);
+  const triggerHeight = useSharedValue(0);
+  const hasMeasuredTrigger = useRef(false);
 
   const selectedOption = options.find((o) => o.key === selectedKey);
   const selectedEmergencyValue = colorMap[selectedKey] === colors.error;
   const chevronRotation = useSharedValue(isOpen ? 1 : 0);
+  const menuHeight = useSharedValue(0);
   const alertIcon = selectedEmergencyValue
     ? "alert-circle"
     : "alert-circle-outline";
@@ -64,7 +64,11 @@ export const DropdownSelect = ({
 
   useEffect(() => {
     chevronRotation.value = withTiming(isOpen ? 1 : 0, { duration: 150 });
-  }, [chevronRotation, isOpen]);
+    menuHeight.value = withTiming(isOpen ? 500 : 0, {
+      duration: 200,
+      easing: isOpen ? Easing.out(Easing.cubic) : Easing.in(Easing.cubic),
+    });
+  }, [chevronRotation, menuHeight, isOpen]);
 
   const chevronStyle = useAnimatedStyle(
     () => ({
@@ -73,17 +77,31 @@ export const DropdownSelect = ({
     [],
   );
 
+  const menuAnimatedStyle = useAnimatedStyle(
+    () => ({
+      maxHeight: menuHeight.value,
+      marginTop: -triggerHeight.value,
+      paddingTop: triggerHeight.value,
+    }),
+    [],
+  );
+
   return (
-    <Animated.View
-      style={styles.container}
-      layout={LinearTransition.duration(200)}
-    >
+    <Animated.View style={styles.container}>
       <Text style={styles.label}>{label}</Text>
       <View
         style={[styles.dropdownWrapper, isOpen && styles.dropdownWrapperOpen]}
       >
         <Pressable
-          onLayout={(e) => setTriggerHeight(e.nativeEvent.layout.height)}
+          onLayout={(e) => {
+            const h = e.nativeEvent.layout.height;
+            if (!hasMeasuredTrigger.current) {
+              triggerHeight.value = h;
+              hasMeasuredTrigger.current = true;
+            } else {
+              triggerHeight.value = withTiming(h, { duration: 150 });
+            }
+          }}
           style={({ pressed }) => [
             styles.trigger,
             isOpen && styles.triggerOpen,
@@ -122,57 +140,51 @@ export const DropdownSelect = ({
             </Animated.View>
           )}
         </Pressable>
-        {isOpen && (
-          <Animated.View
-            entering={FadeIn.duration(200)}
-            exiting={FadeOut.duration(150)}
-            style={[
-              styles.menuList,
-              { marginTop: -triggerHeight, paddingTop: triggerHeight },
-            ]}
-          >
-            {options.map((option) => (
-              <Pressable
-                key={option.key}
-                style={({ pressed }) => [
-                  styles.menuItem,
-                  option.key === selectedKey && styles.menuItemSelected,
-                  pressed && styles.menuItemPressed,
-                ]}
-                onPress={() => handleSelect(option.key)}
-                accessibilityLabel={t(
-                  "profileSetup.configureAlerts.dropdownOptionA11y",
-                  { option: option.label },
-                )}
-                accessibilityRole="button"
-              >
-                {WARNING_COLORS.has(colorMap[option.key]) ? (
-                  <Ionicons
-                    name={
-                      colorMap[option.key] === colors.error
-                        ? "alert-circle"
-                        : "alert-circle-outline"
-                    }
-                    size={18}
-                    color={colorMap[option.key]}
+        <Animated.View
+          style={[styles.menuList, menuAnimatedStyle]}
+          pointerEvents={isOpen ? "auto" : "none"}
+        >
+          {options.map((option) => (
+            <Pressable
+              key={option.key}
+              style={({ pressed }) => [
+                styles.menuItem,
+                option.key === selectedKey && styles.menuItemSelected,
+                pressed && styles.menuItemPressed,
+              ]}
+              onPress={() => handleSelect(option.key)}
+              accessibilityLabel={t(
+                "profileSetup.configureAlerts.dropdownOptionA11y",
+                { option: option.label },
+              )}
+              accessibilityRole="button"
+            >
+              {WARNING_COLORS.has(colorMap[option.key]) ? (
+                <Ionicons
+                  name={
+                    colorMap[option.key] === colors.error
+                      ? "alert-circle"
+                      : "alert-circle-outline"
+                  }
+                  size={18}
+                  color={colorMap[option.key]}
+                />
+              ) : (
+                <View style={styles.severityIndicatorBox}>
+                  <View
+                    style={[
+                      styles.severityIndicator,
+                      { backgroundColor: colorMap[option.key] },
+                    ]}
                   />
-                ) : (
-                  <View style={styles.severityIndicatorBox}>
-                    <View
-                      style={[
-                        styles.severityIndicator,
-                        { backgroundColor: colorMap[option.key] },
-                      ]}
-                    />
-                  </View>
-                )}
-                <View style={styles.menuItemTextContainer}>
-                  <Text style={[styles.menuItemText]}>{option.label}</Text>
                 </View>
-              </Pressable>
-            ))}
-          </Animated.View>
-        )}
+              )}
+              <View style={styles.menuItemTextContainer}>
+                <Text style={[styles.menuItemText]}>{option.label}</Text>
+              </View>
+            </Pressable>
+          ))}
+        </Animated.View>
       </View>
     </Animated.View>
   );

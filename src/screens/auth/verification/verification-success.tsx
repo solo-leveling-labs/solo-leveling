@@ -3,6 +3,7 @@ import Buho from "@/assets/svg/buho.svg";
 import { useAuthStore } from "@/src/store/auth.store";
 import { colors } from "@/src/theme/colors";
 import { fonts } from "@/src/theme/fonts";
+import { useRouter } from "expo-router";
 import React, { useCallback } from "react";
 import {
   Pressable,
@@ -19,12 +20,14 @@ const BUHO_WIDTH_RATIO = 1;
 const VerificationSuccessScreen = () => {
   const { width: screenWidth } = useWindowDimensions();
   const { top: safeTop, bottom: safeBottom } = useSafeAreaInsets();
+  const { push } = useRouter();
   const setIdentityVerified = useAuthStore(
     (state) => state.setIdentityVerified,
   );
 
   const handleContinue = useCallback(() => {
     setIdentityVerified(true);
+    push("/(first-profile-setup)/create-profile");
   }, [setIdentityVerified]);
 
   return (

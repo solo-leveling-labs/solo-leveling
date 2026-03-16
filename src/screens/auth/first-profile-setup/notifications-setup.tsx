@@ -2,10 +2,11 @@ import { useUpdateAccount } from "@/src/api/accounts/accounts.hooks";
 import AuthLayout from "@/src/components/AuthLayout";
 import FormField from "@/src/components/FormField";
 import { Switch } from "@/src/components/Switch";
-import { minDelay } from "@/src/utils/min-delay";
 import { FormErrors } from "@/src/screens/auth/first-profile-setup/types";
 import { colors } from "@/src/theme/colors";
 import { fonts } from "@/src/theme/fonts";
+import { minDelay } from "@/src/utils/min-delay";
+import * as Notifications from "expo-notifications";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -20,7 +21,7 @@ const NotificationsSetupScreen = () => {
   const { mutateAsync: updateAccount } = useUpdateAccount();
 
   // TODO: Get actual email from auth context/store (Ignore when Reviewing)
-  const signUpEmail = "carloslopez@gmail.com";
+  const signUpEmail = "mateolorenzo.dev@gmail.com";
 
   const [email, setEmail] = useState(signUpEmail);
   const [backupEmail, setBackupEmail] = useState("");
@@ -46,9 +47,22 @@ const NotificationsSetupScreen = () => {
     clearFieldError("backupEmail");
   };
 
-  const handleTogglePush = useCallback((value: boolean) => {
-    // TODO: Request push notification permissions when enabling  (Ignore when Reviewing)
-    setIsPushEnabled(value);
+  const handleTogglePush = useCallback(async (value: boolean) => {
+    if (!value) {
+      setIsPushEnabled(false);
+      return;
+    }
+
+    const { status: existingStatus } =
+      await Notifications.getPermissionsAsync();
+
+    if (existingStatus === "granted") {
+      setIsPushEnabled(true);
+      return;
+    }
+
+    const { status } = await Notifications.requestPermissionsAsync();
+    setIsPushEnabled(status === "granted");
   }, []);
 
   const handleNext = async () => {
