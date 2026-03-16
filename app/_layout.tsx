@@ -50,13 +50,15 @@ function RootNavigator() {
       </Stack.Protected> */}
 
       {/* TODO: Add guards when back end is ready */}
-      {/* <Stack.Protected guard={isAuthenticated}> */}
-      <Stack.Screen name="(first-profile-setup)" />
-      {/* </Stack.Protected> */}
+      {/* <Stack.Protected
+        guard={isAuthenticated && isIdentityVerified && !isProfileSetupComplete}
+      >
+        <Stack.Screen name="(first-profile-setup)" />
+      </Stack.Protected> */}
 
       {/* TODO: Add guard when back end is ready */}
-      {/* <Stack.Protected guard={false}> */}
-      <Stack.Screen name="(select-profile)" />
+      {/* <Stack.Protected guard={isAuthenticated && isProfileSetupComplete}> */}
+      {/* <Stack.Screen name="(select-profile)" /> */}
       {/* </Stack.Protected> */}
 
       <Stack.Protected guard={isAuthenticated}>

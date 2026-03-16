@@ -1,11 +1,13 @@
 import AddProfileIconFrame from "@/assets/svg/add-profile-icon-frame.svg";
 import BuhoOjo from "@/assets/svg/Buho-ojo.svg";
+import SelectProfileBackground from "@/assets/svg/select-profile-background.svg";
 import { colors } from "@/src/theme/colors";
 import { fonts } from "@/src/theme/fonts";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import {
+  BackHandler,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -14,12 +16,14 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { ProfileCard } from "./components/ProfileCard";
+import ProfileCard from "./components/ProfileCard";
+
+const BACKGROUND_ASPECT_RATIO = 32 / 375;
 
 interface ChildProfile {
   id: string;
   name: string;
-  avatarIndex: 1 | 2 | 3 | 4 | 5;
+  avatarIndex: number;
 }
 
 const SelectProfileScreen = () => {
@@ -29,36 +33,43 @@ const SelectProfileScreen = () => {
   const router = useRouter();
   const { childName } = useLocalSearchParams<{ childName: string }>();
 
+  useFocusEffect(
+    useCallback(() => {
+      const subscription = BackHandler.addEventListener(
+        "hardwareBackPress",
+        () => true,
+      );
+      return () => subscription.remove();
+    }, []),
+  );
+
   const cardWidth = (screenWidth - 48 - 16) / 2;
 
-  // Mock data — will be replaced with real data from backend
   const profiles: ChildProfile[] = childName
     ? [{ id: "1", name: childName, avatarIndex: 1 }]
     : [];
 
-  const handleProfilePress = useCallback((id: string) => {
-    // TODO: Set active profile and navigate to tabs
+  const handleProfilePress = useCallback((_id: string) => {
+    // TODO:
   }, []);
 
   const handleAddProfile = useCallback(() => {
-    router.push("/(first-profile-setup)/create-profile");
+    router.push({
+      pathname: "/(first-profile-setup)/create-profile",
+      params: { source: "select-profile" },
+    });
   }, [router]);
 
   const handleParentAccess = useCallback(() => {
-    // TODO: Navigate to parent PIN entry
+    // TODO: Navigate to confirm parent PIN screen
   }, []);
 
   return (
     <View style={styles.container}>
       <ScrollView
-        contentContainerStyle={[
-          styles.content,
-          {
-            paddingTop: safeTop + 80,
-            paddingBottom: safeBottom + 24,
-          },
-        ]}
+        contentContainerStyle={[styles.content, { paddingTop: safeTop + 48 }]}
         showsVerticalScrollIndicator={false}
+        bounces={false}
       >
         <Text style={styles.title}>{t("selectProfile.title")}</Text>
 
@@ -86,6 +97,7 @@ const SelectProfileScreen = () => {
               accessibilityLabel={t("selectProfile.addProfileA11y")}
               accessibilityRole="button"
             >
+              {/* TODO: Replace with correct SVG */}
               <AddProfileIconFrame width={128} height={128} />
               <Text style={styles.addProfileText}>
                 {t("selectProfile.addProfile")}
@@ -94,7 +106,7 @@ const SelectProfileScreen = () => {
           </View>
         </View>
 
-        <View style={styles.parentButtonContainer}>
+        <View style={[styles.footer, { paddingBottom: safeBottom + 40 }]}>
           <Pressable
             style={({ pressed }) => [
               styles.parentButton,
@@ -112,6 +124,12 @@ const SelectProfileScreen = () => {
             </Text>
           </Pressable>
         </View>
+
+        <SelectProfileBackground
+          width={screenWidth}
+          height={screenWidth * BACKGROUND_ASPECT_RATIO}
+          style={styles.background}
+        />
       </ScrollView>
     </View>
   );
@@ -127,16 +145,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   title: {
-    fontSize: 48,
+    fontSize: 40,
     fontFamily: fonts.raleway.extraBold,
     color: colors.accent.mainBlue,
-    letterSpacing: -0.96,
+    textAlign: "center",
+    includeFontPadding: false,
   },
   profileGrid: {
     flexDirection: "row",
     flexWrap: "wrap",
     gap: 16,
-    marginTop: 56,
+    marginVertical: 56,
+    flex: 1,
   },
   profileCardWrapper: {
     alignItems: "center",
@@ -155,9 +175,9 @@ const styles = StyleSheet.create({
     color: colors.neutral.black,
     textAlign: "center",
   },
-  parentButtonContainer: {
-    marginTop: 56,
+  footer: {
     paddingHorizontal: 16,
+    marginTop: 24,
   },
   parentButton: {
     backgroundColor: colors.accent.mainBlue,
@@ -172,12 +192,15 @@ const styles = StyleSheet.create({
   },
   parentButtonDecoration: {
     position: "absolute",
-    left: -7,
+    left: 0,
   },
   parentButtonText: {
     fontFamily: fonts.poppins.bold,
     fontSize: 16,
     color: colors.neutral.white,
+  },
+  background: {
+    alignSelf: "center",
   },
 });
 
