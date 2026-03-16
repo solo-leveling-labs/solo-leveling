@@ -16,7 +16,8 @@
     },
     "errors": {
       "title": "Error",
-      "requiredFields": "Por favor completa todos los campos."
+      "requiredFields": "Por favor completa todos los campos.",
+      "genericMessage": "Algo salió mal. Por favor intentá de nuevo."
     },
     "backA11y": "Volver atrás"
   },
@@ -152,19 +153,28 @@
       "sectionTitle": "Datos",
       "fields": {
         "childName": "Nombre del menor",
-        "age": "Edad"
+        "birthDate": "Fecha de nacimiento"
       },
       "placeholders": {
         "name": "Nombre"
       },
-      "selectDate": "DD/MM/AAAA",
-      "helperAge": "Zapienz adapta sus respuestas para que sean fáciles de entender según la edad.",
+      "helperBirthDate": "Zapienz adapta sus respuestas para que sean fáciles de entender según la edad.",
+      "selectDate": "Seleccioná una fecha",
+      "datePickerConfirm": "Confirmar",
+      "datePickerCancel": "Cancelar",
+      "datePickerLocale": "es",
       "next": "Siguiente",
       "back": "Omitir",
       "nameInputA11y": "Campo de nombre del menor",
-      "ageInputA11y": "Campo de edad del menor. Toca para abrir selector de fecha",
+      "birthDateInputA11y": "Campo de fecha de nacimiento del menor",
       "nextA11y": "Ir al siguiente paso de la configuración del perfil",
-      "backA11y": "Omitir configuración de perfil e ir a inicio"
+      "backA11y": "Omitir configuración de perfil e ir a inicio",
+      "skipAlert": {
+        "title": "¿Omitir configuración de perfil?",
+        "message": "Podés crear un perfil infantil más tarde desde la pantalla de inicio.",
+        "cancel": "Volver",
+        "confirm": "Omitir"
+      }
     },
     "configureAlerts": {
       "title": "Configura alertas para {{name}}",
@@ -235,6 +245,46 @@
       "backA11y": "Volver a la pantalla anterior",
       "addCustomAlertA11y": "Agregar una alerta personalizada",
       "dropdownOptionA11y": "Seleccionar {{option}}"
+    },
+    "createCustomAlert": {
+      "title": "Crear alerta personalizada",
+      "subtitle": "Definí un tema personalizado para que Zapienz monitoree.",
+      "next": "Guardar",
+      "nextA11y": "Guardar alerta personalizada",
+      "fields": {
+        "bannedContent": "Tema a monitorear",
+        "bannedContentPlaceholder": "Ej. lenguaje inapropiado, apuestas...",
+        "description": "Descripción",
+        "descriptionPlaceholder": "Describí brevemente qué debe detectar Zapienz...",
+        "severity": "Severidad",
+        "responseType": "Tipo de respuesta",
+        "isBlocking": "Bloquear contenido",
+        "isBlockingDescription": "Zapienz no responderá ante este contenido.",
+        "notify": "Recibir notificaciones",
+        "notifyDescription": "Te avisaremos cuando se detecte este contenido.",
+        "notificationType": "Canales de notificación"
+      },
+      "severity": {
+        "Leve": "Leve",
+        "Moderada": "Moderada",
+        "Grave": "Grave",
+        "Emergencia": "Emergencia"
+      },
+      "responseType": {
+        "Responder normalmente": "Responder normalmente",
+        "Responder y sugerir hablar con un adulto": "Responder y sugerir hablar con un adulto",
+        "No responder y sugerir hablar con un adulto": "No responder y sugerir hablar con un adulto",
+        "Ante emergencias ayuda y avisa que se solicitara ayuda a un adulto": "Emergencia: ayudar y avisar a un adulto"
+      },
+      "notificationType": {
+        "IN_APP": "En la app",
+        "EMAIL": "Email",
+        "PUSH_NOTIFICATION": "Push"
+      },
+      "severityA11y": "Seleccionar severidad",
+      "responseTypeA11y": "Seleccionar tipo de respuesta",
+      "isBlockingA11y": "Activar o desactivar bloqueo de contenido",
+      "notifyA11y": "Activar o desactivar notificaciones"
     },
     "notificationsSetup": {
       "title": "Notificaciones",

@@ -65,6 +65,7 @@ export interface AccountSnapshot {
   id: number;
   name: string;
   email: string;
+  isIdentityVerified: boolean;
 }
 
 export interface LoginResponse {

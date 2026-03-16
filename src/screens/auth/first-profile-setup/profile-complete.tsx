@@ -10,7 +10,7 @@ import { BackHandler, StyleSheet, Text, View } from "react-native";
 const ProfileCompleteScreen = () => {
   const { dismissTo } = useRouter();
   const { t } = useTranslation();
-  const { childName } = useLocalSearchParams<{ childName: string }>(); // This will be used later - IGNORE WHEN REVIEWING
+  const { childName } = useLocalSearchParams<{ childName: string }>(); // TODO: Send to back on request
 
   const setProfileSetupComplete = useAuthStore(
     (state) => state.setProfileSetupComplete,

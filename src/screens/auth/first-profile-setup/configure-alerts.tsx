@@ -1,88 +1,108 @@
-import { AlertAccordion } from "@/src/components/AlertAccordion/AlertAccordion";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useAssignRules, useGetRules } from "@/src/api/rules/rules.hooks";
+import {
+  NotificationType,
+  Rule,
+  RuleResponseType,
+  RuleSeverity,
+} from "@/src/api/rules/rules.types";
+import AlertAccordion from "@/src/components/AlertAccordion.tsx";
 import AuthLayout from "@/src/components/AuthLayout";
 import InfoBanner from "@/src/screens/auth/first-profile-setup/components/InfoBanner";
 import {
   AlertConfig,
-  AlertDefinition,
-  AlertKey,
+  NotificationsLevel,
+  ResponseLevel,
   SeverityLevel,
 } from "@/src/screens/auth/first-profile-setup/types";
 import { colors } from "@/src/theme/colors";
 import { fonts } from "@/src/theme/fonts";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Alert,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import { minDelay } from "@/src/utils/min-delay";
 import Animated, { FadeIn, LinearTransition } from "react-native-reanimated";
 
-const ALERTS: AlertDefinition[] = [
-  { key: "selfHarm", defaultSeverity: "severe" },
-  { key: "grooming", defaultSeverity: "severe" },
-  { key: "abuse", defaultSeverity: "severe" },
-  { key: "bullying", defaultSeverity: "severe" },
-  { key: "emotionalHealth", defaultSeverity: "moderate" },
-  { key: "drugs", defaultSeverity: "moderate" },
-  { key: "violence", defaultSeverity: "moderate" },
-  { key: "discrimination", defaultSeverity: "moderate" },
-  { key: "religion", defaultSeverity: "mild" },
-  { key: "emergencies", defaultSeverity: "emergency" },
-];
-
-const DEFAULT_CONFIGS: Record<SeverityLevel, AlertConfig> = {
-  mild: {
-    severity: "mild",
-    response: "respondNormally",
-    notifications: "appOnly",
-  },
-  moderate: {
-    severity: "moderate",
-    response: "respondAndSuggest",
-    notifications: "appAndEmail",
-  },
-  severe: {
-    severity: "severe",
-    response: "dontRespondAndSuggest",
-    notifications: "appEmailAndPush",
-  },
-  emergency: {
-    severity: "emergency",
-    response: "emergencyResponse",
-    notifications: "emergencyNotification",
-  },
+const SEVERITY_MAP: Record<RuleSeverity, SeverityLevel> = {
+  Leve: "mild",
+  Moderada: "moderate",
+  Grave: "severe",
+  Emergencia: "emergency",
 };
 
-const initialAlertConfigs = Object.fromEntries(
-  ALERTS.map((alert) => [alert.key, DEFAULT_CONFIGS[alert.defaultSeverity]]),
-) as Record<AlertKey, AlertConfig>;
+const RESPONSE_MAP: Record<RuleResponseType, ResponseLevel> = {
+  "Responder normalmente": "respondNormally",
+  "Responder y sugerir hablar con un adulto": "respondAndSuggest",
+  "No responder y sugerir hablar con un adulto": "dontRespondAndSuggest",
+  "Ante emergencias ayuda y avisa que se solicitara ayuda a un adulto":
+    "emergencyResponse",
+};
+
+const toNotificationsLevel = (
+  types: NotificationType[],
+): NotificationsLevel => {
+  const has = (t: NotificationType) => types.includes(t);
+  if (has("IN_APP") && has("EMAIL") && has("PUSH_NOTIFICATION"))
+    return "appEmailAndPush";
+  if (has("IN_APP") && has("EMAIL")) return "appAndEmail";
+  if (has("IN_APP")) return "appOnly";
+  return "emergencyNotification";
+};
+
+const toAlertConfig = (rule: Rule): AlertConfig => ({
+  severity: SEVERITY_MAP[rule.severity],
+  response: RESPONSE_MAP[rule.responseType],
+  notifications: toNotificationsLevel(rule.typeOfNotification),
+});
 
 const ConfigureAlertsScreen = () => {
   const { back, push } = useRouter();
   const { t } = useTranslation();
-  const { childName } = useLocalSearchParams<{ childName: string }>();
+  const { childName, childId } = useLocalSearchParams<{
+    childName: string;
+    childId: string;
+  }>();
 
-  const [expandedAlerts, setExpandedAlerts] = useState<Set<AlertKey>>(
-    new Set(),
-  );
-  const [selectedAlerts, setSelectedAlerts] = useState<Set<AlertKey>>(
-    new Set(ALERTS.map((alert) => alert.key)),
-  );
-  const [alertConfigs, setAlertConfigs] = useState(initialAlertConfigs);
+  const { data: rulesResponse, isLoading: isLoadingRules } = useGetRules();
+  const { mutateAsync: assignRules } = useAssignRules();
+  const rules = rulesResponse?.data.slice().reverse() ?? [];
 
-  const areAllAlertsSelected = selectedAlerts.size === ALERTS.length;
+  const [expandedAlerts, setExpandedAlerts] = useState<Set<number>>(new Set());
+  const [selectedAlerts, setSelectedAlerts] = useState<Set<number>>(new Set());
+  const [alertConfigs, setAlertConfigs] = useState<Record<number, AlertConfig>>(
+    {},
+  );
+
+  useEffect(() => {
+    if (rules.length > 0) {
+      setSelectedAlerts(new Set(rules.map((r) => r.id)));
+      setAlertConfigs(
+        Object.fromEntries(rules.map((r) => [r.id, toAlertConfig(r)])),
+      );
+    }
+  }, [rules.length]);
+
+  const areAllAlertsSelected =
+    rules.length > 0 && selectedAlerts.size === rules.length;
   const checkboxIcon = areAllAlertsSelected ? "checkbox" : "square-outline";
   const checkboxColor = areAllAlertsSelected
     ? colors.accent.mainBlue
     : colors.neutral[500];
 
   const handleConfigChange = useCallback(
-    (key: AlertKey, field: keyof AlertConfig, value: string) => {
-      setAlertConfigs((alertConfigs) => ({
-        ...alertConfigs,
-        [key]: {
-          ...alertConfigs[key],
-          [field]: value,
-        },
+    (id: number, field: keyof AlertConfig, value: string) => {
+      setAlertConfigs((prev) => ({
+        ...prev,
+        [id]: { ...prev[id], [field]: value },
       }));
     },
     [],
@@ -92,21 +112,18 @@ const ConfigureAlertsScreen = () => {
     if (areAllAlertsSelected) {
       setSelectedAlerts(new Set());
     } else {
-      setSelectedAlerts(new Set(ALERTS.map((alert) => alert.key)));
+      setSelectedAlerts(new Set(rules.map((r) => r.id)));
     }
-  }, [areAllAlertsSelected]);
+  }, [areAllAlertsSelected, rules]);
 
   const toggleInSet = useCallback(
-    (
-      setter: React.Dispatch<React.SetStateAction<Set<AlertKey>>>,
-      key: AlertKey,
-    ) => {
+    (setter: React.Dispatch<React.SetStateAction<Set<number>>>, id: number) => {
       setter((prev) => {
         const next = new Set(prev);
-        if (next.has(key)) {
-          next.delete(key);
+        if (next.has(id)) {
+          next.delete(id);
         } else {
-          next.add(key);
+          next.add(id);
         }
         return next;
       });
@@ -115,22 +132,37 @@ const ConfigureAlertsScreen = () => {
   );
 
   const handleToggleSelect = useCallback(
-    (key: AlertKey) => toggleInSet(setSelectedAlerts, key),
+    (id: number) => toggleInSet(setSelectedAlerts, id),
     [toggleInSet],
   );
 
   const toggleExpandAlert = useCallback(
-    (key: AlertKey) => toggleInSet(setExpandedAlerts, key),
+    (id: number) => toggleInSet(setExpandedAlerts, id),
     [toggleInSet],
   );
 
-  const handleNext = useCallback(() => {
-    // TODO: Save alert configuration before navigating (THIS is a TODO reminder - Don't consider it in the review)
-    push({ pathname: "/notifications-setup", params: { childName } });
-  }, [push, childName]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // TODO: Implement navigation to custom alert creation screen
-  const handleAddCustomAlert = useCallback(() => {}, []);
+  const handleNext = useCallback(async () => {
+    setIsSubmitting(true);
+
+    try {
+      await Promise.all([
+        assignRules({ userId: childId, ruleIds: [...selectedAlerts] }),
+        minDelay(),
+      ]);
+      push({ pathname: "/notifications-setup", params: { childName, childId } });
+    } catch {
+      Alert.alert(t("common.errors.title"), t("common.errors.genericMessage"));
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [assignRules, childId, selectedAlerts, push, childName, t]);
+
+  const handleAddCustomAlert = useCallback(() => {
+    push("/create-custom-alert");
+  }, [push]);
+
   return (
     <AuthLayout
       showBackArrow
@@ -142,6 +174,8 @@ const ConfigureAlertsScreen = () => {
       backLabel={t("profileSetup.configureAlerts.back")}
       nextLabelA11y={t("profileSetup.configureAlerts.nextA11y")}
       backLabelA11y={t("profileSetup.configureAlerts.backA11y")}
+      isFormValid={!isLoadingRules}
+      isLoading={isSubmitting}
       headerBottomSpacing={36}
       footerTopSpacing={36}
     >
@@ -151,71 +185,81 @@ const ConfigureAlertsScreen = () => {
         style={styles.alertsContainer}
         layout={LinearTransition.duration(200)}
       >
-        <Pressable
-          onPress={handleToggleSelectAll}
-          style={styles.selectAllRow}
-          accessibilityLabel={t("profileSetup.configureAlerts.selectAllA11y")}
-          accessibilityRole="checkbox"
-          accessibilityState={{
-            checked:
-              selectedAlerts.size === 0
-                ? false
-                : areAllAlertsSelected
-                  ? true
-                  : "mixed",
-          }}
-        >
-          <Animated.View
-            key={checkboxIcon}
-            entering={FadeIn.duration(150).withInitialValues({
-              transform: [{ scale: 0.8 }],
-            })}
-          >
-            <Ionicons name={checkboxIcon} size={24} color={checkboxColor} />
-          </Animated.View>
-          <Text style={styles.selectAllText}>
-            {t("profileSetup.configureAlerts.selectAll")}
-          </Text>
-        </Pressable>
-
-        <View style={styles.alertsList}>
-          {ALERTS.map((alert) => (
-            <AlertAccordion
-              key={alert.key}
-              title={t(`profileSetup.configureAlerts.alerts.${alert.key}`)}
-              description={t(
-                `profileSetup.configureAlerts.descriptions.${alert.key}`,
+        {isLoadingRules ? (
+          <ActivityIndicator
+            size="large"
+            color={colors.accent.mainBlue}
+            style={styles.loader}
+          />
+        ) : (
+          <>
+            <Pressable
+              onPress={handleToggleSelectAll}
+              style={styles.selectAllRow}
+              accessibilityLabel={t(
+                "profileSetup.configureAlerts.selectAllA11y",
               )}
-              isSelected={selectedAlerts.has(alert.key)}
-              isExpanded={expandedAlerts.has(alert.key)}
-              config={alertConfigs[alert.key]}
-              onToggleSelect={() => handleToggleSelect(alert.key)}
-              onToggleExpand={() => toggleExpandAlert(alert.key)}
-              onConfigChange={(field, value) =>
-                handleConfigChange(alert.key, field, value)
-              }
-              isLocked={alert.key === "emergencies"}
-            />
-          ))}
-        </View>
+              accessibilityRole="checkbox"
+              accessibilityState={{
+                checked:
+                  selectedAlerts.size === 0
+                    ? false
+                    : areAllAlertsSelected
+                      ? true
+                      : "mixed",
+              }}
+            >
+              <Animated.View
+                key={checkboxIcon}
+                entering={FadeIn.duration(150).withInitialValues({
+                  transform: [{ scale: 0.8 }],
+                })}
+              >
+                <Ionicons name={checkboxIcon} size={24} color={checkboxColor} />
+              </Animated.View>
+              <Text style={styles.selectAllText}>
+                {t("profileSetup.configureAlerts.selectAll")}
+              </Text>
+            </Pressable>
 
-        <Animated.View
-          style={styles.addAlertRow}
-          layout={LinearTransition.duration(200)}
-        >
-          <Pressable
-            style={({ pressed }) => [pressed && styles.addAlertPressed]}
-            onPress={handleAddCustomAlert}
-            accessibilityLabel={t(
-              "profileSetup.configureAlerts.addCustomAlertA11y",
-            )}
-            accessibilityRole="button"
-          >
-            <Text style={styles.addAlertText}>
-              {t("profileSetup.configureAlerts.addCustomAlert")}
-            </Text>
-          </Pressable>
-        </Animated.View>
+            <View style={styles.alertsList}>
+              {rules.map((rule) => (
+                <AlertAccordion
+                  key={rule.id}
+                  title={rule.bannedContent}
+                  description={rule.description}
+                  isSelected={selectedAlerts.has(rule.id)}
+                  isExpanded={expandedAlerts.has(rule.id)}
+                  config={alertConfigs[rule.id] ?? toAlertConfig(rule)}
+                  onToggleSelect={() => handleToggleSelect(rule.id)}
+                  onToggleExpand={() => toggleExpandAlert(rule.id)}
+                  onConfigChange={(field, value) =>
+                    handleConfigChange(rule.id, field, value)
+                  }
+                  isLocked={rule.severity === "Emergencia"}
+                />
+              ))}
+            </View>
+
+            <Animated.View
+              style={styles.addAlertRow}
+              layout={LinearTransition.duration(200)}
+            >
+              <Pressable
+                style={({ pressed }) => [pressed && styles.addAlertPressed]}
+                onPress={handleAddCustomAlert}
+                accessibilityLabel={t(
+                  "profileSetup.configureAlerts.addCustomAlertA11y",
+                )}
+                accessibilityRole="button"
+              >
+                <Text style={styles.addAlertText}>
+                  {t("profileSetup.configureAlerts.addCustomAlert")}
+                </Text>
+              </Pressable>
+            </Animated.View>
+          </>
+        )}
       </Animated.View>
     </AuthLayout>
   );
@@ -224,6 +268,9 @@ const ConfigureAlertsScreen = () => {
 const styles = StyleSheet.create({
   alertsContainer: {
     gap: 16,
+  },
+  loader: {
+    paddingVertical: 40,
   },
   selectAllRow: {
     flexDirection: "row",

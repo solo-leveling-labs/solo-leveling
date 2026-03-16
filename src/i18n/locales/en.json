@@ -16,7 +16,8 @@
     },
     "errors": {
       "title": "Error",
-      "requiredFields": "Please fill in all fields."
+      "requiredFields": "Please fill in all fields.",
+      "genericMessage": "Something went wrong. Please try again."
     },
     "backA11y": "Go back"
   },
@@ -152,19 +153,28 @@
       "sectionTitle": "Details",
       "fields": {
         "childName": "Child's name",
-        "age": "Age"
+        "birthDate": "Date of birth"
       },
       "placeholders": {
         "name": "Name"
       },
-      "selectDate": "DD/MM/YYYY",
-      "helperAge": "Zapienz adapts its responses so they're easy to understand based on age.",
+      "helperBirthDate": "Zapienz adapts its responses so they're easy to understand based on age.",
+      "selectDate": "Select a date",
+      "datePickerConfirm": "Confirm",
+      "datePickerCancel": "Cancel",
+      "datePickerLocale": "en",
       "next": "Next",
       "back": "Skip",
       "nameInputA11y": "Child's name input",
-      "ageInputA11y": "Child's age input. Tap to open date picker",
+      "birthDateInputA11y": "Child's date of birth input",
       "nextA11y": "Go to the next profile setup step",
-      "backA11y": "Skip profile setup and go to home"
+      "backA11y": "Skip profile setup and go to home",
+      "skipAlert": {
+        "title": "Skip profile setup?",
+        "message": "You can create a child profile later from the home screen.",
+        "cancel": "Go back",
+        "confirm": "Skip"
+      }
     },
     "configureAlerts": {
       "title": "Configure alerts for {{name}}",
@@ -235,6 +245,46 @@
       "backA11y": "Go back to the previous screen",
       "addCustomAlertA11y": "Add a custom alert",
       "dropdownOptionA11y": "Select {{option}}"
+    },
+    "createCustomAlert": {
+      "title": "Create custom alert",
+      "subtitle": "Define a custom topic for Zapienz to monitor.",
+      "next": "Save",
+      "nextA11y": "Save custom alert",
+      "fields": {
+        "bannedContent": "Topic to monitor",
+        "bannedContentPlaceholder": "e.g. inappropriate language, gambling...",
+        "description": "Description",
+        "descriptionPlaceholder": "Briefly describe what Zapienz should detect...",
+        "severity": "Severity",
+        "responseType": "Response type",
+        "isBlocking": "Block content",
+        "isBlockingDescription": "Zapienz won't respond to this content.",
+        "notify": "Receive notifications",
+        "notifyDescription": "We'll notify you when this content is detected.",
+        "notificationType": "Notification channels"
+      },
+      "severity": {
+        "Leve": "Mild",
+        "Moderada": "Moderate",
+        "Grave": "Severe",
+        "Emergencia": "Emergency"
+      },
+      "responseType": {
+        "Responder normalmente": "Respond normally",
+        "Responder y sugerir hablar con un adulto": "Respond and suggest talking to an adult",
+        "No responder y sugerir hablar con un adulto": "Don't respond and suggest talking to an adult",
+        "Ante emergencias ayuda y avisa que se solicitara ayuda a un adulto": "Emergency: help and notify an adult"
+      },
+      "notificationType": {
+        "IN_APP": "In-app",
+        "EMAIL": "Email",
+        "PUSH_NOTIFICATION": "Push"
+      },
+      "severityA11y": "Select severity",
+      "responseTypeA11y": "Select response type",
+      "isBlockingA11y": "Toggle block content",
+      "notifyA11y": "Toggle notifications"
     },
     "notificationsSetup": {
       "title": "Notifications",

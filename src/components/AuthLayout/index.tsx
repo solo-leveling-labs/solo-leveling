@@ -6,6 +6,7 @@ import { Ionicons } from "@expo/vector-icons";
 import React, { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import {
+  ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -15,7 +16,6 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
-import Animated, { LinearTransition } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const BUHO_ASPECT_RATIO = 134 / 375;
@@ -37,8 +37,11 @@ interface AuthLayoutProps {
   backLabel?: string;
   backLabelA11y?: string;
   hideBackButton?: boolean;
+  hideFooter?: boolean;
   headerBottomSpacing?: number;
   footerTopSpacing?: number;
+  scrollPaddingBottom?: number;
+  isLoading?: boolean;
 }
 
 const AuthLayout = ({
@@ -57,8 +60,11 @@ const AuthLayout = ({
   backLabel,
   backLabelA11y,
   hideBackButton = false,
+  hideFooter = false,
   headerBottomSpacing = 0,
   footerTopSpacing = 0,
+  scrollPaddingBottom,
+  isLoading = false,
 }: AuthLayoutProps) => {
   const { t } = useTranslation();
   const { width: screenWidth } = useWindowDimensions();
@@ -79,7 +85,10 @@ const AuthLayout = ({
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
         <ScrollView
-          contentContainerStyle={[styles.content, { paddingTop }]}
+          contentContainerStyle={[
+            styles.content,
+            { paddingTop, paddingBottom: scrollPaddingBottom },
+          ]}
           keyboardShouldPersistTaps="handled"
         >
           {showBackArrow && (
@@ -115,51 +124,56 @@ const AuthLayout = ({
             {children}
           </View>
 
-          <Animated.View
-            style={[
-              styles.footer,
-              { marginTop: footerTopSpacing, paddingBottom: safeBottom + 40 },
-            ]}
-            layout={LinearTransition.duration(200)}
-          >
-            {/* TODO: Fix insets problem */}
-            <Pressable
-              style={({ pressed }) => [
-                styles.nextButton,
-                !isFormValid && styles.nextButtonDisabled,
-                pressed && isFormValid && styles.buttonPressed,
+          {!hideFooter && (
+            <View
+              style={[
+                styles.footer,
+                { marginTop: footerTopSpacing, paddingBottom: safeBottom + 40 },
               ]}
-              onPress={onNext}
-              disabled={!isFormValid}
-              accessibilityLabel={nextLabelA11y ?? t("auth.signUp.nextA11y")}
-              accessibilityRole="button"
             >
-              <Text
-                style={[
-                  styles.nextButtonText,
-                  !isFormValid && styles.nextButtonTextDisabled,
+              {/* TODO: Fix insets problem */}
+              <Pressable
+                style={({ pressed }) => [
+                  styles.nextButton,
+                  (!isFormValid || isLoading) && styles.nextButtonDisabled,
+                  pressed && isFormValid && !isLoading && styles.buttonPressed,
+                ]}
+                onPress={onNext}
+                disabled={!isFormValid || isLoading}
+                accessibilityLabel={nextLabelA11y ?? t("auth.signUp.nextA11y")}
+                accessibilityRole="button"
+              >
+                {isLoading ? (
+                  <ActivityIndicator color={colors.neutral[700]} />
+                ) : (
+                  <Text
+                    style={[
+                      styles.nextButtonText,
+                      !isFormValid && styles.nextButtonTextDisabled,
+                    ]}
+                  >
+                    {nextLabel ?? t("auth.signUp.next")}
+                  </Text>
+                )}
+              </Pressable>
+              <Pressable
+                onPress={onBack}
+                accessibilityLabel={backLabelA11y ?? t("auth.signUp.backA11y")}
+                accessibilityRole="button"
+                accessible={!hideBackButton}
+                disabled={hideBackButton}
+                style={({ pressed }) => [
+                  styles.backButton,
+                  hideBackButton && styles.backButtonHidden,
+                  pressed && !hideBackButton && styles.buttonPressed,
                 ]}
               >
-                {nextLabel ?? t("auth.signUp.next")}
-              </Text>
-            </Pressable>
-            <Pressable
-              onPress={onBack}
-              accessibilityLabel={backLabelA11y ?? t("auth.signUp.backA11y")}
-              accessibilityRole="button"
-              accessible={!hideBackButton}
-              disabled={hideBackButton}
-              style={({ pressed }) => [
-                styles.backButton,
-                hideBackButton && styles.backButtonHidden,
-                pressed && !hideBackButton && styles.buttonPressed,
-              ]}
-            >
-              <Text style={styles.backText}>
-                {backLabel ?? t("auth.signUp.back")}
-              </Text>
-            </Pressable>
-          </Animated.View>
+                <Text style={styles.backText}>
+                  {backLabel ?? t("auth.signUp.back")}
+                </Text>
+              </Pressable>
+            </View>
+          )}
         </ScrollView>
       </KeyboardAvoidingView>
     </View>

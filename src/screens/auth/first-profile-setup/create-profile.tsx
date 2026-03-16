@@ -1,19 +1,16 @@
 import CalendarIcon from "@/assets/svg/calendar.svg";
 import AuthLayout from "@/src/components/AuthLayout";
+import DatePickerField from "@/src/components/DatePickerField";
 import FormField from "@/src/components/FormField";
+import { useCreateUser } from "@/src/api/users/users.hooks";
+import { minDelay } from "@/src/utils/min-delay";
 import { colors } from "@/src/theme/colors";
 import { fonts } from "@/src/theme/fonts";
 import { useRouter } from "expo-router";
 import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Pressable, StyleSheet, Text } from "react-native";
+import { Alert, Pressable, StyleSheet, Text } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-
-const getDefaultPickerDate = (): Date => {
-  const date = new Date();
-  date.setFullYear(date.getFullYear() - 8);
-  return date;
-};
 
 const formatDate = (date: Date): string => {
   const day = String(date.getDate()).padStart(2, "0");
@@ -22,13 +19,22 @@ const formatDate = (date: Date): string => {
   return `${day}/${month}/${year}`;
 };
 
+const toISODate = (date: Date): string => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
 const CreateProfileScreen = () => {
   const { push, dismissTo } = useRouter();
   const { t } = useTranslation();
+  const { mutateAsync: createUser } = useCreateUser();
 
   const [name, setName] = useState("");
   const [birthDate, setBirthDate] = useState<Date | null>(null);
   const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const isFormValid = name.trim().length > 0 && birthDate !== null;
 
@@ -48,14 +54,47 @@ const CreateProfileScreen = () => {
     [hideDatePicker],
   );
 
-  const handleNext = useCallback(() => {
-    if (!isFormValid) return;
-    push({ pathname: "/configure-alerts", params: { childName: name.trim() } });
-  }, [isFormValid, push, name]);
+  const handleNext = useCallback(async () => {
+    if (!isFormValid || !birthDate) return;
+
+    setIsLoading(true);
+
+    try {
+      const [data] = await Promise.all([
+        createUser({ fullName: name.trim(), birthday: toISODate(birthDate) }),
+        minDelay(),
+      ]);
+      push({
+        pathname: "/configure-alerts",
+        params: { childName: data.data.fullName, childId: data.data.id },
+      });
+    } catch {
+      Alert.alert(
+        t("common.errors.title"),
+        t("common.errors.genericMessage"),
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  }, [isFormValid, birthDate, createUser, name, push, t]);
 
   const handleCancel = useCallback(() => {
-    dismissTo("/(tabs)");
-  }, [dismissTo]);
+    Alert.alert(
+      t("profileSetup.createProfile.skipAlert.title"),
+      t("profileSetup.createProfile.skipAlert.message"),
+      [
+        {
+          text: t("profileSetup.createProfile.skipAlert.cancel"),
+          style: "cancel",
+        },
+        {
+          text: t("profileSetup.createProfile.skipAlert.confirm"),
+          style: "destructive",
+          onPress: () => dismissTo("/(tabs)"),
+        },
+      ],
+    );
+  }, [dismissTo, t]);
 
   return (
     <AuthLayout
@@ -64,6 +103,7 @@ const CreateProfileScreen = () => {
       onNext={handleNext}
       onBack={handleCancel}
       isFormValid={isFormValid}
+      isLoading={isLoading}
       nextLabel={t("profileSetup.createProfile.next")}
       backLabel={t("profileSetup.createProfile.back")}
       nextLabelA11y={t("profileSetup.createProfile.nextA11y")}
@@ -81,18 +121,18 @@ const CreateProfileScreen = () => {
         placeholder={t("profileSetup.createProfile.placeholders.name")}
         labelA11y={t("profileSetup.createProfile.nameInputA11y")}
       />
-      <FormField
-        isDatePickerInput
-        label={t("profileSetup.createProfile.fields.age")}
+
+      <DatePickerField
+        label={t("profileSetup.createProfile.fields.birthDate")}
         onPress={showDatePicker}
-        labelA11y={t("profileSetup.createProfile.ageInputA11y")}
+        labelA11y={t("profileSetup.createProfile.birthDateInputA11y")}
         isPlaceholder={!birthDate}
         displayValue={
           birthDate
             ? formatDate(birthDate)
             : t("profileSetup.createProfile.selectDate")
         }
-        helperText={t("profileSetup.createProfile.helperAge")}
+        helperText={t("profileSetup.createProfile.helperBirthDate")}
         rightIconElement={
           <CalendarIcon width={22} height={22} style={styles.calendarIcon} />
         }
@@ -104,10 +144,10 @@ const CreateProfileScreen = () => {
         onConfirm={handleDateConfirm}
         onCancel={hideDatePicker}
         maximumDate={new Date()}
-        date={birthDate ?? getDefaultPickerDate()}
-        confirmTextIOS={t("auth.signUp.datePickerConfirm")}
-        cancelTextIOS={t("auth.signUp.datePickerCancel")}
-        locale={t("auth.signUp.datePickerLocale")}
+        date={birthDate ?? new Date()}
+        confirmTextIOS={t("profileSetup.createProfile.datePickerConfirm")}
+        cancelTextIOS={t("profileSetup.createProfile.datePickerCancel")}
+        locale={t("profileSetup.createProfile.datePickerLocale")}
         pickerContainerStyleIOS={styles.datePickerIOS}
         customConfirmButtonIOS={({ onPress }) => (
           <Pressable
@@ -117,10 +157,10 @@ const CreateProfileScreen = () => {
               pressed && styles.datePickerConfirmPressed,
             ]}
             accessibilityRole="button"
-            accessibilityLabel={t("auth.signUp.datePickerConfirm")}
+            accessibilityLabel={t("profileSetup.createProfile.datePickerConfirm")}
           >
             <Text style={styles.datePickerConfirmText}>
-              {t("auth.signUp.datePickerConfirm")}
+              {t("profileSetup.createProfile.datePickerConfirm")}
             </Text>
           </Pressable>
         )}
@@ -155,7 +195,6 @@ const styles = StyleSheet.create({
   },
   datePickerConfirmText: {
     fontSize: 20,
-    fontFamily: fonts.poppins.regular,
     color: colors.system.iosBlue,
   },
 });
