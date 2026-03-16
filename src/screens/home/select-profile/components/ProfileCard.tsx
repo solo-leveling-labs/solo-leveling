@@ -22,14 +22,15 @@ const AVATAR_CONFIGS: Record<
 };
 
 interface ProfileCardProps {
+  id: string;
   name: string;
   avatarIndex: number;
-  onPress: () => void;
+  onPress: (id: string) => void;
 }
 
-const ProfileCard = ({ name, avatarIndex, onPress }: ProfileCardProps) => {
+const ProfileCard = ({ id, name, avatarIndex, onPress }: ProfileCardProps) => {
   const { t } = useTranslation();
-  const configIndex = (((avatarIndex - 1) % 5) + 1) as 1 | 2 | 3 | 4 | 5;
+  const configIndex = ((((avatarIndex - 1) % 5) + 5) % 5 + 1) as 1 | 2 | 3 | 4 | 5;
   const { SvgComponent, frameColor } = AVATAR_CONFIGS[configIndex];
 
   return (
@@ -38,7 +39,7 @@ const ProfileCard = ({ name, avatarIndex, onPress }: ProfileCardProps) => {
         styles.container,
         pressed && styles.containerPressed,
       ]}
-      onPress={onPress}
+      onPress={() => onPress(id)}
       accessibilityLabel={t("selectProfile.profileCardA11y", { name })}
       accessibilityRole="button"
     >

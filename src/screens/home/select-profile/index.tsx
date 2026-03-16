@@ -80,9 +80,10 @@ const SelectProfileScreen = () => {
               style={[styles.profileCardWrapper, { width: cardWidth }]}
             >
               <ProfileCard
+                id={profile.id}
                 name={profile.name}
                 avatarIndex={profile.avatarIndex}
-                onPress={() => handleProfilePress(profile.id)}
+                onPress={handleProfilePress}
               />
             </View>
           ))}
