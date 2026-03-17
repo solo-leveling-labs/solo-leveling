@@ -47,7 +47,12 @@ const SelectProfileScreen = () => {
 
   const profiles: ChildProfile[] = childName
     ? [{ id: "1", name: childName, avatarIndex: 1 }]
-    : [];
+    : // : [];
+      [
+        { id: "1", name: "Pepo", avatarIndex: 1 },
+        { id: "2", name: "Pepo2", avatarIndex: 2 },
+        { id: "3", name: "Pepo3", avatarIndex: 3 },
+      ];
 
   const handleProfilePress = useCallback(
     (id: string) => {
