@@ -30,7 +30,7 @@ const SelectProfileScreen = () => {
   const { t } = useTranslation();
   const { top: safeTop, bottom: safeBottom } = useSafeAreaInsets();
   const { width: screenWidth } = useWindowDimensions();
-  const router = useRouter();
+  const { push } = useRouter();
   const { childName } = useLocalSearchParams<{ childName: string }>();
 
   useFocusEffect(
@@ -49,16 +49,22 @@ const SelectProfileScreen = () => {
     ? [{ id: "1", name: childName, avatarIndex: 1 }]
     : [];
 
-  const handleProfilePress = useCallback((_id: string) => {
-    // TODO:
-  }, []);
+  const handleProfilePress = useCallback(
+    (id: string) => {
+      push({
+        pathname: "/(select-secret-object)",
+        params: { childId: id }, // TODO: Get childId from back
+      });
+    },
+    [push],
+  );
 
   const handleAddProfile = useCallback(() => {
-    router.push({
+    push({
       pathname: "/(first-profile-setup)/create-profile",
       params: { source: "select-profile" },
     });
-  }, [router]);
+  }, [push]);
 
   const handleParentAccess = useCallback(() => {
     // TODO: Navigate to confirm parent PIN screen

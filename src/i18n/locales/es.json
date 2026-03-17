@@ -332,6 +332,12 @@
     "addProfileA11y": "Agregar un nuevo perfil",
     "parentAccessA11y": "Ingresar como padre o madre"
   },
+  "selectSecretObject": {
+    "title": "¡Elije tu objeto secreto!",
+    "confirm": "¡Este es mi objeto secreto!",
+    "cardA11y": "Seleccionar objeto secreto {{index}}",
+    "confirmA11y": "Confirmar objeto secreto seleccionado"
+  },
   "home": {
     "title": "Inicio",
     "subtitle": "¡Has iniciado sesión!",

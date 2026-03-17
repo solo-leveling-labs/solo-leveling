@@ -332,6 +332,12 @@
     "addProfileA11y": "Add a new profile",
     "parentAccessA11y": "Enter as a parent"
   },
+  "selectSecretObject": {
+    "title": "Choose your secret object!",
+    "confirm": "This is my secret object!",
+    "cardA11y": "Select secret object {{index}}",
+    "confirmA11y": "Confirm selected secret object"
+  },
   "home": {
     "title": "Home",
     "subtitle": "You are logged in!",
