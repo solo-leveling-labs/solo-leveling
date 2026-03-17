@@ -332,6 +332,15 @@
     "addProfileA11y": "Agregar un nuevo perfil",
     "parentAccessA11y": "Ingresar como padre o madre"
   },
+  "childWelcome": {
+    "greeting": "¡Hola {{name}}!",
+    "subtitle": "Te damos la bienvenida a Zapienz",
+    "body": "Un lugar para charlar, sacarte todas las dudas y aprender cosas nuevas con tu nueva amiga IA.",
+    "question": "¿Empezamos?",
+    "cta": "¡Quiero empezar!",
+    "backA11y": "Volver",
+    "ctaA11y": "Comenzar a usar Zapienz"
+  },
   "selectSecretObject": {
     "title": "¡Elije tu objeto secreto!",
     "confirm": "¡Este es mi objeto secreto!",

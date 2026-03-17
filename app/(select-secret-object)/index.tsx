@@ -1,1 +1,1 @@
-export { default } from "@/src/screens/home/select-secret-object";
+export { default } from "@/src/screens/home/child-secret-object-setup/select-secret-object";

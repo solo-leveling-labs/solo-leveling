@@ -1,25 +1,8 @@
-import SelectProfileIcon1 from "@/assets/svg/select-profile-icon-1.svg";
-import SelectProfileIcon2 from "@/assets/svg/select-profile-icon-2.svg";
-import SelectProfileIcon3 from "@/assets/svg/select-profile-icon-3.svg";
-import SelectProfileIcon4 from "@/assets/svg/select-profile-icon-4.svg";
-import SelectProfileIcon5 from "@/assets/svg/select-profile-icon-5.svg";
+import { getAvatarConfig } from "@/src/constants/avatar-configs";
 import { colors } from "@/src/theme/colors";
 import { fonts } from "@/src/theme/fonts";
-import { ComponentType } from "react";
 import { useTranslation } from "react-i18next";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { SvgProps } from "react-native-svg";
-
-const AVATAR_CONFIGS: Record<
-  1 | 2 | 3 | 4 | 5,
-  { SvgComponent: ComponentType<SvgProps>; frameColor: string }
-> = {
-  1: { SvgComponent: SelectProfileIcon1, frameColor: colors.deco.decoYellow },
-  2: { SvgComponent: SelectProfileIcon2, frameColor: colors.deco.decoGreen },
-  3: { SvgComponent: SelectProfileIcon3, frameColor: colors.deco.decoBlue },
-  4: { SvgComponent: SelectProfileIcon4, frameColor: colors.deco.decoViolet },
-  5: { SvgComponent: SelectProfileIcon5, frameColor: colors.accent.skyblue },
-};
 
 interface ProfileCardProps {
   id: string;
@@ -30,8 +13,7 @@ interface ProfileCardProps {
 
 const ProfileCard = ({ id, name, avatarIndex, onPress }: ProfileCardProps) => {
   const { t } = useTranslation();
-  const configIndex = ((((avatarIndex - 1) % 5) + 5) % 5 + 1) as 1 | 2 | 3 | 4 | 5;
-  const { SvgComponent, frameColor } = AVATAR_CONFIGS[configIndex];
+  const { SvgComponent, frameColor } = getAvatarConfig(avatarIndex);
 
   return (
     <Pressable

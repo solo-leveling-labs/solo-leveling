@@ -47,21 +47,22 @@ const SelectProfileScreen = () => {
 
   const profiles: ChildProfile[] = childName
     ? [{ id: "1", name: childName, avatarIndex: 1 }]
-    : // : [];
-      [
-        { id: "1", name: "Pepo", avatarIndex: 1 },
-        { id: "2", name: "Pepo2", avatarIndex: 2 },
-        { id: "3", name: "Pepo3", avatarIndex: 3 },
-      ];
+    : [];
 
   const handleProfilePress = useCallback(
     (id: string) => {
+      const profile = profiles.find((p) => p.id === id);
+      if (!profile) return;
       push({
-        pathname: "/(select-secret-object)",
-        params: { childId: id }, // TODO: Get childId from back
+        pathname: "/(child-secret-object-setup)/child-welcome",
+        params: {
+          childId: id, // TODO: Get childId from back
+          childName: profile.name,
+          avatarIndex: String(profile.avatarIndex),
+        },
       });
     },
-    [push],
+    [push, profiles],
   );
 
   const handleAddProfile = useCallback(() => {
