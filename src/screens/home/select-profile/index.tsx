@@ -91,12 +91,19 @@ const SelectProfileScreen = () => {
     useAuthStore.getState().logout();
   }, []);
 
+  const backgroundHeight = screenWidth * BACKGROUND_ASPECT_RATIO;
+
   return (
     <View style={styles.container}>
       <ScrollView
-        contentContainerStyle={[styles.content, { paddingTop: safeTop + 48 }]}
+        contentContainerStyle={[
+          styles.content,
+          {
+            paddingTop: safeTop + 96,
+            paddingBottom: backgroundHeight + 56 + 20 + safeBottom + 20,
+          },
+        ]}
         showsVerticalScrollIndicator={false}
-        bounces={false}
       >
         <Text style={styles.title}>{t("selectProfile.title")}</Text>
 
@@ -138,8 +145,10 @@ const SelectProfileScreen = () => {
             </View>
           </View>
         )}
+      </ScrollView>
 
-        <View style={[styles.footer, { paddingBottom: safeBottom + 40 }]}>
+      <View style={styles.fixedBottom} pointerEvents="box-none">
+        <View style={styles.footer}>
           <Pressable
             style={({ pressed }) => [
               styles.parentButton,
@@ -160,10 +169,9 @@ const SelectProfileScreen = () => {
 
         <SelectProfileBackground
           width={screenWidth}
-          height={screenWidth * BACKGROUND_ASPECT_RATIO}
-          style={styles.background}
+          height={backgroundHeight}
         />
-      </ScrollView>
+      </View>
     </View>
   );
 };
@@ -178,10 +186,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   title: {
-    fontSize: 40,
+    fontSize: 48,
     fontFamily: fonts.raleway.extraBold,
     color: colors.accent.mainBlue,
-    textAlign: "center",
+    letterSpacing: -0.96,
     includeFontPadding: false,
   },
   profileGrid: {
@@ -201,7 +209,7 @@ const styles = StyleSheet.create({
   },
   addProfileCard: {
     alignItems: "center",
-    gap: 8,
+    gap: 16,
   },
   addProfileCardPressed: {
     opacity: 0.8,
@@ -213,9 +221,19 @@ const styles = StyleSheet.create({
     color: colors.neutral.black,
     textAlign: "center",
   },
+  fixedBottom: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    bottom: 0,
+    alignItems: "center",
+  },
   footer: {
-    paddingHorizontal: 16,
-    marginTop: 24,
+    paddingHorizontal: 40,
+    paddingBottom: 20,
+    paddingTop: 24,
+    width: "100%",
+    backgroundColor: colors.accent.lightBackground,
   },
   parentButton: {
     backgroundColor: colors.accent.mainBlue,
@@ -233,12 +251,10 @@ const styles = StyleSheet.create({
     left: 0,
   },
   parentButtonText: {
-    fontFamily: fonts.poppins.bold,
-    fontSize: 16,
+    fontFamily: fonts.raleway.bold,
+    fontSize: 20,
+    lineHeight: 24,
     color: colors.neutral.white,
-  },
-  background: {
-    alignSelf: "center",
   },
 });
 
