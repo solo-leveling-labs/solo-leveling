@@ -1,12 +1,16 @@
 import AddProfileIconFrame from "@/assets/svg/add-profile-icon-frame.svg";
 import BuhoOjo from "@/assets/svg/Buho-ojo.svg";
 import SelectProfileBackground from "@/assets/svg/select-profile-background.svg";
+import { useGetUsers } from "@/src/api/users/users.hooks";
+import { useAuthStore } from "@/src/store/auth.store";
 import { colors } from "@/src/theme/colors";
 import { fonts } from "@/src/theme/fonts";
-import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
-import { useCallback } from "react";
+import { minDelay } from "@/src/utils/min-delay";
+import { useFocusEffect, useRouter } from "expo-router";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
+  ActivityIndicator,
   BackHandler,
   Pressable,
   ScrollView,
@@ -19,19 +23,21 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import ProfileCard from "./components/ProfileCard";
 
 const BACKGROUND_ASPECT_RATIO = 32 / 375;
-
-interface ChildProfile {
-  id: string;
-  name: string;
-  avatarIndex: number;
-}
+const AVATAR_COUNT = 5;
 
 const SelectProfileScreen = () => {
   const { t } = useTranslation();
   const { top: safeTop, bottom: safeBottom } = useSafeAreaInsets();
   const { width: screenWidth } = useWindowDimensions();
   const { push } = useRouter();
-  const { childName } = useLocalSearchParams<{ childName: string }>();
+  const { data: usersResponse, isLoading: isFetching } = useGetUsers();
+  const [minDelayDone, setMinDelayDone] = useState(false);
+
+  useEffect(() => {
+    minDelay().then(() => setMinDelayDone(true));
+  }, []);
+
+  const isLoading = isFetching || !minDelayDone;
 
   useFocusEffect(
     useCallback(() => {
@@ -45,24 +51,32 @@ const SelectProfileScreen = () => {
 
   const cardWidth = (screenWidth - 48 - 16) / 2;
 
-  const profiles: ChildProfile[] = childName
-    ? [{ id: "1", name: childName, avatarIndex: 1 }]
-    : [];
+  const childProfiles = useMemo(() => {
+    if (!usersResponse?.data) return [];
+    return usersResponse.data
+      .filter((user) => user.role === "CHILD")
+      .map((user, index) => ({
+        id: String(user.id),
+        name: user.fullName,
+        avatarIndex: (index % AVATAR_COUNT) + 1,
+        hasSecretObject: user.hasSecretObject,
+      }));
+  }, [usersResponse]);
 
   const handleProfilePress = useCallback(
     (id: string) => {
-      const profile = profiles.find((p) => p.id === id);
+      const profile = childProfiles.find((p) => p.id === id);
       if (!profile) return;
       push({
         pathname: "/(child-secret-object-setup)/child-welcome",
         params: {
-          childId: id, // TODO: Get childId from back
+          childId: id,
           childName: profile.name,
           avatarIndex: String(profile.avatarIndex),
         },
       });
     },
-    [push, profiles],
+    [push, childProfiles],
   );
 
   const handleAddProfile = useCallback(() => {
@@ -73,7 +87,8 @@ const SelectProfileScreen = () => {
   }, [push]);
 
   const handleParentAccess = useCallback(() => {
-    // TODO: Navigate to confirm parent PIN screen
+    // TODO: Navigate to confirm parent PIN screen (temporary logout for testing)
+    useAuthStore.getState().logout();
   }, []);
 
   return (
@@ -85,39 +100,44 @@ const SelectProfileScreen = () => {
       >
         <Text style={styles.title}>{t("selectProfile.title")}</Text>
 
-        <View style={styles.profileGrid}>
-          {profiles.map((profile) => (
-            <View
-              key={profile.id}
-              style={[styles.profileCardWrapper, { width: cardWidth }]}
-            >
-              <ProfileCard
-                id={profile.id}
-                name={profile.name}
-                avatarIndex={profile.avatarIndex}
-                onPress={handleProfilePress}
-              />
-            </View>
-          ))}
-
-          <View style={[styles.profileCardWrapper, { width: cardWidth }]}>
-            <Pressable
-              style={({ pressed }) => [
-                styles.addProfileCard,
-                pressed && styles.addProfileCardPressed,
-              ]}
-              onPress={handleAddProfile}
-              accessibilityLabel={t("selectProfile.addProfileA11y")}
-              accessibilityRole="button"
-            >
-              {/* TODO: Replace with correct SVG */}
-              <AddProfileIconFrame width={128} height={128} />
-              <Text style={styles.addProfileText}>
-                {t("selectProfile.addProfile")}
-              </Text>
-            </Pressable>
+        {isLoading ? (
+          <View style={styles.loaderContainer}>
+            <ActivityIndicator size="large" color={colors.accent.mainBlue} />
           </View>
-        </View>
+        ) : (
+          <View style={styles.profileGrid}>
+            {childProfiles.map((profile) => (
+              <View
+                key={profile.id}
+                style={[styles.profileCardWrapper, { width: cardWidth }]}
+              >
+                <ProfileCard
+                  id={profile.id}
+                  name={profile.name}
+                  avatarIndex={profile.avatarIndex}
+                  onPress={handleProfilePress}
+                />
+              </View>
+            ))}
+
+            <View style={[styles.profileCardWrapper, { width: cardWidth }]}>
+              <Pressable
+                style={({ pressed }) => [
+                  styles.addProfileCard,
+                  pressed && styles.addProfileCardPressed,
+                ]}
+                onPress={handleAddProfile}
+                accessibilityLabel={t("selectProfile.addProfileA11y")}
+                accessibilityRole="button"
+              >
+                <AddProfileIconFrame width={128} height={128} />
+                <Text style={styles.addProfileText}>
+                  {t("selectProfile.addProfile")}
+                </Text>
+              </Pressable>
+            </View>
+          </View>
+        )}
 
         <View style={[styles.footer, { paddingBottom: safeBottom + 40 }]}>
           <Pressable
@@ -173,6 +193,11 @@ const styles = StyleSheet.create({
   },
   profileCardWrapper: {
     alignItems: "center",
+  },
+  loaderContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
   },
   addProfileCard: {
     alignItems: "center",

@@ -2,7 +2,7 @@ import { AuthLayout } from "@/src/components/AuthLayout";
 import { useAuthStore } from "@/src/store/auth.store";
 import { colors } from "@/src/theme/colors";
 import { fonts } from "@/src/theme/fonts";
-import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { BackHandler, StyleSheet, Text, View } from "react-native";
@@ -10,7 +10,6 @@ import { BackHandler, StyleSheet, Text, View } from "react-native";
 const ProfileCompleteScreen = () => {
   const { dismissTo } = useRouter();
   const { t } = useTranslation();
-  const { childName } = useLocalSearchParams<{ childName: string }>(); // TODO: Send to back on request
 
   const setProfileSetupComplete = useAuthStore(
     (state) => state.setProfileSetupComplete,
@@ -29,8 +28,8 @@ const ProfileCompleteScreen = () => {
 
   const handleAccept = useCallback(() => {
     setProfileSetupComplete(true);
-    dismissTo({ pathname: "/(select-profile)", params: { childName } });
-  }, [dismissTo, setProfileSetupComplete, childName]);
+    dismissTo("/(select-profile)");
+  }, [dismissTo, setProfileSetupComplete]);
 
   return (
     <AuthLayout
