@@ -1,5 +1,6 @@
 import { colors } from "@/src/theme/colors";
 import { fonts } from "@/src/theme/fonts";
+import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -11,7 +12,7 @@ const SECRET_OBJECT_INDICES = [1, 2, 3, 4, 5, 6, 7, 8] as const;
 
 const SelectSecretObjectScreen = () => {
   const { t } = useTranslation();
-  const { dismissTo } = useRouter();
+  const { dismissTo, back } = useRouter();
   const { top: safeTop, bottom: safeBottom } = useSafeAreaInsets();
   const { childId: _childId } = useLocalSearchParams<{ childId: string }>();
 
@@ -21,8 +22,12 @@ const SelectSecretObjectScreen = () => {
     setSelectedIndex((prev) => (prev === index ? null : index));
   }, []);
 
+  const handleBack = useCallback(() => {
+    back();
+  }, [back]);
+
   const handleConfirm = useCallback(() => {
-    // TODO: Save selected secret object + navigate to next screen
+    // TODO: Save selected secret object
     dismissTo("/(tabs)");
   }, [dismissTo]);
 
@@ -31,10 +36,29 @@ const SelectSecretObjectScreen = () => {
   return (
     <View style={styles.container}>
       <ScrollView
-        contentContainerStyle={[styles.content, { paddingTop: safeTop + 48 }]}
+        contentContainerStyle={[
+          styles.content,
+          { paddingTop: safeTop + 16, paddingBottom: safeBottom + 40 },
+        ]}
         showsVerticalScrollIndicator={false}
         bounces={false}
       >
+        <Pressable
+          style={({ pressed }) => [
+            styles.backButton,
+            pressed && styles.backButtonPressed,
+          ]}
+          onPress={handleBack}
+          accessibilityLabel={t("selectSecretObject.backA11y")}
+          accessibilityRole="button"
+        >
+          <Ionicons
+            name="arrow-back"
+            size={28}
+            color={colors.accent.mainBlue}
+          />
+        </Pressable>
+
         <Text style={styles.title}>{t("selectSecretObject.title")}</Text>
 
         <View style={styles.cardGrid}>
@@ -49,7 +73,7 @@ const SelectSecretObjectScreen = () => {
           ))}
         </View>
 
-        <View style={[styles.footer, { paddingBottom: safeBottom + 40 }]}>
+        <View style={styles.footer}>
           <Pressable
             style={({ pressed }) => [
               styles.confirmButton,
@@ -85,6 +109,14 @@ const styles = StyleSheet.create({
   content: {
     flexGrow: 1,
     paddingHorizontal: 24,
+  },
+  backButton: {
+    padding: 10,
+    alignSelf: "flex-start",
+    marginBottom: 20,
+  },
+  backButtonPressed: {
+    opacity: 0.8,
   },
   title: {
     fontSize: 40,

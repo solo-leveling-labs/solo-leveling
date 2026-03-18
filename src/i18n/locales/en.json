@@ -341,11 +341,19 @@
     "backA11y": "Go back",
     "ctaA11y": "Start using Zapienz"
   },
+  "secretObjectIntro": {
+    "title": "Your secret object!",
+    "description": "So that only you can enter and chat with Zapienz, we need you to choose a secret object.",
+    "cta": "Choose my secret object",
+    "backA11y": "Go back",
+    "ctaA11y": "Go to choose secret object"
+  },
   "selectSecretObject": {
     "title": "Choose your secret object!",
     "confirm": "This is my secret object!",
     "cardA11y": "Select secret object {{index}}",
-    "confirmA11y": "Confirm selected secret object"
+    "confirmA11y": "Confirm selected secret object",
+    "backA11y": "Go back"
   },
   "home": {
     "title": "Home",

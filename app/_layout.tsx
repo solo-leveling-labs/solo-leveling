@@ -65,7 +65,7 @@ function RootNavigator() {
       <Stack.Screen name="(child-secret-object-setup)" />
 
       {/* TODO: Add guard when back end is ready */}
-      <Stack.Screen name="(select-secret-object)" />
+      {/* <Stack.Screen name="(select-secret-object)" /> */}
 
       <Stack.Protected guard={isAuthenticated}>
         <Stack.Screen name="(tabs)" />

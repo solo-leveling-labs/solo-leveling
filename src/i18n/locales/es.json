@@ -341,11 +341,19 @@
     "backA11y": "Volver",
     "ctaA11y": "Comenzar a usar Zapienz"
   },
+  "secretObjectIntro": {
+    "title": "¡Tu objeto secreto!",
+    "description": "Para que solo vos puedas entrar a hablar con Zapienz, necesitamos que elijas un objeto secreto.",
+    "cta": "Elegir mi objeto secreto",
+    "backA11y": "Volver",
+    "ctaA11y": "Ir a elegir objeto secreto"
+  },
   "selectSecretObject": {
     "title": "¡Elije tu objeto secreto!",
     "confirm": "¡Este es mi objeto secreto!",
     "cardA11y": "Seleccionar objeto secreto {{index}}",
-    "confirmA11y": "Confirmar objeto secreto seleccionado"
+    "confirmA11y": "Confirmar objeto secreto seleccionado",
+    "backA11y": "Volver"
   },
   "home": {
     "title": "Inicio",
