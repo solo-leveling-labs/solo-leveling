@@ -2,7 +2,6 @@ import AddProfileIconFrame from "@/assets/svg/add-profile-icon-frame.svg";
 import BuhoOjo from "@/assets/svg/Buho-ojo.svg";
 import SelectProfileBackground from "@/assets/svg/select-profile-background.svg";
 import { useGetUsers } from "@/src/api/users/users.hooks";
-import { useAuthStore } from "@/src/store/auth.store";
 import { colors } from "@/src/theme/colors";
 import { fonts } from "@/src/theme/fonts";
 import { minDelay } from "@/src/utils/min-delay";
@@ -87,9 +86,8 @@ const SelectProfileScreen = () => {
   }, [push]);
 
   const handleParentAccess = useCallback(() => {
-    // TODO: Navigate to confirm parent PIN screen (temporary logout for testing)
-    useAuthStore.getState().logout();
-  }, []);
+    push("/(select-profile)/parent-access");
+  }, [push]);
 
   const backgroundHeight = screenWidth * BACKGROUND_ASPECT_RATIO;
 
