@@ -5,9 +5,9 @@ import {
   RuleResponseType,
   RuleSeverity,
 } from "@/src/api/rules/rules.types";
-import AuthLayout from "@/src/components/AuthLayout";
+import { AuthLayout } from "@/src/components/AuthLayout";
 import { DropdownSelect } from "@/src/components/DropdownSelect";
-import FormField from "@/src/components/FormField";
+import { FormField } from "@/src/components/FormField";
 import { Switch } from "@/src/components/Switch";
 import {
   RULE_NOTIFICATION_TYPES,

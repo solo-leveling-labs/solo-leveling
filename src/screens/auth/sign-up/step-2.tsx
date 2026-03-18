@@ -1,5 +1,5 @@
-import AuthLayout from "@/src/components/AuthLayout";
-import FormField from "@/src/components/FormField";
+import { AuthLayout } from "@/src/components/AuthLayout";
+import { FormField } from "@/src/components/FormField";
 import { useSignupStore } from "@/src/store/signup.store";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";

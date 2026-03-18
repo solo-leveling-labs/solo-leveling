@@ -164,7 +164,8 @@
       "datePickerCancel": "Cancel",
       "datePickerLocale": "en",
       "next": "Next",
-      "back": "Skip",
+      "back": "Go back",
+      "skip": "Skip",
       "nameInputA11y": "Child's name input",
       "birthDateInputA11y": "Child's date of birth input",
       "nextA11y": "Go to the next profile setup step",
@@ -322,6 +323,37 @@
       "accept": "Accept",
       "acceptA11y": "Accept and continue to the home screen"
     }
+  },
+  "selectProfile": {
+    "title": "Who wants to use Zapienz?",
+    "addProfile": "Add profile",
+    "parentAccess": "Parent access",
+    "profileCardA11y": "Select {{name}}'s profile",
+    "addProfileA11y": "Add a new profile",
+    "parentAccessA11y": "Enter as a parent"
+  },
+  "childWelcome": {
+    "greeting": "Hi {{name}}!",
+    "subtitle": "Welcome to Zapienz",
+    "body": "A place to chat, clear up all your doubts, and learn new things with your new AI friend.",
+    "question": "Shall we start?",
+    "cta": "I want to start!",
+    "backA11y": "Go back",
+    "ctaA11y": "Start using Zapienz"
+  },
+  "secretObjectIntro": {
+    "title": "Your secret object!",
+    "description": "So that only you can enter and chat with Zapienz, we need you to choose a secret object.",
+    "cta": "Choose my secret object",
+    "backA11y": "Go back",
+    "ctaA11y": "Go to choose secret object"
+  },
+  "selectSecretObject": {
+    "title": "Choose your secret object!",
+    "confirm": "This is my secret object!",
+    "cardA11y": "Select secret object {{index}}",
+    "confirmA11y": "Confirm selected secret object",
+    "backA11y": "Go back"
   },
   "home": {
     "title": "Home",

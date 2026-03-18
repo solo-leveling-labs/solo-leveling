@@ -56,6 +56,17 @@ function RootNavigator() {
         <Stack.Screen name="(first-profile-setup)" />
       </Stack.Protected> */}
 
+      {/* TODO: Add guard when back end is ready */}
+      {/* <Stack.Protected guard={isAuthenticated && isProfileSetupComplete}> */}
+      {/* <Stack.Screen name="(select-profile)" /> */}
+      {/* </Stack.Protected> */}
+
+      {/* TODO: Add guard when back end is ready */}
+      <Stack.Screen name="(child-secret-object-setup)" />
+
+      {/* TODO: Add guard when back end is ready */}
+      {/* <Stack.Screen name="(select-secret-object)" /> */}
+
       <Stack.Protected guard={isAuthenticated}>
         <Stack.Screen name="(tabs)" />
       </Stack.Protected>
