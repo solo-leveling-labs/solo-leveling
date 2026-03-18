@@ -26,10 +26,6 @@ const ChildWelcomeScreen = () => {
     Number(avatarIndex),
   );
 
-  const handleBack = useCallback(() => {
-    back();
-  }, [back]);
-
   const handleStart = useCallback(() => {
     push({
       pathname: "/secret-object-intro",
@@ -57,7 +53,7 @@ const ChildWelcomeScreen = () => {
             styles.backButton,
             pressed && styles.backButtonPressed,
           ]}
-          onPress={handleBack}
+          onPress={back}
           accessibilityLabel={t("childWelcome.backA11y")}
           accessibilityRole="button"
         >
@@ -127,7 +123,7 @@ const styles = StyleSheet.create({
   backButton: {
     padding: 10,
     alignSelf: "flex-start",
-    marginBottom: 20,
+    marginBottom: 60,
   },
   backButtonPressed: {
     opacity: 0.8,
@@ -159,10 +155,11 @@ const styles = StyleSheet.create({
     marginTop: 24,
   },
   greeting: {
-    fontSize: 40,
+    fontSize: 48,
     fontFamily: fonts.raleway.extraBold,
     color: colors.accent.mainBlue,
     textAlign: "center",
+    letterSpacing: -0.96,
     includeFontPadding: false,
   },
   sectionHeading: {
@@ -184,11 +181,18 @@ const styles = StyleSheet.create({
   },
   ctaButton: {
     backgroundColor: colors.accent.mainBlue,
-    height: 56,
-    borderRadius: 12,
+    height: 70,
+    borderRadius: 100,
+    borderWidth: 1,
+    borderColor: colors.neutral.disabled,
     alignItems: "center",
     justifyContent: "center",
     overflow: "hidden",
+    shadowColor: colors.neutral.white,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 2,
+    elevation: 2,
   },
   ctaButtonPressed: {
     opacity: 0.8,
