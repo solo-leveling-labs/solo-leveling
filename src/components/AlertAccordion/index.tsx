@@ -1,3 +1,4 @@
+import { DropdownSelect } from "@/src/components/DropdownSelect";
 import { getAlertOptions } from "@/src/screens/auth/first-profile-setup/constants/alert-options";
 import {
   AlertAccordionProps,
@@ -20,9 +21,8 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import { DropdownSelect } from "../DropdownSelect";
 
-const AlertAccordion = ({
+export const AlertAccordion = ({
   title,
   description,
   isSelected,
@@ -228,5 +228,3 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
 });
-
-export default AlertAccordion;

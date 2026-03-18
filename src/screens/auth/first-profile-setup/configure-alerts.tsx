@@ -6,8 +6,8 @@ import {
   RuleResponseType,
   RuleSeverity,
 } from "@/src/api/rules/rules.types";
-import AlertAccordion from "@/src/components/AlertAccordion.tsx";
-import AuthLayout from "@/src/components/AuthLayout";
+import { AlertAccordion } from "@/src/components/AlertAccordion";
+import { AuthLayout } from "@/src/components/AuthLayout";
 import InfoBanner from "@/src/screens/auth/first-profile-setup/components/InfoBanner";
 import {
   AlertConfig,
@@ -17,6 +17,7 @@ import {
 } from "@/src/screens/auth/first-profile-setup/types";
 import { colors } from "@/src/theme/colors";
 import { fonts } from "@/src/theme/fonts";
+import { minDelay } from "@/src/utils/min-delay";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useCallback, useEffect, useState } from "react";
@@ -29,7 +30,6 @@ import {
   Text,
   View,
 } from "react-native";
-import { minDelay } from "@/src/utils/min-delay";
 import Animated, { FadeIn, LinearTransition } from "react-native-reanimated";
 
 const SEVERITY_MAP: Record<RuleSeverity, SeverityLevel> = {
@@ -151,7 +151,10 @@ const ConfigureAlertsScreen = () => {
         assignRules({ userId: childId, ruleIds: [...selectedAlerts] }),
         minDelay(),
       ]);
-      push({ pathname: "/notifications-setup", params: { childName, childId } });
+      push({
+        pathname: "/notifications-setup",
+        params: { childName, childId },
+      });
     } catch {
       Alert.alert(t("common.errors.title"), t("common.errors.genericMessage"));
     } finally {
