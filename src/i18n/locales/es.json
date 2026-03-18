@@ -332,6 +332,17 @@
     "addProfileA11y": "Agregar un nuevo perfil",
     "parentAccessA11y": "Ingresar como padre o madre"
   },
+  "parentPinAccess": {
+    "title": "¡Hola!",
+    "subtitle": "Te damos la bienvenida al acceso para padres.",
+    "instruction": "Ingresá el PIN para gestionar los perfiles y alertas.",
+    "forgotPin": "Olvidé mi clave",
+    "backA11y": "Volver",
+    "forgotPinA11y": "Recuperar clave de acceso",
+    "digitA11y": "Dígito {{digit}}",
+    "backspaceA11y": "Borrar dígito",
+    "pinDotA11y": "Dígito {{position}} de {{total}}"
+  },
   "childWelcome": {
     "greeting": "¡Hola {{name}}!",
     "subtitle": "Te damos la bienvenida a Zapienz",

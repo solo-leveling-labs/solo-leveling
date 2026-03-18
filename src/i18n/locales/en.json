@@ -332,6 +332,17 @@
     "addProfileA11y": "Add a new profile",
     "parentAccessA11y": "Enter as a parent"
   },
+  "parentPinAccess": {
+    "title": "Hello!",
+    "subtitle": "Welcome to parent access.",
+    "instruction": "Enter the PIN to manage profiles and alerts.",
+    "forgotPin": "Forgot my PIN",
+    "backA11y": "Go back",
+    "forgotPinA11y": "Recover access PIN",
+    "digitA11y": "Digit {{digit}}",
+    "backspaceA11y": "Delete digit",
+    "pinDotA11y": "Digit {{position}} of {{total}}"
+  },
   "childWelcome": {
     "greeting": "Hi {{name}}!",
     "subtitle": "Welcome to Zapienz",

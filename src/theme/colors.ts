@@ -19,6 +19,7 @@ export const colors = {
     white: "#FFFFFF",
     black: "#000000",
     disabled: "#D0D0D0",
+    fill: "#ECECEC",
   },
   system: {
     iosBlue: "#0081FF",

@@ -73,8 +73,8 @@ const SelectProfileScreen = () => {
   }, [push]);
 
   const handleParentAccess = useCallback(() => {
-    // TODO: Navigate to confirm parent PIN screen
-  }, []);
+    push("/parent-pin-access");
+  }, [push]);
 
   return (
     <View style={styles.container}>

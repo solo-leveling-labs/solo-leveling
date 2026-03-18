@@ -7,6 +7,7 @@ export default function SelectProfileLayout() {
         name="index"
         options={{ gestureEnabled: false }}
       />
+      <Stack.Screen name="parent-pin-access" />
     </Stack>
   );
 }
