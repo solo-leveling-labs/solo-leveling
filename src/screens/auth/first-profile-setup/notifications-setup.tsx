@@ -1,6 +1,6 @@
 import { useUpdateAccount } from "@/src/api/accounts/accounts.hooks";
-import AuthLayout from "@/src/components/AuthLayout";
-import FormField from "@/src/components/FormField";
+import { AuthLayout } from "@/src/components/AuthLayout";
+import { FormField } from "@/src/components/FormField";
 import { Switch } from "@/src/components/Switch";
 import { FormErrors } from "@/src/screens/auth/first-profile-setup/types";
 import { colors } from "@/src/theme/colors";
