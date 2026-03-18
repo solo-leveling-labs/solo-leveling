@@ -66,6 +66,7 @@ export interface AccountSnapshot {
   name: string;
   email: string;
   isIdentityVerified: boolean;
+  hasChildProfiles: boolean;
 }
 
 export interface LoginResponse {

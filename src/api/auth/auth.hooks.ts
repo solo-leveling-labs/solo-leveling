@@ -14,29 +14,31 @@ import {
 } from "./auth.types";
 
 export const useLogin = () => {
-  const router = useRouter();
   const login = useAuthStore((state) => state.login);
+  const setIdentityVerified = useAuthStore(
+    (state) => state.setIdentityVerified,
+  );
+  const setProfileSetupComplete = useAuthStore(
+    (state) => state.setProfileSetupComplete,
+  );
 
   return useMutation({
     mutationFn: (credentials: LoginRequest) => authApi.login(credentials),
     onSuccess: async (data) => {
+      const { account, token, refreshToken } = data.data;
       const user: AuthUser = {
-        id: data.data.account.id,
-        name: data.data.account.name,
-        email: data.data.account.email,
+        id: account.id,
+        name: account.name,
+        email: account.email,
       };
-      await login(data.data.token, data.data.refreshToken, user);
-      if (!data.data.account.isIdentityVerified) {
-        router.replace("/(verification)/intro");
-      } else {
-        router.replace("/(tabs)");
-      }
+      await login(token, refreshToken, user);
+      setIdentityVerified(account.isIdentityVerified);
+      setProfileSetupComplete(account.hasChildProfiles);
     },
   });
 };
 
 export const useSignup = () => {
-  const router = useRouter();
   const login = useAuthStore((state) => state.login);
 
   return useMutation({

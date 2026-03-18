@@ -48,8 +48,9 @@ const RESPONSE_MAP: Record<RuleResponseType, ResponseLevel> = {
 };
 
 const toNotificationsLevel = (
-  types: NotificationType[],
+  types: NotificationType[] | null,
 ): NotificationsLevel => {
+  if (!types) return "emergencyNotification";
   const has = (t: NotificationType) => types.includes(t);
   if (has("IN_APP") && has("EMAIL") && has("PUSH_NOTIFICATION"))
     return "appEmailAndPush";

@@ -11,7 +11,12 @@ SplashScreen.preventAutoHideAsync();
 const queryClient = new QueryClient();
 
 function RootNavigator() {
-  const { isAuthenticated, isInitialized } = useAuthStore();
+  const {
+    isAuthenticated,
+    isInitialized,
+    isIdentityVerified,
+    isProfileSetupComplete,
+  } = useAuthStore();
 
   const [fontsLoaded, fontsError] = useFonts({
     "Poppins-Bold": require("../assets/fonts/Poppins-Bold.ttf"),
@@ -44,28 +49,21 @@ function RootNavigator() {
         />
       </Stack.Protected>
 
-      {/* TODO: Add guards when back end is ready */}
-      {/* <Stack.Protected guard={isAuthenticated && !isIdentityVerified}>
+      <Stack.Protected guard={isAuthenticated && !isIdentityVerified}>
         <Stack.Screen name="(verification)" />
-      </Stack.Protected> */}
+      </Stack.Protected>
 
-      {/* TODO: Add guards when back end is ready */}
-      {/* <Stack.Protected
+      <Stack.Protected
         guard={isAuthenticated && isIdentityVerified && !isProfileSetupComplete}
       >
         <Stack.Screen name="(first-profile-setup)" />
-      </Stack.Protected> */}
+      </Stack.Protected>
 
-      {/* TODO: Add guard when back end is ready */}
-      {/* <Stack.Protected guard={isAuthenticated && isProfileSetupComplete}> */}
-      {/* <Stack.Screen name="(select-profile)" /> */}
-      {/* </Stack.Protected> */}
+      <Stack.Protected guard={isAuthenticated && isProfileSetupComplete}>
+        <Stack.Screen name="(select-profile)" />
+      </Stack.Protected>
 
-      {/* TODO: Add guard when back end is ready */}
       <Stack.Screen name="(child-secret-object-setup)" />
-
-      {/* TODO: Add guard when back end is ready */}
-      {/* <Stack.Screen name="(select-secret-object)" /> */}
 
       <Stack.Protected guard={isAuthenticated}>
         <Stack.Screen name="(tabs)" />
