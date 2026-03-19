@@ -145,6 +145,12 @@
       "cancelAlertStay": "Continuar",
       "cancelAlertLeave": "Cancelar"
     },
+    "verificationError": {
+      "title": "Algo salió mal...",
+      "subtitle": "No pudimos validar tu identidad. Por favor, intentalo de nuevo asegurándote de tener buena iluminación.",
+      "retry": "Reintentar",
+      "retryA11y": "Reintentar verificación de identidad"
+    },
     "underage": {
       "title": "¡Pedile ayuda a un adulto!",
       "subtitle": "¡Avisale a un adulto que queres comenzar a usar Zapienz!",

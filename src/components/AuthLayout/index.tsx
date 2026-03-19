@@ -231,11 +231,11 @@ const styles = StyleSheet.create({
   },
   nextButton: {
     backgroundColor: colors.accent.mainBlue,
-    height: 56,
-    borderRadius: 28,
+    borderRadius: 100,
     alignItems: "center",
     justifyContent: "center",
-    width: "100%",
+    paddingHorizontal: 32,
+    paddingVertical: 20,
   },
   nextButtonDisabled: {
     backgroundColor: colors.neutral.disabled,

@@ -4,12 +4,13 @@ import { AuthLayout } from "@/src/components/AuthLayout";
 import { DatePickerField } from "@/src/components/DatePickerField";
 import { FormField } from "@/src/components/FormField";
 import { colors } from "@/src/theme/colors";
+import { ACTIVE_OPACITY } from "@/src/theme/constants";
 import { fonts } from "@/src/theme/fonts";
 import { minDelay } from "@/src/utils/min-delay";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Alert, Pressable, StyleSheet, Text } from "react-native";
+import { Alert, StyleSheet, Text, TouchableOpacity } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 const formatDate = (date: Date): string => {
@@ -162,12 +163,10 @@ const CreateProfileScreen = () => {
         locale={t("profileSetup.createProfile.datePickerLocale")}
         pickerContainerStyleIOS={styles.datePickerIOS}
         customConfirmButtonIOS={({ onPress }) => (
-          <Pressable
+          <TouchableOpacity
             onPress={onPress}
-            style={({ pressed }) => [
-              styles.datePickerConfirmButton,
-              pressed && styles.datePickerConfirmPressed,
-            ]}
+            style={styles.datePickerConfirmButton}
+            activeOpacity={ACTIVE_OPACITY}
             accessibilityRole="button"
             accessibilityLabel={t(
               "profileSetup.createProfile.datePickerConfirm",
@@ -176,7 +175,7 @@ const CreateProfileScreen = () => {
             <Text style={styles.datePickerConfirmText}>
               {t("profileSetup.createProfile.datePickerConfirm")}
             </Text>
-          </Pressable>
+          </TouchableOpacity>
         )}
       />
     </AuthLayout>
@@ -203,9 +202,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderTopWidth: StyleSheet.hairlineWidth,
     borderTopColor: colors.neutral[700],
-  },
-  datePickerConfirmPressed: {
-    backgroundColor: colors.overlay.selected,
   },
   datePickerConfirmText: {
     fontSize: 20,

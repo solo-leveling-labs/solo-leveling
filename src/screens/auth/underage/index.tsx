@@ -1,14 +1,15 @@
 import BgDecorations from "@/assets/svg/bg-decorations.svg";
 import Buho from "@/assets/svg/buho.svg";
 import { colors } from "@/src/theme/colors";
+import { ACTIVE_OPACITY } from "@/src/theme/constants";
 import { fonts } from "@/src/theme/fonts";
 import { useRouter } from "expo-router";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import {
-  Pressable,
   StyleSheet,
   Text,
+  TouchableOpacity,
   useWindowDimensions,
   View,
 } from "react-native";
@@ -28,17 +29,15 @@ const UnderageScreen = () => {
         </View>
 
         <View style={styles.buttonContainer}>
-          <Pressable
-            style={({ pressed }) => [
-              styles.backButton,
-              pressed && styles.buttonPressed,
-            ]}
+          <TouchableOpacity
+            style={styles.backButton}
             onPress={back}
+            activeOpacity={ACTIVE_OPACITY}
             accessibilityLabel={t("auth.underage.backA11y")}
             accessibilityRole="button"
           >
             <Text style={styles.backButtonText}>{t("auth.underage.back")}</Text>
-          </Pressable>
+          </TouchableOpacity>
         </View>
       </View>
 
@@ -87,9 +86,6 @@ const styles = StyleSheet.create({
     paddingVertical: 24,
     alignItems: "center",
     justifyContent: "center",
-  },
-  buttonPressed: {
-    opacity: 0.8,
   },
   backButtonText: {
     fontSize: 16,

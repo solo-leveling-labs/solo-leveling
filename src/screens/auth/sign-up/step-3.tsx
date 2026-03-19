@@ -3,13 +3,14 @@ import { AuthLayout } from "@/src/components/AuthLayout";
 import { FormField } from "@/src/components/FormField";
 import { useSignupStore } from "@/src/store/signup.store";
 import { colors } from "@/src/theme/colors";
+import { ACTIVE_OPACITY } from "@/src/theme/constants";
 import { fonts } from "@/src/theme/fonts";
 import { Ionicons } from "@expo/vector-icons";
 import { isAxiosError } from "axios";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Alert, Pressable, StyleSheet, Text } from "react-native";
+import { Alert, StyleSheet, Text, TouchableOpacity } from "react-native";
 
 const PIN_LENGTH = 6;
 
@@ -112,7 +113,7 @@ const SignUpStep3Screen = () => {
       description={t("auth.signUpStep3.description")}
       onNext={handleNext}
       onBack={back}
-      isFormValid={isFormFilled && !isPending}
+      isFormValid={isFormFilled && termsAccepted && !isPending}
     >
       <FormField
         label={t("auth.signUpStep3.fields.pin")}
@@ -145,9 +146,10 @@ const SignUpStep3Screen = () => {
         onRightIconPress={() => setShowRepeatPin((prev) => !prev)}
       />
 
-      <Pressable
+      <TouchableOpacity
         style={styles.checkboxRow}
         onPress={handleTermsToggle}
+        activeOpacity={ACTIVE_OPACITY}
         accessibilityLabel={t("auth.signUpStep3.termsCheckboxA11y")}
         accessibilityRole="checkbox"
         accessibilityState={{ checked: termsAccepted }}
@@ -166,7 +168,7 @@ const SignUpStep3Screen = () => {
         >
           {t("auth.signUpStep3.termsCheckbox")}
         </Text>
-      </Pressable>
+      </TouchableOpacity>
       {errors.terms && <Text style={styles.errorText}>{errors.terms}</Text>}
     </AuthLayout>
   );

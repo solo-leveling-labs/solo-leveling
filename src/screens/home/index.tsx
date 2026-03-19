@@ -1,5 +1,6 @@
 import { useAuthStore } from "@/src/store/auth.store";
 import { colors } from "@/src/theme/colors";
+import { ACTIVE_OPACITY } from "@/src/theme/constants";
 import { fonts } from "@/src/theme/fonts";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useCallback } from "react";
@@ -47,7 +48,7 @@ const HomeScreen = () => {
     <View style={styles.container}>
       <View style={[styles.header, { paddingTop: top + 12 }]}>
         <TouchableOpacity
-          activeOpacity={0.7}
+          activeOpacity={ACTIVE_OPACITY}
           style={styles.headerIconButton}
           accessibilityLabel="Menú"
           accessibilityRole="button"
@@ -58,7 +59,7 @@ const HomeScreen = () => {
         <Text style={styles.headerTitle}>Zapienz</Text>
 
         <TouchableOpacity
-          activeOpacity={0.7}
+          activeOpacity={ACTIVE_OPACITY}
           onPress={handleLogout}
           style={styles.headerIconButton}
           accessibilityLabel="Cerrar sesión"
@@ -91,7 +92,7 @@ const HomeScreen = () => {
           accessibilityLabel="Campo de mensaje"
         />
         <TouchableOpacity
-          activeOpacity={0.7}
+          activeOpacity={ACTIVE_OPACITY}
           style={styles.sendButton}
           accessibilityLabel="Enviar mensaje"
           accessibilityRole="button"

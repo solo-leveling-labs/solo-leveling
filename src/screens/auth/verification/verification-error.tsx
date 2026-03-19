@@ -1,13 +1,15 @@
 import BgDecorations from "@/assets/svg/bg-decorations.svg";
 import Buho from "@/assets/svg/buho.svg";
 import { colors } from "@/src/theme/colors";
+import { ACTIVE_OPACITY } from "@/src/theme/constants";
 import { fonts } from "@/src/theme/fonts";
 import { useRouter } from "expo-router";
 import React, { useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import {
-  Pressable,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
   useWindowDimensions,
 } from "react-native";
@@ -19,6 +21,7 @@ const BUHO_WIDTH_RATIO = 1;
 const VerificationErrorScreen = () => {
   const { width: screenWidth } = useWindowDimensions();
   const { top: safeTop, bottom: safeBottom } = useSafeAreaInsets();
+  const { t } = useTranslation();
   const { dismissTo } = useRouter();
 
   const handleRetry = useCallback(() => {
@@ -40,25 +43,24 @@ const VerificationErrorScreen = () => {
         ]}
       >
         <View style={styles.textContainer}>
-          <Text style={styles.title}>Algo salió mal...</Text>
+          <Text style={styles.title}>{t("auth.verificationError.title")}</Text>
           <Text style={styles.subtitle}>
-            No pudimos validar tu identidad. Por favor, intentalo de nuevo
-            asegurándote de tener buena iluminación.
+            {t("auth.verificationError.subtitle")}
           </Text>
         </View>
 
         <View style={styles.footer}>
-          <Pressable
-            style={({ pressed }) => [
-              styles.retryButton,
-              pressed && styles.buttonPressed,
-            ]}
+          <TouchableOpacity
+            style={styles.retryButton}
             onPress={handleRetry}
-            accessibilityLabel="Reintentar verificación de identidad"
+            activeOpacity={ACTIVE_OPACITY}
+            accessibilityLabel={t("auth.verificationError.retryA11y")}
             accessibilityRole="button"
           >
-            <Text style={styles.retryButtonText}>Reintentar</Text>
-          </Pressable>
+            <Text style={styles.retryButtonText}>
+              {t("auth.verificationError.retry")}
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
     </View>
@@ -106,12 +108,11 @@ const styles = StyleSheet.create({
   },
   retryButton: {
     backgroundColor: colors.accent.mainRed,
-    height: 70,
     borderRadius: 100,
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 32,
-    width: "100%",
+    paddingVertical: 24,
     borderWidth: 1,
     borderColor: colors.neutral.disabled,
     shadowColor: colors.neutral.white,
@@ -119,9 +120,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 2,
     elevation: 2,
-  },
-  buttonPressed: {
-    opacity: 0.8,
   },
   retryButtonText: {
     fontSize: 16,

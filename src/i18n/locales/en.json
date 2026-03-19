@@ -145,6 +145,12 @@
       "cancelAlertStay": "Continue",
       "cancelAlertLeave": "Cancel"
     },
+    "verificationError": {
+      "title": "Something went wrong...",
+      "subtitle": "We couldn't verify your identity. Please try again making sure you have good lighting.",
+      "retry": "Retry",
+      "retryA11y": "Retry identity verification"
+    },
     "underage": {
       "title": "Ask a grown-up for help!",
       "subtitle": "Let an adult know you want to start using Zapienz!",

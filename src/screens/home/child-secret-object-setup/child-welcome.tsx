@@ -2,12 +2,13 @@ import ChildWelcomeDecoBottom from "@/assets/svg/child-welcome-deco-bottom.svg";
 import ChildWelcomeDecoTop from "@/assets/svg/child-welcome-deco-top.svg";
 import { getAvatarConfig } from "@/src/constants/avatar-configs";
 import { colors } from "@/src/theme/colors";
+import { ACTIVE_OPACITY } from "@/src/theme/constants";
 import { fonts } from "@/src/theme/fonts";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const DECO_OVERFLOW = 40;
@@ -48,12 +49,10 @@ const ChildWelcomeScreen = () => {
           { paddingTop: safeTop + 16, paddingBottom: safeBottom + 40 },
         ]}
       >
-        <Pressable
-          style={({ pressed }) => [
-            styles.backButton,
-            pressed && styles.backButtonPressed,
-          ]}
+        <TouchableOpacity
+          style={styles.backButton}
           onPress={back}
+          activeOpacity={ACTIVE_OPACITY}
           accessibilityLabel={t("childWelcome.backA11y")}
           accessibilityRole="button"
         >
@@ -62,7 +61,7 @@ const ChildWelcomeScreen = () => {
             size={28}
             color={colors.accent.mainBlue}
           />
-        </Pressable>
+        </TouchableOpacity>
 
         <View style={styles.avatarSection}>
           <View style={[styles.avatarFrame, { borderColor: frameColor }]}>
@@ -87,17 +86,15 @@ const ChildWelcomeScreen = () => {
         </View>
 
         <View style={styles.footer}>
-          <Pressable
-            style={({ pressed }) => [
-              styles.ctaButton,
-              pressed && styles.ctaButtonPressed,
-            ]}
+          <TouchableOpacity
+            style={styles.ctaButton}
             onPress={handleStart}
+            activeOpacity={ACTIVE_OPACITY}
             accessibilityLabel={t("childWelcome.ctaA11y")}
             accessibilityRole="button"
           >
             <Text style={styles.ctaButtonText}>{t("childWelcome.cta")}</Text>
-          </Pressable>
+          </TouchableOpacity>
         </View>
       </View>
     </View>
@@ -124,9 +121,6 @@ const styles = StyleSheet.create({
     padding: 10,
     alignSelf: "flex-start",
     marginBottom: 60,
-  },
-  backButtonPressed: {
-    opacity: 0.8,
   },
   content: {
     flexGrow: 1,
@@ -195,9 +189,6 @@ const styles = StyleSheet.create({
     elevation: 2,
     paddingHorizontal: 32,
     paddingVertical: 24,
-  },
-  ctaButtonPressed: {
-    opacity: 0.8,
   },
   ctaButtonText: {
     fontFamily: fonts.poppins.bold,

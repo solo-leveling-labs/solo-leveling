@@ -4,6 +4,7 @@ import {
   useSelectProfile,
 } from "@/src/api/auth/auth.hooks";
 import { colors } from "@/src/theme/colors";
+import { ACTIVE_OPACITY } from "@/src/theme/constants";
 import { fonts } from "@/src/theme/fonts";
 import { minDelay } from "@/src/utils/min-delay";
 import { Ionicons } from "@expo/vector-icons";
@@ -189,7 +190,7 @@ const SelectSecretObjectScreen = () => {
       >
         <TouchableOpacity
           style={styles.backButton}
-          activeOpacity={0.7}
+          activeOpacity={ACTIVE_OPACITY}
           onPress={handleBack}
           accessibilityLabel={t("selectSecretObject.backA11y")}
           accessibilityRole="button"
@@ -214,7 +215,7 @@ const SelectSecretObjectScreen = () => {
             <TouchableOpacity
               key={index}
               style={styles.gridCard}
-              activeOpacity={0.7}
+              activeOpacity={ACTIVE_OPACITY}
               onPress={() => openOverlay(index)}
               accessibilityLabel={t("selectSecretObject.cardA11y", { index })}
               accessibilityRole="button"
@@ -242,7 +243,7 @@ const SelectSecretObjectScreen = () => {
             <View style={styles.closeRow}>
               <TouchableOpacity
                 style={styles.closeButton}
-                activeOpacity={0.7}
+                activeOpacity={ACTIVE_OPACITY}
                 onPress={closeOverlay}
                 accessibilityLabel={t("selectSecretObject.backA11y")}
                 accessibilityRole="button"
@@ -260,7 +261,7 @@ const SelectSecretObjectScreen = () => {
                 styles.confirmButton,
                 confirmState === "error" && styles.confirmButtonError,
               ]}
-              activeOpacity={0.7}
+              activeOpacity={ACTIVE_OPACITY}
               onPress={handleConfirm}
               disabled={isConfirmBusy}
               accessibilityLabel={t("selectSecretObject.confirmA11y")}

@@ -1,12 +1,13 @@
 import { colors } from "@/src/theme/colors";
+import { ACTIVE_OPACITY } from "@/src/theme/constants";
 import { fonts } from "@/src/theme/fonts";
 import { useRouter } from "expo-router";
 import React, { useCallback, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
-  Pressable,
   StyleSheet,
   Text,
+  TouchableOpacity,
   useWindowDimensions,
   View,
 } from "react-native";
@@ -63,28 +64,22 @@ const OnboardingScreen = () => {
         </Animated.View>
 
         <View style={styles.buttonsContainer}>
-          <Pressable
-            style={({ pressed }) => [
-              styles.button,
-              styles.skipButton,
-              pressed && styles.buttonPressed,
-            ]}
+          <TouchableOpacity
+            style={[styles.button, styles.skipButton]}
             onPress={handleSkip}
+            activeOpacity={ACTIVE_OPACITY}
             accessibilityLabel={t("auth.onboarding.skipA11y")}
             accessibilityRole="button"
           >
             <Text style={styles.skipButtonText}>
               {t("auth.onboarding.skip")}
             </Text>
-          </Pressable>
+          </TouchableOpacity>
 
-          <Pressable
-            style={({ pressed }) => [
-              styles.button,
-              styles.nextButton,
-              pressed && styles.buttonPressed,
-            ]}
+          <TouchableOpacity
+            style={[styles.button, styles.nextButton]}
             onPress={handleNext}
+            activeOpacity={ACTIVE_OPACITY}
             accessibilityLabel={t(
               isLastSlide
                 ? "auth.onboarding.startA11y"
@@ -97,7 +92,7 @@ const OnboardingScreen = () => {
                 ? t("auth.onboarding.start")
                 : t("auth.onboarding.next")}
             </Text>
-          </Pressable>
+          </TouchableOpacity>
         </View>
       </View>
     </View>
@@ -139,13 +134,10 @@ const styles = StyleSheet.create({
   },
   button: {
     flex: 1,
-    height: 50,
-    borderRadius: 25,
+    borderRadius: 100,
     alignItems: "center",
     justifyContent: "center",
-  },
-  buttonPressed: {
-    opacity: 0.8,
+    paddingVertical: 20,
   },
   skipButton: {
     borderWidth: 1.5,

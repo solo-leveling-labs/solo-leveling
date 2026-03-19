@@ -1,6 +1,7 @@
 import ChildWelcomeDecoBottom from "@/assets/svg/child-welcome-deco-bottom.svg";
 import ChildWelcomeDecoTop from "@/assets/svg/child-welcome-deco-top.svg";
 import { colors } from "@/src/theme/colors";
+import { ACTIVE_OPACITY } from "@/src/theme/constants";
 import { fonts } from "@/src/theme/fonts";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -46,7 +47,7 @@ const SecretObjectIntroScreen = () => {
         <TouchableOpacity
           style={styles.backButton}
           onPress={handleBack}
-          activeOpacity={0.7}
+          activeOpacity={ACTIVE_OPACITY}
           accessibilityLabel={t("secretObjectIntro.backA11y")}
           accessibilityRole="button"
         >
@@ -69,7 +70,7 @@ const SecretObjectIntroScreen = () => {
           <TouchableOpacity
             style={styles.ctaButton}
             onPress={handleChoose}
-            activeOpacity={0.7}
+            activeOpacity={ACTIVE_OPACITY}
             accessibilityLabel={t("secretObjectIntro.ctaA11y")}
             accessibilityRole="button"
           >

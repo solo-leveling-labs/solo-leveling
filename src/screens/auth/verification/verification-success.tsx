@@ -2,13 +2,14 @@ import BgDecorations from "@/assets/svg/bg-decorations.svg";
 import Buho from "@/assets/svg/buho.svg";
 import { useAuthStore } from "@/src/store/auth.store";
 import { colors } from "@/src/theme/colors";
+import { ACTIVE_OPACITY } from "@/src/theme/constants";
 import { fonts } from "@/src/theme/fonts";
 import { useRouter } from "expo-router";
 import React, { useCallback } from "react";
 import {
-  Pressable,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
   useWindowDimensions,
 } from "react-native";
@@ -53,17 +54,15 @@ const VerificationSuccessScreen = () => {
         </View>
 
         <View style={styles.footer}>
-          <Pressable
-            style={({ pressed }) => [
-              styles.continueButton,
-              pressed && styles.buttonPressed,
-            ]}
+          <TouchableOpacity
+            style={styles.continueButton}
             onPress={handleContinue}
+            activeOpacity={ACTIVE_OPACITY}
             accessibilityLabel="Continuar con la configuración"
             accessibilityRole="button"
           >
             <Text style={styles.continueButtonText}>Continuar</Text>
-          </Pressable>
+          </TouchableOpacity>
         </View>
       </View>
     </View>
@@ -111,12 +110,11 @@ const styles = StyleSheet.create({
   },
   continueButton: {
     backgroundColor: colors.accent.mainBlue,
-    height: 70,
     borderRadius: 100,
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 32,
-    width: "100%",
+    paddingVertical: 24,
     borderWidth: 1,
     borderColor: colors.neutral.disabled,
     shadowColor: colors.neutral.white,
@@ -124,9 +122,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 2,
     elevation: 2,
-  },
-  buttonPressed: {
-    opacity: 0.8,
   },
   continueButtonText: {
     fontSize: 16,

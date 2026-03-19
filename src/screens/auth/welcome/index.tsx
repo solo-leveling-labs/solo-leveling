@@ -1,15 +1,16 @@
 import CoLogo from "@/assets/svg/co-logo.svg";
 import WelcomeBackground from "@/assets/svg/welcome-background.svg";
 import { colors } from "@/src/theme/colors";
+import { ACTIVE_OPACITY } from "@/src/theme/constants";
 import { fonts } from "@/src/theme/fonts";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import {
-  Pressable,
   StyleSheet,
   Text,
+  TouchableOpacity,
   useWindowDimensions,
   View,
 } from "react-native";
@@ -44,35 +45,29 @@ const WelcomeScreen = () => {
         <Text style={styles.subtitle}>{t("auth.welcome.subtitle")}</Text>
 
         <View style={styles.buttonsContainer}>
-          <Pressable
-            style={({ pressed }) => [
-              styles.button,
-              styles.primaryButton,
-              pressed && styles.buttonPressed,
-            ]}
+          <TouchableOpacity
+            style={styles.primaryButton}
             onPress={handleFirstTime}
+            activeOpacity={ACTIVE_OPACITY}
             accessibilityLabel={t("auth.welcome.firstTimeA11y")}
             accessibilityRole="button"
           >
             <Text style={styles.primaryButtonText}>
               {t("auth.welcome.firstTime")}
             </Text>
-          </Pressable>
+          </TouchableOpacity>
 
-          <Pressable
-            style={({ pressed }) => [
-              styles.button,
-              styles.secondaryButton,
-              pressed && styles.buttonPressed,
-            ]}
+          <TouchableOpacity
+            style={styles.secondaryButton}
             onPress={handleHaveAccount}
+            activeOpacity={ACTIVE_OPACITY}
             accessibilityLabel={t("auth.welcome.haveAccountA11y")}
             accessibilityRole="button"
           >
             <Text style={styles.secondaryButtonText}>
               {t("auth.welcome.haveAccount")}
             </Text>
-          </Pressable>
+          </TouchableOpacity>
         </View>
       </View>
 
@@ -119,17 +114,13 @@ const styles = StyleSheet.create({
   buttonsContainer: {
     gap: 16,
   },
-  button: {
-    height: 70,
+  primaryButton: {
+    backgroundColor: colors.accent.mainBlue,
     borderRadius: 100,
     alignItems: "center",
     justifyContent: "center",
-  },
-  buttonPressed: {
-    opacity: 0.8,
-  },
-  primaryButton: {
-    backgroundColor: colors.accent.mainBlue,
+    paddingHorizontal: 32,
+    paddingVertical: 20,
   },
   primaryButtonText: {
     fontSize: 16,
@@ -140,6 +131,11 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     borderColor: colors.accent.mainBlue,
     backgroundColor: colors.transparent,
+    borderRadius: 100,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 32,
+    paddingVertical: 20,
   },
   secondaryButtonText: {
     fontSize: 16,

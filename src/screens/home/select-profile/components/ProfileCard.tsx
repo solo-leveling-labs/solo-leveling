@@ -1,8 +1,9 @@
 import { getAvatarConfig } from "@/src/constants/avatar-configs";
 import { colors } from "@/src/theme/colors";
+import { ACTIVE_OPACITY } from "@/src/theme/constants";
 import { fonts } from "@/src/theme/fonts";
 import { useTranslation } from "react-i18next";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 interface ProfileCardProps {
   id: string;
@@ -16,12 +17,10 @@ const ProfileCard = ({ id, name, avatarIndex, onPress }: ProfileCardProps) => {
   const { SvgComponent, frameColor } = getAvatarConfig(avatarIndex);
 
   return (
-    <Pressable
-      style={({ pressed }) => [
-        styles.container,
-        pressed && styles.containerPressed,
-      ]}
+    <TouchableOpacity
+      style={styles.container}
       onPress={() => onPress(id)}
+      activeOpacity={ACTIVE_OPACITY}
       accessibilityLabel={t("selectProfile.profileCardA11y", { name })}
       accessibilityRole="button"
     >
@@ -31,7 +30,7 @@ const ProfileCard = ({ id, name, avatarIndex, onPress }: ProfileCardProps) => {
       <Text style={styles.name} numberOfLines={1}>
         {name}
       </Text>
-    </Pressable>
+    </TouchableOpacity>
   );
 };
 
@@ -39,9 +38,6 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     gap: 8,
-  },
-  containerPressed: {
-    opacity: 0.8,
   },
   frame: {
     width: 128,

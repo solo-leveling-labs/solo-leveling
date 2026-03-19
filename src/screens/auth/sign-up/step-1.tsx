@@ -4,10 +4,11 @@ import { DatePickerField } from "@/src/components/DatePickerField";
 import { FormField } from "@/src/components/FormField";
 import { useSignupStore } from "@/src/store/signup.store";
 import { colors } from "@/src/theme/colors";
+import { ACTIVE_OPACITY } from "@/src/theme/constants";
 import { useRouter } from "expo-router";
 import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Keyboard, Pressable, StyleSheet, Text } from "react-native";
+import { Keyboard, StyleSheet, Text, TouchableOpacity } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 const MINIMUM_AGE = 18;
@@ -133,19 +134,17 @@ const SignUpStep1Screen = () => {
         locale={t("auth.signUp.datePickerLocale")}
         pickerContainerStyleIOS={styles.datePickerIOS}
         customConfirmButtonIOS={({ onPress }) => (
-          <Pressable
+          <TouchableOpacity
             onPress={onPress}
-            style={({ pressed }) => [
-              styles.datePickerConfirmButton,
-              pressed && styles.datePickerConfirmPressed,
-            ]}
+            style={styles.datePickerConfirmButton}
+            activeOpacity={ACTIVE_OPACITY}
             accessibilityRole="button"
             accessibilityLabel={t("auth.signUp.datePickerConfirm")}
           >
             <Text style={styles.datePickerConfirmText}>
               {t("auth.signUp.datePickerConfirm")}
             </Text>
-          </Pressable>
+          </TouchableOpacity>
         )}
       />
     </AuthLayout>
@@ -162,9 +161,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderTopWidth: StyleSheet.hairlineWidth,
     borderTopColor: colors.neutral[700],
-  },
-  datePickerConfirmPressed: {
-    backgroundColor: colors.overlay.selected,
   },
   datePickerConfirmText: {
     fontSize: 20,

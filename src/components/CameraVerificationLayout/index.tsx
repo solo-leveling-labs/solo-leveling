@@ -219,8 +219,15 @@ export const CameraVerificationLayout = ({
                 t("auth.cameraVerification.cancelAlertTitle"),
                 t("auth.cameraVerification.cancelAlertMessage"),
                 [
-                  { text: t("auth.cameraVerification.cancelAlertStay"), style: "cancel" },
-                  { text: t("auth.cameraVerification.cancelAlertLeave"), style: "destructive", onPress: onCancel },
+                  {
+                    text: t("auth.cameraVerification.cancelAlertStay"),
+                    style: "cancel",
+                  },
+                  {
+                    text: t("auth.cameraVerification.cancelAlertLeave"),
+                    style: "destructive",
+                    onPress: onCancel,
+                  },
                 ],
               );
             }}
@@ -270,7 +277,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 32,
-    width: "100%",
   },
   buttonPressed: {
     opacity: 0.8,

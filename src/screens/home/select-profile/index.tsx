@@ -4,6 +4,7 @@ import SelectProfileBackground from "@/assets/svg/select-profile-background.svg"
 import { useGetUsers } from "@/src/api/users/users.hooks";
 import { useAuthStore } from "@/src/store/auth.store";
 import { colors } from "@/src/theme/colors";
+import { ACTIVE_OPACITY } from "@/src/theme/constants";
 import { fonts } from "@/src/theme/fonts";
 import { minDelay } from "@/src/utils/min-delay";
 import { useFocusEffect, useRouter } from "expo-router";
@@ -12,10 +13,10 @@ import { useTranslation } from "react-i18next";
 import {
   ActivityIndicator,
   BackHandler,
-  Pressable,
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
   useWindowDimensions,
 } from "react-native";
@@ -142,12 +143,10 @@ const SelectProfileScreen = () => {
             ))}
 
             {isParent && <View style={[styles.profileCardWrapper, { width: cardWidth }]}>
-              <Pressable
-                style={({ pressed }) => [
-                  styles.addProfileCard,
-                  pressed && styles.addProfileCardPressed,
-                ]}
+              <TouchableOpacity
+                style={styles.addProfileCard}
                 onPress={handleAddProfile}
+                activeOpacity={ACTIVE_OPACITY}
                 accessibilityLabel={t("selectProfile.addProfileA11y")}
                 accessibilityRole="button"
               >
@@ -155,7 +154,7 @@ const SelectProfileScreen = () => {
                 <Text style={styles.addProfileText}>
                   {t("selectProfile.addProfile")}
                 </Text>
-              </Pressable>
+              </TouchableOpacity>
             </View>}
           </View>
         )}
@@ -163,12 +162,10 @@ const SelectProfileScreen = () => {
 
       <View style={styles.fixedBottom} pointerEvents="box-none">
         <View style={styles.footer}>
-          <Pressable
-            style={({ pressed }) => [
-              styles.parentButton,
-              pressed && styles.parentButtonPressed,
-            ]}
+          <TouchableOpacity
+            style={styles.parentButton}
             onPress={handleParentAccess}
+            activeOpacity={ACTIVE_OPACITY}
             accessibilityLabel={t("selectProfile.parentAccessA11y")}
             accessibilityRole="button"
           >
@@ -178,7 +175,7 @@ const SelectProfileScreen = () => {
             <Text style={styles.parentButtonText}>
               {t("selectProfile.parentAccess")}
             </Text>
-          </Pressable>
+          </TouchableOpacity>
         </View>
 
         <SelectProfileBackground
@@ -225,9 +222,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 16,
   },
-  addProfileCardPressed: {
-    opacity: 0.8,
-  },
   addProfileText: {
     fontFamily: fonts.poppins.bold,
     fontSize: 16,
@@ -253,13 +247,11 @@ const styles = StyleSheet.create({
   parentButton: {
     backgroundColor: colors.accent.mainBlue,
     borderRadius: 12,
-    height: 56,
     alignItems: "center",
     justifyContent: "center",
     overflow: "hidden",
-  },
-  parentButtonPressed: {
-    opacity: 0.8,
+    paddingHorizontal: 32,
+    paddingVertical: 24,
   },
   parentButtonDecoration: {
     position: "absolute",
