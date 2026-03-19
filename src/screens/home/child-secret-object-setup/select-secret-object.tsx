@@ -87,7 +87,8 @@ const SelectSecretObjectScreen = () => {
   const { mutate: assignSecretObject, isPending: isAssigning } =
     useAssignSecretObject();
 
-  const isConfirmPending = isSelectingProfile || isAssigning;
+  const [confirmState, setConfirmState] = useState<"idle" | "loading" | "success">("idle");
+  const isConfirmBusy = confirmState !== "idle";
 
   const [overlayIndex, setOverlayIndex] = useState<number | null>(null);
   const [visibleIndex, setVisibleIndex] = useState<number | null>(null);
@@ -125,9 +126,12 @@ const SelectSecretObjectScreen = () => {
   }, [back]);
 
   const handleConfirm = useCallback(() => {
-    if (visibleIndex === null || isConfirmPending) return;
+    if (visibleIndex === null || isConfirmBusy) return;
 
-    const navigateToHome = () => {
+    setConfirmState("loading");
+
+    const onSuccess = () => {
+      setConfirmState("success");
       minDelay().then(() => {
         replace("/(tabs)");
       });
@@ -136,20 +140,20 @@ const SelectSecretObjectScreen = () => {
     if (mode === "login") {
       selectProfile(
         { userId: Number(childId), secretObjectId: visibleIndex },
-        { onSuccess: navigateToHome },
+        { onSuccess },
       );
     } else {
       // TODO: Use real objectId from GET /secret-objects when available
       assignSecretObject(
         { userId: Number(childId), objectId: 2001 },
-        { onSuccess: navigateToHome },
+        { onSuccess },
       );
     }
   }, [
     mode,
     visibleIndex,
     childId,
-    isConfirmPending,
+    isConfirmBusy,
     selectProfile,
     assignSecretObject,
     replace,
@@ -244,24 +248,37 @@ const SelectSecretObjectScreen = () => {
               style={styles.confirmButton}
               activeOpacity={0.7}
               onPress={handleConfirm}
-              disabled={isConfirmPending}
+              disabled={isConfirmBusy}
               accessibilityLabel={t("selectSecretObject.confirmA11y")}
               accessibilityRole="button"
             >
-              {isConfirmPending ? (
+              {confirmState === "loading" && (
                 <ActivityIndicator
                   color={colors.neutral.white}
-                  size={"small"}
+                  size="small"
+                  style={styles.confirmOverlay}
                 />
-              ) : (
-                <Text style={styles.confirmButtonText}>
-                  {t(
-                    mode === "login"
-                      ? "selectSecretObject.loginConfirm"
-                      : "selectSecretObject.setupConfirm",
-                  )}
-                </Text>
               )}
+              {confirmState === "success" && (
+                <Ionicons
+                  name="checkmark"
+                  size={24}
+                  color={colors.neutral.white}
+                  style={styles.confirmOverlay}
+                />
+              )}
+              <Text
+                style={[
+                  styles.confirmButtonText,
+                  isConfirmBusy && styles.confirmButtonTextHidden,
+                ]}
+              >
+                {t(
+                  mode === "login"
+                    ? "selectSecretObject.loginConfirm"
+                    : "selectSecretObject.setupConfirm",
+                )}
+              </Text>
             </TouchableOpacity>
           </View>
         </Animated.View>
@@ -363,13 +380,16 @@ const styles = StyleSheet.create({
     shadowRadius: 15,
     elevation: 8,
   },
-  confirmButtonDisabled: {
-    opacity: 0.6,
+  confirmOverlay: {
+    position: "absolute",
   },
   confirmButtonText: {
     fontFamily: fonts.poppins.bold,
     fontSize: 16,
     color: colors.neutral.white,
+  },
+  confirmButtonTextHidden: {
+    opacity: 0,
   },
 });
 
