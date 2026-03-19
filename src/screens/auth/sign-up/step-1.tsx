@@ -7,7 +7,7 @@ import { colors } from "@/src/theme/colors";
 import { useRouter } from "expo-router";
 import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Pressable, StyleSheet, Text } from "react-native";
+import { Keyboard, Pressable, StyleSheet, Text } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 const MINIMUM_AGE = 18;
@@ -61,6 +61,7 @@ const SignUpStep1Screen = () => {
   const isFormValid = name.trim().length > 0 && birthDate !== null;
 
   const showDatePicker = useCallback(() => {
+    Keyboard.dismiss();
     setIsDatePickerVisible(true);
   }, []);
 

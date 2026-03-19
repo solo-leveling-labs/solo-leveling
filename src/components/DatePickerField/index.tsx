@@ -66,9 +66,10 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    borderRadius: 28,
-    borderWidth: 2,
-    borderColor: colors.border.default,
+    borderRadius: 40,
+    borderWidth: 1,
+    borderColor: colors.accent.mainBlue,
+    margin: 1,
     backgroundColor: colors.transparent,
   },
   inputContainerError: {
