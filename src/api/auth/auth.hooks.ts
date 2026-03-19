@@ -91,9 +91,10 @@ export const useSelectProfile = () => {
     mutationFn: (payload: SelectProfileRequest) => {
       return authApi.selectProfile(payload);
     },
-    onSuccess: async (data) => {
-      updateUser({ role: data.role });
-      await TokenService.setTokens(data.token, data.refreshToken);
+    onSuccess: async (response) => {
+      const { token, refreshToken, role } = response.data;
+      updateUser({ role });
+      await TokenService.setTokens(token, refreshToken);
     },
   });
 };

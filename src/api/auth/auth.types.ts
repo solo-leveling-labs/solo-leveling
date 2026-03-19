@@ -94,10 +94,13 @@ export interface SignupResponse {
 }
 
 export interface SelectProfileResponse {
-  auth: boolean;
-  token: string;
-  refreshToken: string;
-  role: UserRole;
+  statusCode: number;
+  data: {
+    auth: boolean;
+    token: string;
+    refreshToken: string;
+    role: UserRole;
+  };
 }
 
 export interface AssignSecretObjectResponse {

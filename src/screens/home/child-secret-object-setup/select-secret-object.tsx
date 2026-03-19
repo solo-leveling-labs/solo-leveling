@@ -88,7 +88,7 @@ const SelectSecretObjectScreen = () => {
   const { mutate: assignSecretObject } = useAssignSecretObject();
 
   const [confirmState, setConfirmState] = useState<
-    "idle" | "loading" | "success"
+    "idle" | "loading" | "success" | "error"
   >("idle");
   const isConfirmBusy = confirmState !== "idle";
 
@@ -144,21 +144,20 @@ const SelectSecretObjectScreen = () => {
       });
     };
 
+    const onError = () => {
+      setConfirmState("error");
+      setTimeout(() => setConfirmState("idle"), 1200);
+    };
+
     if (mode === "login") {
       selectProfile(
         { userId: Number(childId), secretObjectId: visibleIndex },
-        { onSuccess },
+        { onSuccess, onError },
       );
     } else {
       assignSecretObject(
         { userId: Number(childId), objectId: visibleIndex },
-        {
-          onSuccess,
-          onError: (error: any) => {
-            console.log("assign-secret-object error:", error?.response?.data);
-            setConfirmState("idle");
-          },
-        },
+        { onSuccess, onError },
       );
     }
   }, [
@@ -257,7 +256,10 @@ const SelectSecretObjectScreen = () => {
             </Animated.View>
 
             <TouchableOpacity
-              style={styles.confirmButton}
+              style={[
+                styles.confirmButton,
+                confirmState === "error" && styles.confirmButtonError,
+              ]}
               activeOpacity={0.7}
               onPress={handleConfirm}
               disabled={isConfirmBusy}
@@ -274,6 +276,14 @@ const SelectSecretObjectScreen = () => {
               {confirmState === "success" && (
                 <Ionicons
                   name="checkmark"
+                  size={24}
+                  color={colors.neutral.white}
+                  style={styles.confirmOverlay}
+                />
+              )}
+              {confirmState === "error" && (
+                <Ionicons
+                  name="close"
                   size={24}
                   color={colors.neutral.white}
                   style={styles.confirmOverlay}
@@ -391,6 +401,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 15,
     elevation: 8,
+  },
+  confirmButtonError: {
+    backgroundColor: colors.error,
   },
   confirmOverlay: {
     position: "absolute",
