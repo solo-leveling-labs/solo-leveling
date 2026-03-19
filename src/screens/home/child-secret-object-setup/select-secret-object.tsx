@@ -7,6 +7,7 @@ import { colors } from "@/src/theme/colors";
 import { fonts } from "@/src/theme/fonts";
 import { minDelay } from "@/src/utils/min-delay";
 import { Ionicons } from "@expo/vector-icons";
+import { CommonActions, useNavigation } from "@react-navigation/native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -75,17 +76,16 @@ type ScreenMode = "setup" | "login";
 
 const SelectSecretObjectScreen = () => {
   const { t } = useTranslation();
-  const { back, replace } = useRouter();
+  const { back } = useRouter();
+  const rootNavigation = useNavigation().getParent();
   const { top: safeTop, bottom: safeBottom } = useSafeAreaInsets();
   const { childId, mode = "setup" } = useLocalSearchParams<{
     childId: string;
     mode?: ScreenMode;
   }>();
 
-  const { mutate: selectProfile, isPending: isSelectingProfile } =
-    useSelectProfile();
-  const { mutate: assignSecretObject, isPending: isAssigning } =
-    useAssignSecretObject();
+  const { mutate: selectProfile } = useSelectProfile();
+  const { mutate: assignSecretObject } = useAssignSecretObject();
 
   const [confirmState, setConfirmState] = useState<"idle" | "loading" | "success">("idle");
   const isConfirmBusy = confirmState !== "idle";
@@ -133,7 +133,12 @@ const SelectSecretObjectScreen = () => {
     const onSuccess = () => {
       setConfirmState("success");
       minDelay().then(() => {
-        replace("/(tabs)");
+        rootNavigation?.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{ name: "(tabs)" }],
+          }),
+        );
       });
     };
 
@@ -156,7 +161,7 @@ const SelectSecretObjectScreen = () => {
     isConfirmBusy,
     selectProfile,
     assignSecretObject,
-    replace,
+    rootNavigation,
   ]);
 
   const overlayAnimatedStyle = useAnimatedStyle(() => ({
