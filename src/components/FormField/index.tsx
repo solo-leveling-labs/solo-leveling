@@ -28,6 +28,7 @@ interface FormFieldProps {
   helperText?: string;
   pressableA11y?: string;
   maxLength?: number;
+  disabled?: boolean;
 }
 
 export const FormField = ({
@@ -47,23 +48,33 @@ export const FormField = ({
   helperText,
   pressableA11y,
   maxLength,
+  disabled = false,
 }: FormFieldProps) => {
   const [isFocused, setIsFocused] = useState(false);
 
+  const hasValue = (value?.length ?? 0) > 0;
+  const isError = !!errorText;
+
+  const getLabelStyle = () => {
+    if (disabled) return styles.labelDisabled;
+    if (isError) return styles.labelError;
+    if (isFocused || hasValue) return styles.labelActive;
+    return null;
+  };
+
+  const getContainerStyle = () => {
+    if (disabled) return styles.inputContainerDisabled;
+    if (isError) return styles.inputContainerError;
+    if (isFocused) return styles.inputContainerFocused;
+    return null;
+  };
+
   return (
     <View style={styles.fieldGroup}>
-      <Text style={[styles.label, errorText && styles.labelError]}>
-        {label}
-      </Text>
-      <View
-        style={[
-          styles.inputContainer,
-          isFocused && styles.inputContainerFocused,
-          errorText && styles.inputContainerError,
-        ]}
-      >
+      <Text style={[styles.label, getLabelStyle()]}>{label}</Text>
+      <View style={[styles.inputContainer, getContainerStyle()]}>
         <TextInput
-          style={styles.input}
+          style={[styles.input, disabled && styles.inputDisabled]}
           value={value}
           onChangeText={onChangeText}
           onFocus={() => setIsFocused(true)}
@@ -75,20 +86,24 @@ export const FormField = ({
           autoComplete={autoComplete}
           placeholder={placeholder}
           maxLength={maxLength}
-          placeholderTextColor={colors.neutral[700]}
+          placeholderTextColor={
+            disabled ? colors.neutral.disabled : colors.neutral[500]
+          }
+          editable={!disabled}
           accessibilityLabel={labelA11y}
         />
         {rightIconName && (
           <Pressable
             onPress={onRightIconPress}
             style={styles.eyeIcon}
+            disabled={disabled}
             accessibilityLabel={pressableA11y}
             accessibilityRole="button"
           >
             <Ionicons
               name={rightIconName}
               size={22}
-              color={colors.neutral[500]}
+              color={disabled ? colors.neutral.disabled : colors.neutral[500]}
             />
           </Pressable>
         )}
@@ -96,7 +111,9 @@ export const FormField = ({
       {errorText ? (
         <Text style={styles.errorText}>{errorText}</Text>
       ) : helperText ? (
-        <Text style={styles.helperText}>{helperText}</Text>
+        <Text style={[styles.helperText, disabled && styles.helperTextDisabled]}>
+          {helperText}
+        </Text>
       ) : null}
     </View>
   );
@@ -104,39 +121,54 @@ export const FormField = ({
 
 const styles = StyleSheet.create({
   fieldGroup: {
-    gap: 6,
+    gap: 8,
   },
   label: {
     fontSize: 14,
     fontFamily: fonts.poppins.regular,
+    color: colors.neutral[200],
+  },
+  labelActive: {
     color: colors.neutral[300],
   },
   labelError: {
     color: colors.error,
   },
+  labelDisabled: {
+    color: colors.neutral.disabled,
+  },
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    borderRadius: 28,
-    borderWidth: 2,
-    borderColor: colors.border.default,
+    borderRadius: 40,
+    borderWidth: 1,
+    borderColor: colors.accent.mainBlue,
     backgroundColor: colors.transparent,
+    margin: 1,
   },
   inputContainerFocused: {
-    borderColor: colors.border.focused,
+    borderWidth: 2,
+    backgroundColor: colors.neutral.white,
+    margin: 0,
   },
   inputContainerError: {
     borderColor: colors.error,
+  },
+  inputContainerDisabled: {
+    borderColor: colors.neutral.disabled,
   },
   input: {
     flex: 1,
     fontSize: 16,
     fontFamily: fonts.poppins.regular,
-    color: colors.neutral[300],
+    color: colors.neutral[200],
     height: 56,
-    paddingHorizontal: 20,
+    paddingHorizontal: 24,
     lineHeight: 22,
     includeFontPadding: false,
+  },
+  inputDisabled: {
+    color: colors.neutral.disabled,
   },
   eyeIcon: {
     position: "absolute",
@@ -147,14 +179,16 @@ const styles = StyleSheet.create({
     fontFamily: fonts.poppins.regular,
     color: colors.error,
     paddingHorizontal: 24,
-    lineHeight: 16,
-    letterSpacing: 0.4,
+    lineHeight: 14.4,
   },
   helperText: {
     fontSize: 12,
     fontFamily: fonts.poppins.regular,
     color: colors.neutral[500],
     paddingHorizontal: 24,
-    lineHeight: 16,
+    lineHeight: 14.4,
+  },
+  helperTextDisabled: {
+    color: colors.neutral.disabled,
   },
 });
