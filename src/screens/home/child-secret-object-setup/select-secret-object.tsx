@@ -1,14 +1,69 @@
+import CloseBigIcon from "@/assets/svg/close_big.svg";
 import { colors } from "@/src/theme/colors";
 import { fonts } from "@/src/theme/fonts";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import Animated, {
+  cancelAnimation,
+  runOnJS,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+  withTiming,
+} from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import SecretObjectCard from "./components/SecretObjectCard";
+import {
+  SECRET_OBJECT_CONFIGS,
+  SECRET_OBJECT_INDICES,
+} from "./constants/secret-object-configs";
+const FADE_DURATION = 250;
 
-const SECRET_OBJECT_INDICES = [1, 2, 3, 4, 5, 6, 7, 8] as const;
+const GRID_FRAME_SIZE = 145;
+const GRID_ICON_SIZE = 124;
+const ENLARGED_FRAME_SIZE = 210;
+const ENLARGED_ICON_SIZE = 180;
+
+const OPEN_SPRING = { damping: 18, stiffness: 260, mass: 0.8 } as const;
+const CLOSE_SPRING = { damping: 22, stiffness: 300 } as const;
+
+interface ObjectFrameProps {
+  index: number;
+  size: "grid" | "enlarged";
+}
+
+const ObjectFrame = ({ index, size }: ObjectFrameProps) => {
+  const config = SECRET_OBJECT_CONFIGS[index];
+  if (!config) return null;
+
+  const { SvgComponent, frameColor } = config;
+  const isEnlarged = size === "enlarged";
+  const frameSize = isEnlarged ? ENLARGED_FRAME_SIZE : GRID_FRAME_SIZE;
+  const iconSize = isEnlarged ? ENLARGED_ICON_SIZE : GRID_ICON_SIZE;
+
+  return (
+    <View
+      style={[styles.frameShadow, isEnlarged && styles.frameShadowEnlarged]}
+    >
+      <View
+        style={[
+          styles.frameInner,
+          { borderColor: frameColor, width: frameSize, height: frameSize },
+        ]}
+      >
+        <SvgComponent width={iconSize} height={iconSize} />
+      </View>
+    </View>
+  );
+};
 
 const SelectSecretObjectScreen = () => {
   const { t } = useTranslation();
@@ -16,22 +71,53 @@ const SelectSecretObjectScreen = () => {
   const { top: safeTop, bottom: safeBottom } = useSafeAreaInsets();
   const { childId: _childId } = useLocalSearchParams<{ childId: string }>();
 
-  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [overlayIndex, setOverlayIndex] = useState<number | null>(null);
+  const [visibleIndex, setVisibleIndex] = useState<number | null>(null);
 
-  const handleCardPress = useCallback((index: number) => {
-    setSelectedIndex((prev) => (prev === index ? null : index));
-  }, []);
+  const overlayOpacity = useSharedValue(0);
+  const cardScale = useSharedValue(0);
+
+  const openOverlay = useCallback(
+    (index: number) => {
+      cancelAnimation(cardScale);
+      cancelAnimation(overlayOpacity);
+
+      setOverlayIndex(index);
+      setVisibleIndex(index);
+      cardScale.value = 0;
+      overlayOpacity.value = withTiming(1, { duration: FADE_DURATION });
+      cardScale.value = withSpring(1, OPEN_SPRING);
+    },
+    [overlayOpacity, cardScale],
+  );
+
+  const closeOverlay = useCallback(() => {
+    setOverlayIndex(null);
+
+    overlayOpacity.value = withTiming(0, { duration: FADE_DURATION });
+    cardScale.value = withSpring(0, CLOSE_SPRING, (finished) => {
+      if (finished) {
+        runOnJS(setVisibleIndex)(null);
+      }
+    });
+  }, [overlayOpacity, cardScale]);
 
   const handleBack = useCallback(() => {
     back();
   }, [back]);
 
   const handleConfirm = useCallback(() => {
-    // TODO: Save selected secret object
+    // TODO: Save selected secret object via POST /auth/assign-secret-object
     dismissTo("/(tabs)");
   }, [dismissTo]);
 
-  const isConfirmEnabled = selectedIndex !== null;
+  const overlayAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: overlayOpacity.value,
+  }));
+
+  const modalCardAnimatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: cardScale.value }],
+  }));
 
   return (
     <View style={styles.container}>
@@ -41,13 +127,10 @@ const SelectSecretObjectScreen = () => {
           { paddingTop: safeTop + 16, paddingBottom: safeBottom + 40 },
         ]}
         showsVerticalScrollIndicator={false}
-        bounces={false}
       >
-        <Pressable
-          style={({ pressed }) => [
-            styles.backButton,
-            pressed && styles.backButtonPressed,
-          ]}
+        <TouchableOpacity
+          style={styles.backButton}
+          activeOpacity={0.7}
           onPress={handleBack}
           accessibilityLabel={t("selectSecretObject.backA11y")}
           accessibilityRole="button"
@@ -57,46 +140,70 @@ const SelectSecretObjectScreen = () => {
             size={28}
             color={colors.accent.mainBlue}
           />
-        </Pressable>
+        </TouchableOpacity>
 
         <Text style={styles.title}>{t("selectSecretObject.title")}</Text>
 
         <View style={styles.cardGrid}>
           {SECRET_OBJECT_INDICES.map((index) => (
-            <SecretObjectCard
+            <TouchableOpacity
               key={index}
-              index={index}
-              isSelected={selectedIndex === index}
-              isDimmed={selectedIndex !== null && selectedIndex !== index}
-              onPress={handleCardPress}
-            />
+              style={styles.gridCard}
+              activeOpacity={0.7}
+              onPress={() => openOverlay(index)}
+              accessibilityLabel={t("selectSecretObject.cardA11y", { index })}
+              accessibilityRole="button"
+            >
+              <ObjectFrame index={index} size="grid" />
+            </TouchableOpacity>
           ))}
         </View>
-
-        <View style={styles.footer}>
-          <Pressable
-            style={({ pressed }) => [
-              styles.confirmButton,
-              !isConfirmEnabled && styles.confirmButtonDisabled,
-              pressed && isConfirmEnabled && styles.confirmButtonPressed,
-            ]}
-            onPress={handleConfirm}
-            disabled={!isConfirmEnabled}
-            accessibilityLabel={t("selectSecretObject.confirmA11y")}
-            accessibilityRole="button"
-            accessibilityState={{ disabled: !isConfirmEnabled }}
-          >
-            <Text
-              style={[
-                styles.confirmButtonText,
-                !isConfirmEnabled && styles.confirmButtonTextDisabled,
-              ]}
-            >
-              {t("selectSecretObject.confirm")}
-            </Text>
-          </Pressable>
-        </View>
       </ScrollView>
+
+      {visibleIndex !== null && (
+        <Animated.View
+          style={[StyleSheet.absoluteFill, overlayAnimatedStyle]}
+          pointerEvents={overlayIndex !== null ? "box-none" : "none"}
+        >
+          <TouchableOpacity
+            style={[StyleSheet.absoluteFill, styles.backdrop]}
+            activeOpacity={1}
+            onPress={closeOverlay}
+            accessibilityLabel={t("selectSecretObject.backA11y")}
+            accessibilityRole="button"
+          />
+
+          <View style={styles.modalContainer} pointerEvents="box-none">
+            <View style={styles.closeRow}>
+              <TouchableOpacity
+                style={styles.closeButton}
+                activeOpacity={0.7}
+                onPress={closeOverlay}
+                accessibilityLabel={t("selectSecretObject.backA11y")}
+                accessibilityRole="button"
+              >
+                <CloseBigIcon width={56} height={56} />
+              </TouchableOpacity>
+            </View>
+
+            <Animated.View style={[styles.modalCard, modalCardAnimatedStyle]}>
+              <ObjectFrame index={visibleIndex} size="enlarged" />
+            </Animated.View>
+
+            <TouchableOpacity
+              style={styles.confirmButton}
+              activeOpacity={0.7}
+              onPress={handleConfirm}
+              accessibilityLabel={t("selectSecretObject.confirmA11y")}
+              accessibilityRole="button"
+            >
+              <Text style={styles.confirmButtonText}>
+                {t("selectSecretObject.confirm")}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </Animated.View>
+      )}
     </View>
   );
 };
@@ -115,12 +222,9 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
     marginBottom: 20,
   },
-  backButtonPressed: {
-    opacity: 0.8,
-  },
   title: {
-    fontSize: 40,
-    fontFamily: fonts.raleway.extraBold,
+    fontSize: 24,
+    fontFamily: fonts.raleway.bold,
     color: colors.accent.mainBlue,
     textAlign: "center",
     includeFontPadding: false,
@@ -130,33 +234,77 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     justifyContent: "center",
     gap: 20,
-    marginVertical: 56,
+    marginTop: 32,
     flex: 1,
   },
-  footer: {
-    paddingHorizontal: 16,
+  gridCard: {
+    alignItems: "center",
   },
-  confirmButton: {
-    backgroundColor: colors.accent.mainBlue,
+  frameShadow: {
     borderRadius: 12,
+    backgroundColor: colors.accent.lightBackground,
+    shadowColor: colors.neutral.black,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  frameShadowEnlarged: {
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 12,
+    elevation: 12,
+  },
+  frameInner: {
+    borderRadius: 12,
+    borderWidth: 11,
+    backgroundColor: colors.accent.lightBackground,
+    overflow: "hidden",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  backdrop: {
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+    width: 327,
+    alignSelf: "center",
+  },
+  closeRow: {
+    width: "100%",
+    alignItems: "flex-end",
+  },
+  closeButton: {
+    width: 56,
     height: 56,
     alignItems: "center",
     justifyContent: "center",
-    overflow: "hidden",
   },
-  confirmButtonDisabled: {
-    backgroundColor: colors.neutral.disabled,
+  modalCard: {
+    alignItems: "center",
   },
-  confirmButtonPressed: {
-    opacity: 0.8,
+  confirmButton: {
+    backgroundColor: colors.accent.mainBlue,
+    borderRadius: 100,
+    paddingHorizontal: 32,
+    paddingVertical: 24,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 24,
+    shadowColor: colors.neutral.black,
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.1,
+    shadowRadius: 15,
+    elevation: 8,
   },
   confirmButtonText: {
     fontFamily: fonts.poppins.bold,
     fontSize: 16,
     color: colors.neutral.white,
-  },
-  confirmButtonTextDisabled: {
-    color: colors.neutral[700],
   },
 });
 
