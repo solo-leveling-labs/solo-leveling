@@ -241,6 +241,7 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     alignItems: "center",
+    backgroundColor: colors.accent.lightBackground,
   },
   footer: {
     paddingHorizontal: 40,
