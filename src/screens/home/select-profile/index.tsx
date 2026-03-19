@@ -2,6 +2,7 @@ import AddProfileIconFrame from "@/assets/svg/add-profile-icon-frame.svg";
 import BuhoOjo from "@/assets/svg/Buho-ojo.svg";
 import SelectProfileBackground from "@/assets/svg/select-profile-background.svg";
 import { useGetUsers } from "@/src/api/users/users.hooks";
+import { useAuthStore } from "@/src/store/auth.store";
 import { colors } from "@/src/theme/colors";
 import { fonts } from "@/src/theme/fonts";
 import { minDelay } from "@/src/utils/min-delay";
@@ -30,6 +31,8 @@ const SelectProfileScreen = () => {
   const { width: screenWidth } = useWindowDimensions();
   const { push } = useRouter();
   const { data: usersResponse, isLoading: isFetching, refetch } = useGetUsers();
+  const userRole = useAuthStore((state) => state.user?.role);
+  const isParent = userRole === "PARENT" || !userRole;
   const [minDelayDone, setMinDelayDone] = useState(false);
 
   useEffect(() => {
@@ -138,8 +141,7 @@ const SelectProfileScreen = () => {
               </View>
             ))}
 
-            {/* TODO: Only show "Add profile" button when logged user is PARENT */}
-            <View style={[styles.profileCardWrapper, { width: cardWidth }]}>
+            {isParent && <View style={[styles.profileCardWrapper, { width: cardWidth }]}>
               <Pressable
                 style={({ pressed }) => [
                   styles.addProfileCard,
@@ -154,7 +156,7 @@ const SelectProfileScreen = () => {
                   {t("selectProfile.addProfile")}
                 </Text>
               </Pressable>
-            </View>
+            </View>}
           </View>
         )}
       </ScrollView>
