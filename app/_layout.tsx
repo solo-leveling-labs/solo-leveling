@@ -64,8 +64,6 @@ function RootNavigator() {
         <Stack.Screen name="(select-profile)" />
       </Stack.Protected>
 
-      <Stack.Screen name="(child-secret-object-setup)" />
-
       <Stack.Protected guard={isAuthenticated}>
         <Stack.Screen name="(tabs)" />
       </Stack.Protected>

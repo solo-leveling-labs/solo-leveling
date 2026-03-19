@@ -59,14 +59,16 @@ apiSecure.interceptors.response.use(
     }
 
     try {
-      const { data } = await api.post<AuthTokensResponse>(
-        ENDPOINTS.auth.refresh,
-        { refreshToken },
-      );
+      const { data: refreshResponse } = await api.post<{
+        data: AuthTokensResponse;
+      }>(ENDPOINTS.auth.refresh, { refreshToken });
 
-      await TokenService.setTokens(data.token, data.refreshToken);
+      const { token: newToken, refreshToken: newRefreshToken } =
+        refreshResponse.data;
 
-      originalRequest.headers.set("Authorization", `Bearer ${data.token}`);
+      await TokenService.setTokens(newToken, newRefreshToken);
+
+      originalRequest.headers.set("Authorization", `Bearer ${newToken}`);
 
       return apiSecure(originalRequest);
     } catch (refreshError) {

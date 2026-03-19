@@ -68,9 +68,10 @@ const toAlertConfig = (rule: Rule): AlertConfig => ({
 const ConfigureAlertsScreen = () => {
   const { back, push } = useRouter();
   const { t } = useTranslation();
-  const { childName, childId } = useLocalSearchParams<{
+  const { childName, childId, source } = useLocalSearchParams<{
     childName: string;
     childId: string;
+    source?: string;
   }>();
 
   const { data: rulesResponse, isLoading: isLoadingRules } = useGetRules();
@@ -154,7 +155,7 @@ const ConfigureAlertsScreen = () => {
       ]);
       push({
         pathname: "/notifications-setup",
-        params: { childName, childId },
+        params: { childName, childId, source },
       });
     } catch {
       Alert.alert(t("common.errors.title"), t("common.errors.genericMessage"));

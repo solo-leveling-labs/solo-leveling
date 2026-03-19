@@ -29,7 +29,7 @@ const SelectProfileScreen = () => {
   const { top: safeTop, bottom: safeBottom } = useSafeAreaInsets();
   const { width: screenWidth } = useWindowDimensions();
   const { push } = useRouter();
-  const { data: usersResponse, isLoading: isFetching } = useGetUsers();
+  const { data: usersResponse, isLoading: isFetching, refetch } = useGetUsers();
   const [minDelayDone, setMinDelayDone] = useState(false);
 
   useEffect(() => {
@@ -40,12 +40,14 @@ const SelectProfileScreen = () => {
 
   useFocusEffect(
     useCallback(() => {
+      refetch();
+
       const subscription = BackHandler.addEventListener(
         "hardwareBackPress",
         () => true,
       );
       return () => subscription.remove();
-    }, []),
+    }, [refetch]),
   );
 
   const cardWidth = (screenWidth - 48 - 16) / 2;
@@ -69,7 +71,7 @@ const SelectProfileScreen = () => {
 
       if (profile.hasSecretObject) {
         push({
-          pathname: "/(child-secret-object-setup)/select-secret-object",
+          pathname: "/(select-profile)/select-secret-object",
           params: {
             childId: id,
             mode: "login",
@@ -77,7 +79,7 @@ const SelectProfileScreen = () => {
         });
       } else {
         push({
-          pathname: "/(child-secret-object-setup)/child-welcome",
+          pathname: "/(select-profile)/child-welcome",
           params: {
             childId: id,
             childName: profile.name,
@@ -91,7 +93,7 @@ const SelectProfileScreen = () => {
 
   const handleAddProfile = useCallback(() => {
     push({
-      pathname: "/(first-profile-setup)/create-profile",
+      pathname: "/(select-profile)/create-profile",
       params: { source: "select-profile" },
     });
   }, [push]);
@@ -118,7 +120,7 @@ const SelectProfileScreen = () => {
 
         {isLoading ? (
           <View style={styles.loaderContainer}>
-            <ActivityIndicator size="large" color={colors.accent.mainBlue} />
+            <ActivityIndicator size="small" color={colors.accent.mainBlue} />
           </View>
         ) : (
           <View style={styles.profileGrid}>
@@ -136,6 +138,7 @@ const SelectProfileScreen = () => {
               </View>
             ))}
 
+            {/* TODO: Only show "Add profile" button when logged user is PARENT */}
             <View style={[styles.profileCardWrapper, { width: cardWidth }]}>
               <Pressable
                 style={({ pressed }) => [

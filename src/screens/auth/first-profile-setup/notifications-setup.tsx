@@ -17,7 +17,10 @@ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const NotificationsSetupScreen = () => {
   const { back, replace } = useRouter();
   const { t } = useTranslation();
-  const { childName } = useLocalSearchParams<{ childName: string }>();
+  const { childName, source } = useLocalSearchParams<{
+    childName: string;
+    source?: string;
+  }>();
   const { mutateAsync: updateAccount } = useUpdateAccount();
 
   // TODO: Get actual email from auth context/store (Ignore when Reviewing)
@@ -92,7 +95,7 @@ const NotificationsSetupScreen = () => {
         }),
         minDelay(),
       ]);
-      replace({ pathname: "/profile-complete", params: { childName } });
+      replace({ pathname: "/profile-complete", params: { childName, source } });
     } catch {
       Alert.alert(t("common.errors.title"), t("common.errors.genericMessage"));
     } finally {

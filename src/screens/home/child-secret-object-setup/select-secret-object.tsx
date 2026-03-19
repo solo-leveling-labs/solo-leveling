@@ -87,7 +87,9 @@ const SelectSecretObjectScreen = () => {
   const { mutate: selectProfile } = useSelectProfile();
   const { mutate: assignSecretObject } = useAssignSecretObject();
 
-  const [confirmState, setConfirmState] = useState<"idle" | "loading" | "success">("idle");
+  const [confirmState, setConfirmState] = useState<
+    "idle" | "loading" | "success"
+  >("idle");
   const isConfirmBusy = confirmState !== "idle";
 
   const [overlayIndex, setOverlayIndex] = useState<number | null>(null);
@@ -148,10 +150,15 @@ const SelectSecretObjectScreen = () => {
         { onSuccess },
       );
     } else {
-      // TODO: Use real objectId from GET /secret-objects when available
       assignSecretObject(
-        { userId: Number(childId), objectId: 2001 },
-        { onSuccess },
+        { userId: Number(childId), objectId: visibleIndex },
+        {
+          onSuccess,
+          onError: (error: any) => {
+            console.log("assign-secret-object error:", error?.response?.data);
+            setConfirmState("idle");
+          },
+        },
       );
     }
   }, [

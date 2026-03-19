@@ -66,16 +66,21 @@ const CreateProfileScreen = () => {
         createUser({ fullName: name.trim(), birthday: toISODate(birthDate) }),
         minDelay(),
       ]);
+
       push({
         pathname: "/configure-alerts",
-        params: { childName: data.data.fullName, childId: data.data.id },
+        params: {
+          childName: data.data.fullName,
+          childId: data.data.id,
+          source,
+        },
       });
     } catch {
       Alert.alert(t("common.errors.title"), t("common.errors.genericMessage"));
     } finally {
       setIsLoading(false);
     }
-  }, [isFormValid, birthDate, createUser, name, push, t]);
+  }, [isFormValid, birthDate, createUser, name, push, source, t]);
 
   const handleCancel = useCallback(() => {
     Alert.alert(
