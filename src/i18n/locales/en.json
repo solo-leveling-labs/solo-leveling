@@ -139,7 +139,11 @@
       "cancel": "Cancel",
       "takePhotoButtonA11y": "Start countdown to take identity verification photo",
       "cameraCancelA11y": "Cancel verification and go back to previous step",
-      "photoSaved": "Photo saved successfully."
+      "photoSaved": "Photo saved successfully.",
+      "cancelAlertTitle": "Cancel verification",
+      "cancelAlertMessage": "Are you sure? Verification progress will be lost.",
+      "cancelAlertStay": "Continue",
+      "cancelAlertLeave": "Cancel"
     },
     "underage": {
       "title": "Ask a grown-up for help!",

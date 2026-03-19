@@ -13,6 +13,7 @@ import type { ParseKeys } from "i18next";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
+  Alert,
   Pressable,
   StyleSheet,
   Text,
@@ -213,7 +214,16 @@ export const CameraVerificationLayout = ({
           )}
 
           <Pressable
-            onPress={onCancel}
+            onPress={() => {
+              Alert.alert(
+                t("auth.cameraVerification.cancelAlertTitle"),
+                t("auth.cameraVerification.cancelAlertMessage"),
+                [
+                  { text: t("auth.cameraVerification.cancelAlertStay"), style: "cancel" },
+                  { text: t("auth.cameraVerification.cancelAlertLeave"), style: "destructive", onPress: onCancel },
+                ],
+              );
+            }}
             accessibilityLabel={t("auth.cameraVerification.cameraCancelA11y")}
             accessibilityRole="button"
             disabled={isCountingDown}

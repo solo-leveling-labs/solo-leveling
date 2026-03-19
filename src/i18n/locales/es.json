@@ -139,7 +139,11 @@
       "cancel": "Cancelar",
       "takePhotoButtonA11y": "Iniciar cuenta regresiva para tomar foto de verificación",
       "cameraCancelA11y": "Cancelar verificación y volver al estado anterior",
-      "photoSaved": "Foto guardada correctamente."
+      "photoSaved": "Foto guardada correctamente.",
+      "cancelAlertTitle": "Cancelar verificación",
+      "cancelAlertMessage": "¿Estás seguro? Se perderá el progreso de la verificación.",
+      "cancelAlertStay": "Continuar",
+      "cancelAlertLeave": "Cancelar"
     },
     "underage": {
       "title": "¡Pedile ayuda a un adulto!",
