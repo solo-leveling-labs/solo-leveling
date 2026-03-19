@@ -1,19 +1,11 @@
 import { useLogin } from "@/src/api/auth/auth.hooks";
-import { Ionicons } from "@expo/vector-icons";
+import { AuthLayout } from "@/src/components/AuthLayout";
+import { FormField } from "@/src/components/FormField";
 import { isAxiosError } from "axios";
 import { useRouter } from "expo-router";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  Alert,
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
+import { Alert } from "react-native";
 
 const SignInScreen = () => {
   const { push } = useRouter();
@@ -22,191 +14,71 @@ const SignInScreen = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
-  const handleSignIn = () => {
-    if (!email.trim() || !password.trim()) {
-      Alert.alert(t("common.errors.title"), t("common.errors.requiredFields"));
-      return;
-    }
+  const isFormValid = email.trim().length > 0 && password.trim().length > 0;
 
-    const credentials = { email: email.trim(), password };
+  const handleSignIn = useCallback(() => {
+    if (!isFormValid) return;
 
-    login(credentials, {
-      onError: (e) => {
-        console.log("error", e);
-        if (isAxiosError(e)) {
-          console.log("axios error", e.request, e.response);
-        }
-        Alert.alert(
-          t("common.errors.title"),
-          t("auth.signIn.errorInvalidCredentials"),
-        );
+    login(
+      { email: email.trim(), password },
+      {
+        onError: (e) => {
+          if (isAxiosError(e)) {
+            console.log("login error:", e.response?.data);
+          }
+          Alert.alert(
+            t("common.errors.title"),
+            t("auth.signIn.errorInvalidCredentials"),
+          );
+        },
       },
-    });
-  };
+    );
+  }, [email, password, isFormValid, login, t]);
+
+  const handleGoToSignUp = useCallback(() => {
+    push("/(auth)/sign-up-step-1");
+  }, [push]);
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    <AuthLayout
+      title={t("auth.signIn.title")}
+      subtitle={t("auth.signIn.subtitle")}
+      onNext={handleSignIn}
+      onBack={handleGoToSignUp}
+      isFormValid={isFormValid}
+      isLoading={isPending}
+      nextLabel={t("common.actions.signIn")}
+      nextLabelA11y={t("auth.signIn.submitA11y")}
+      backLabel={t("auth.signIn.footerSignUp")}
+      backLabelA11y={t("auth.signIn.goToSignUpA11y")}
     >
-      <View style={styles.content}>
-        <View style={styles.header}>
-          <Ionicons name="school-outline" size={56} color="#1A1A2E" />
-          <Text style={styles.title}>{t("auth.signIn.title")}</Text>
-          <Text style={styles.subtitle}>{t("auth.signIn.subtitle")}</Text>
-        </View>
+      <FormField
+        label={t("common.fields.email")}
+        value={email}
+        onChangeText={setEmail}
+        placeholder={t("common.fields.email")}
+        keyboardType="email-address"
+        autoCapitalize="none"
+        autoComplete="email"
+        textContentType="emailAddress"
+        labelA11y={t("auth.signIn.emailInputA11y")}
+      />
 
-        <View style={styles.form}>
-          <View style={styles.inputContainer}>
-            <Ionicons
-              name="mail-outline"
-              size={20}
-              color="#8E8E93"
-              style={styles.inputIcon}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder={t("common.fields.email")}
-              placeholderTextColor="#8E8E93"
-              value={email}
-              onChangeText={setEmail}
-              keyboardType="email-address"
-              autoCapitalize="none"
-              autoCorrect={false}
-              accessibilityLabel={t("auth.signIn.emailInputA11y")}
-            />
-          </View>
-
-          <View style={styles.inputContainer}>
-            <Ionicons
-              name="lock-closed-outline"
-              size={20}
-              color="#8E8E93"
-              style={styles.inputIcon}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder={t("common.fields.password")}
-              placeholderTextColor="#8E8E93"
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry
-              accessibilityLabel={t("auth.signIn.passwordInputA11y")}
-            />
-          </View>
-
-          <Pressable
-            style={({ pressed }) => [
-              styles.button,
-              isPending && styles.buttonDisabled,
-              pressed && !isPending && styles.buttonPressed,
-            ]}
-            onPress={handleSignIn}
-            disabled={isPending}
-            accessibilityLabel={t("auth.signIn.submitA11y")}
-            accessibilityRole="button"
-          >
-            <Text style={styles.buttonText}>{t("common.actions.signIn")}</Text>
-          </Pressable>
-        </View>
-
-        <Pressable
-          onPress={() => push("/(auth)/sign-up-step-1")}
-          accessibilityLabel={t("auth.signIn.goToSignUpA11y")}
-          accessibilityRole="link"
-          style={styles.footerButton}
-        >
-          <Text style={styles.footerText}>{t("auth.signIn.footerText")}</Text>
-
-          <Text style={styles.linkText}>{t("common.actions.signUp")}</Text>
-        </Pressable>
-      </View>
-    </KeyboardAvoidingView>
+      <FormField
+        label={t("common.fields.password")}
+        value={password}
+        onChangeText={setPassword}
+        placeholder={t("common.fields.password")}
+        secureTextEntry={!showPassword}
+        rightIconName={showPassword ? "eye-off-outline" : "eye-outline"}
+        onRightIconPress={() => setShowPassword((prev) => !prev)}
+        pressableA11y={t("auth.signIn.togglePasswordA11y")}
+        labelA11y={t("auth.signIn.passwordInputA11y")}
+      />
+    </AuthLayout>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#F8F9FA",
-  },
-  content: {
-    flex: 1,
-    justifyContent: "center",
-    paddingHorizontal: 32,
-  },
-  header: {
-    alignItems: "center",
-    marginBottom: 48,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: "700",
-    color: "#1A1A2E",
-    marginTop: 16,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: "#8E8E93",
-    marginTop: 8,
-  },
-  form: {
-    gap: 16,
-  },
-  inputContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#FFFFFF",
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: "#E5E5EA",
-    paddingHorizontal: 16,
-    height: 52,
-  },
-  inputIcon: {
-    marginRight: 12,
-  },
-  input: {
-    flex: 1,
-    fontSize: 16,
-    color: "#1A1A2E",
-  },
-  button: {
-    backgroundColor: "#1A1A2E",
-    borderRadius: 12,
-    height: 52,
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 8,
-  },
-  buttonDisabled: {
-    opacity: 0.5,
-  },
-  buttonPressed: {
-    opacity: 0.8,
-  },
-  buttonText: {
-    color: "#FFFFFF",
-    fontSize: 17,
-    fontWeight: "600",
-  },
-  footerButton: {
-    marginTop: 32,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    gap: 6,
-  },
-  footerText: {
-    fontSize: 15,
-    color: "#8E8E93",
-  },
-  linkText: {
-    fontSize: 15,
-    color: "#1A1A2E",
-    fontWeight: "600",
-  },
-});
 
 export default SignInScreen;

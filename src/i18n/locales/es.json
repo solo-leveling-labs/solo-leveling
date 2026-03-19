@@ -57,8 +57,10 @@
       "errorInvalidCredentials": "Correo electrónico o contraseña incorrectos. Por favor intenta de nuevo.",
       "emailInputA11y": "Campo de correo electrónico",
       "passwordInputA11y": "Campo de contraseña",
+      "togglePasswordA11y": "Mostrar u ocultar contraseña",
       "submitA11y": "Botón de iniciar sesión",
-      "goToSignUpA11y": "Ir a registro"
+      "goToSignUpA11y": "Ir a registro",
+      "footerSignUp": "Registrarse"
     },
     "signUp": {
       "title": "Regístrate",

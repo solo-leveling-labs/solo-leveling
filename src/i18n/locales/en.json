@@ -57,8 +57,10 @@
       "errorInvalidCredentials": "Invalid email or password. Please try again.",
       "emailInputA11y": "Email input",
       "passwordInputA11y": "Password input",
+      "togglePasswordA11y": "Show or hide password",
       "submitA11y": "Sign in button",
-      "goToSignUpA11y": "Go to sign up"
+      "goToSignUpA11y": "Go to sign up",
+      "footerSignUp": "Sign Up"
     },
     "signUp": {
       "title": "Sign Up",
