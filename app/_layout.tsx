@@ -23,6 +23,7 @@ function RootNavigator() {
     "Poppins-Regular": require("../assets/fonts/Poppins-Regular.ttf"),
     "Raleway-Bold": require("../assets/fonts/Raleway-Bold.ttf"),
     "Raleway-ExtraBold": require("../assets/fonts/Raleway-ExtraBold.ttf"),
+    "Raleway-SemiBold": require("../assets/fonts/Raleway-SemiBold.ttf"),
     ...Ionicons.font,
   });
 

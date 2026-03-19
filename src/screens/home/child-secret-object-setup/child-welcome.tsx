@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
   },
   sectionHeading: {
     fontSize: 20,
-    fontFamily: fonts.raleway.bold,
+    fontFamily: fonts.raleway.semiBold,
     color: colors.accent.mainBlue,
     textAlign: "center",
     lineHeight: 24,
@@ -178,10 +178,10 @@ const styles = StyleSheet.create({
   footer: {
     paddingHorizontal: 16,
     marginTop: 56,
+    alignItems: "center",
   },
   ctaButton: {
     backgroundColor: colors.accent.mainBlue,
-    height: 70,
     borderRadius: 100,
     borderWidth: 1,
     borderColor: colors.neutral.disabled,
@@ -193,6 +193,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 2,
     elevation: 2,
+    paddingHorizontal: 32,
+    paddingVertical: 24,
   },
   ctaButtonPressed: {
     opacity: 0.8,

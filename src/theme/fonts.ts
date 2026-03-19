@@ -6,5 +6,6 @@ export const fonts = {
   raleway: {
     bold: "Raleway-Bold",
     extraBold: "Raleway-ExtraBold",
+    semiBold: "Raleway-SemiBold",
   },
 } as const;

@@ -6,7 +6,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const DECO_OVERFLOW = 40;
@@ -43,12 +43,10 @@ const SecretObjectIntroScreen = () => {
           { paddingTop: safeTop + 16, paddingBottom: safeBottom + 40 },
         ]}
       >
-        <Pressable
-          style={({ pressed }) => [
-            styles.backButton,
-            pressed && styles.backButtonPressed,
-          ]}
+        <TouchableOpacity
+          style={styles.backButton}
           onPress={handleBack}
+          activeOpacity={0.7}
           accessibilityLabel={t("secretObjectIntro.backA11y")}
           accessibilityRole="button"
         >
@@ -57,7 +55,7 @@ const SecretObjectIntroScreen = () => {
             size={28}
             color={colors.accent.mainBlue}
           />
-        </Pressable>
+        </TouchableOpacity>
 
         <View style={styles.textSection}>
           <Text style={styles.title}>{t("secretObjectIntro.title")}</Text>
@@ -68,19 +66,17 @@ const SecretObjectIntroScreen = () => {
         </View>
 
         <View style={styles.footer}>
-          <Pressable
-            style={({ pressed }) => [
-              styles.ctaButton,
-              pressed && styles.ctaButtonPressed,
-            ]}
+          <TouchableOpacity
+            style={styles.ctaButton}
             onPress={handleChoose}
+            activeOpacity={0.7}
             accessibilityLabel={t("secretObjectIntro.ctaA11y")}
             accessibilityRole="button"
           >
             <Text style={styles.ctaButtonText}>
               {t("secretObjectIntro.cta")}
             </Text>
-          </Pressable>
+          </TouchableOpacity>
         </View>
       </View>
     </View>
@@ -106,10 +102,7 @@ const styles = StyleSheet.create({
   backButton: {
     padding: 10,
     alignSelf: "flex-start",
-    marginBottom: 20,
-  },
-  backButtonPressed: {
-    opacity: 0.8,
+    marginBottom: 60,
   },
   content: {
     flexGrow: 1,
@@ -117,33 +110,41 @@ const styles = StyleSheet.create({
   },
   textSection: {
     gap: 24,
+    alignItems: "center",
   },
   title: {
-    fontSize: 40,
+    fontSize: 48,
     fontFamily: fonts.raleway.extraBold,
     color: colors.accent.mainBlue,
+    letterSpacing: -0.96,
     includeFontPadding: false,
   },
   description: {
     fontSize: 20,
-    fontFamily: fonts.raleway.bold,
+    fontFamily: fonts.raleway.semiBold,
     color: colors.accent.mainBlue,
-    lineHeight: 24,
+    lineHeight: 22.4,
   },
   footer: {
     paddingHorizontal: 16,
     marginTop: 56,
+    alignItems: "center",
   },
   ctaButton: {
     backgroundColor: colors.accent.mainBlue,
-    height: 56,
-    borderRadius: 12,
+    borderRadius: 100,
+    borderWidth: 1,
+    borderColor: colors.neutral.disabled,
     alignItems: "center",
     justifyContent: "center",
     overflow: "hidden",
-  },
-  ctaButtonPressed: {
-    opacity: 0.8,
+    shadowColor: colors.neutral.white,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 2,
+    elevation: 2,
+    paddingHorizontal: 32,
+    paddingVertical: 24,
   },
   ctaButtonText: {
     fontFamily: fonts.poppins.bold,
