@@ -25,6 +25,11 @@ export interface SelectProfileRequest {
   secretObjectId?: number; // Required when selecting a CHILD profile
 }
 
+export interface AssignSecretObjectRequest {
+  userId: number;
+  objectId: number;
+}
+
 // Responses
 
 export interface ValidateIdentityResponse {
@@ -93,4 +98,14 @@ export interface SelectProfileResponse {
   token: string;
   refreshToken: string;
   role: UserRole;
+}
+
+export interface AssignSecretObjectResponse {
+  statusCode: number;
+  data: {
+    auth: boolean;
+    token: string;
+    refreshToken: string;
+    role: UserRole;
+  };
 }

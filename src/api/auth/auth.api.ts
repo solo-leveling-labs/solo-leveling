@@ -2,6 +2,8 @@ import { api, apiSecure } from "@/src/api/client";
 import { ENDPOINTS } from "@/src/api/endpoints";
 
 import {
+  AssignSecretObjectRequest,
+  AssignSecretObjectResponse,
   LoginRequest,
   LoginResponse,
   SelectProfileRequest,
@@ -34,6 +36,16 @@ export const authApi = {
   ): Promise<SelectProfileResponse> => {
     const { data } = await apiSecure.post<SelectProfileResponse>(
       ENDPOINTS.auth.selectProfile,
+      payload,
+    );
+    return data;
+  },
+
+  assignSecretObject: async (
+    payload: AssignSecretObjectRequest,
+  ): Promise<AssignSecretObjectResponse> => {
+    const { data } = await apiSecure.post<AssignSecretObjectResponse>(
+      ENDPOINTS.auth.assignSecretObject,
       payload,
     );
     return data;

@@ -3,10 +3,10 @@ import { AuthUser } from "@/src/api/types";
 import { useAuthStore } from "@/src/store/auth.store";
 import { useSignupStore } from "@/src/store/signup.store";
 import { useMutation } from "@tanstack/react-query";
-import { useRouter } from "expo-router";
 
 import { authApi } from "./auth.api";
 import {
+  AssignSecretObjectRequest,
   LoginRequest,
   SelectProfileRequest,
   SignupRequest,
@@ -70,8 +70,21 @@ export const useValidateIdentity = () => {
   });
 };
 
+export const useAssignSecretObject = () => {
+  const updateUser = useAuthStore((state) => state.updateUser);
+
+  return useMutation({
+    mutationFn: (payload: AssignSecretObjectRequest) =>
+      authApi.assignSecretObject(payload),
+    onSuccess: async (response) => {
+      const { token, refreshToken, role } = response.data;
+      updateUser({ role });
+      await TokenService.setTokens(token, refreshToken);
+    },
+  });
+};
+
 export const useSelectProfile = () => {
-  const router = useRouter();
   const updateUser = useAuthStore((state) => state.updateUser);
 
   return useMutation({
@@ -81,7 +94,6 @@ export const useSelectProfile = () => {
     onSuccess: async (data) => {
       updateUser({ role: data.role });
       await TokenService.setTokens(data.token, data.refreshToken);
-      router.replace("/(tabs)");
     },
   });
 };

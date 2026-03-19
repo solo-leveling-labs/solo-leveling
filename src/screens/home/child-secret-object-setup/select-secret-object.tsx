@@ -1,12 +1,17 @@
 import CloseBigIcon from "@/assets/svg/close_big.svg";
-import { useSelectProfile } from "@/src/api/auth/auth.hooks";
+import {
+  useAssignSecretObject,
+  useSelectProfile,
+} from "@/src/api/auth/auth.hooks";
 import { colors } from "@/src/theme/colors";
 import { fonts } from "@/src/theme/fonts";
+import { minDelay } from "@/src/utils/min-delay";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
+  ActivityIndicator,
   ScrollView,
   StyleSheet,
   Text,
@@ -70,7 +75,7 @@ type ScreenMode = "setup" | "login";
 
 const SelectSecretObjectScreen = () => {
   const { t } = useTranslation();
-  const { dismissTo, back } = useRouter();
+  const { back, replace } = useRouter();
   const { top: safeTop, bottom: safeBottom } = useSafeAreaInsets();
   const { childId, mode = "setup" } = useLocalSearchParams<{
     childId: string;
@@ -79,6 +84,10 @@ const SelectSecretObjectScreen = () => {
 
   const { mutate: selectProfile, isPending: isSelectingProfile } =
     useSelectProfile();
+  const { mutate: assignSecretObject, isPending: isAssigning } =
+    useAssignSecretObject();
+
+  const isConfirmPending = isSelectingProfile || isAssigning;
 
   const [overlayIndex, setOverlayIndex] = useState<number | null>(null);
   const [visibleIndex, setVisibleIndex] = useState<number | null>(null);
@@ -116,18 +125,35 @@ const SelectSecretObjectScreen = () => {
   }, [back]);
 
   const handleConfirm = useCallback(() => {
-    if (visibleIndex === null) return;
+    if (visibleIndex === null || isConfirmPending) return;
+
+    const navigateToHome = () => {
+      minDelay().then(() => {
+        replace("/(tabs)");
+      });
+    };
 
     if (mode === "login") {
-      selectProfile({
-        userId: Number(childId),
-        secretObjectId: visibleIndex,
-      });
+      selectProfile(
+        { userId: Number(childId), secretObjectId: visibleIndex },
+        { onSuccess: navigateToHome },
+      );
     } else {
-      //TODO: Validate secret object
-      // dismissTo("/(tabs)");
+      // TODO: Use real objectId from GET /secret-objects when available
+      assignSecretObject(
+        { userId: Number(childId), objectId: 2001 },
+        { onSuccess: navigateToHome },
+      );
     }
-  }, [mode, visibleIndex, childId, selectProfile, dismissTo]);
+  }, [
+    mode,
+    visibleIndex,
+    childId,
+    isConfirmPending,
+    selectProfile,
+    assignSecretObject,
+    replace,
+  ]);
 
   const overlayAnimatedStyle = useAnimatedStyle(() => ({
     opacity: overlayOpacity.value,
@@ -215,23 +241,27 @@ const SelectSecretObjectScreen = () => {
             </Animated.View>
 
             <TouchableOpacity
-              style={[
-                styles.confirmButton,
-                isSelectingProfile && styles.confirmButtonDisabled,
-              ]}
+              style={styles.confirmButton}
               activeOpacity={0.7}
               onPress={handleConfirm}
-              disabled={isSelectingProfile}
+              disabled={isConfirmPending}
               accessibilityLabel={t("selectSecretObject.confirmA11y")}
               accessibilityRole="button"
             >
-              <Text style={styles.confirmButtonText}>
-                {t(
-                  mode === "login"
-                    ? "selectSecretObject.loginConfirm"
-                    : "selectSecretObject.setupConfirm",
-                )}
-              </Text>
+              {isConfirmPending ? (
+                <ActivityIndicator
+                  color={colors.neutral.white}
+                  size={"small"}
+                />
+              ) : (
+                <Text style={styles.confirmButtonText}>
+                  {t(
+                    mode === "login"
+                      ? "selectSecretObject.loginConfirm"
+                      : "selectSecretObject.setupConfirm",
+                  )}
+                </Text>
+              )}
             </TouchableOpacity>
           </View>
         </Animated.View>
