@@ -15,7 +15,9 @@ export const usersApi = {
     return data;
   },
 
-  createUser: async (payload: CreateUserRequest): Promise<CreateUserResponse> => {
+  createUser: async (
+    payload: CreateUserRequest,
+  ): Promise<CreateUserResponse> => {
     const { data } = await apiSecure.post<CreateUserResponse>(
       ENDPOINTS.users.base,
       payload,

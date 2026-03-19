@@ -22,6 +22,11 @@ export interface CreateUserResponse {
   data: UserResponseDto;
 }
 
+export interface GetUserResponse {
+  statusCode: number;
+  data: UserResponseDto;
+}
+
 export interface GetUsersResponse {
   statusCode: number;
   data: UserResponseDto[];

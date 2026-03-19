@@ -1,4 +1,5 @@
 import CloseBigIcon from "@/assets/svg/close_big.svg";
+import { useSelectProfile } from "@/src/api/auth/auth.hooks";
 import { colors } from "@/src/theme/colors";
 import { fonts } from "@/src/theme/fonts";
 import { Ionicons } from "@expo/vector-icons";
@@ -65,11 +66,19 @@ const ObjectFrame = ({ index, size }: ObjectFrameProps) => {
   );
 };
 
+type ScreenMode = "setup" | "login";
+
 const SelectSecretObjectScreen = () => {
   const { t } = useTranslation();
   const { dismissTo, back } = useRouter();
   const { top: safeTop, bottom: safeBottom } = useSafeAreaInsets();
-  const { childId: _childId } = useLocalSearchParams<{ childId: string }>();
+  const { childId, mode = "setup" } = useLocalSearchParams<{
+    childId: string;
+    mode?: ScreenMode;
+  }>();
+
+  const { mutate: selectProfile, isPending: isSelectingProfile } =
+    useSelectProfile();
 
   const [overlayIndex, setOverlayIndex] = useState<number | null>(null);
   const [visibleIndex, setVisibleIndex] = useState<number | null>(null);
@@ -107,9 +116,18 @@ const SelectSecretObjectScreen = () => {
   }, [back]);
 
   const handleConfirm = useCallback(() => {
-    // TODO: Save selected secret object via POST /auth/assign-secret-object
-    dismissTo("/(tabs)");
-  }, [dismissTo]);
+    if (visibleIndex === null) return;
+
+    if (mode === "login") {
+      selectProfile({
+        userId: Number(childId),
+        secretObjectId: visibleIndex,
+      });
+    } else {
+      //TODO: Validate secret object
+      // dismissTo("/(tabs)");
+    }
+  }, [mode, visibleIndex, childId, selectProfile, dismissTo]);
 
   const overlayAnimatedStyle = useAnimatedStyle(() => ({
     opacity: overlayOpacity.value,
@@ -142,7 +160,13 @@ const SelectSecretObjectScreen = () => {
           />
         </TouchableOpacity>
 
-        <Text style={styles.title}>{t("selectSecretObject.title")}</Text>
+        <Text style={styles.title}>
+          {t(
+            mode === "login"
+              ? "selectSecretObject.loginTitle"
+              : "selectSecretObject.setupTitle",
+          )}
+        </Text>
 
         <View style={styles.cardGrid}>
           {SECRET_OBJECT_INDICES.map((index) => (
@@ -191,14 +215,22 @@ const SelectSecretObjectScreen = () => {
             </Animated.View>
 
             <TouchableOpacity
-              style={styles.confirmButton}
+              style={[
+                styles.confirmButton,
+                isSelectingProfile && styles.confirmButtonDisabled,
+              ]}
               activeOpacity={0.7}
               onPress={handleConfirm}
+              disabled={isSelectingProfile}
               accessibilityLabel={t("selectSecretObject.confirmA11y")}
               accessibilityRole="button"
             >
               <Text style={styles.confirmButtonText}>
-                {t("selectSecretObject.confirm")}
+                {t(
+                  mode === "login"
+                    ? "selectSecretObject.loginConfirm"
+                    : "selectSecretObject.setupConfirm",
+                )}
               </Text>
             </TouchableOpacity>
           </View>
@@ -300,6 +332,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 15,
     elevation: 8,
+  },
+  confirmButtonDisabled: {
+    opacity: 0.6,
   },
   confirmButtonText: {
     fontFamily: fonts.poppins.bold,

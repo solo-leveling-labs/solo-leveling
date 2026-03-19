@@ -349,8 +349,10 @@
     "ctaA11y": "Ir a elegir objeto secreto"
   },
   "selectSecretObject": {
-    "title": "¡Elije tu objeto secreto!",
-    "confirm": "¡Este es mi objeto secreto!",
+    "setupTitle": "¡Elije tu objeto secreto!",
+    "setupConfirm": "¡Este es mi objeto secreto!",
+    "loginTitle": "¿Cuál es tu objeto secreto?",
+    "loginConfirm": "¡Este es!",
     "cardA11y": "Seleccionar objeto secreto {{index}}",
     "confirmA11y": "Confirmar objeto secreto seleccionado",
     "backA11y": "Volver"

@@ -66,14 +66,25 @@ const SelectProfileScreen = () => {
     (id: string) => {
       const profile = childProfiles.find((p) => p.id === id);
       if (!profile) return;
-      push({
-        pathname: "/(child-secret-object-setup)/child-welcome",
-        params: {
-          childId: id,
-          childName: profile.name,
-          avatarIndex: String(profile.avatarIndex),
-        },
-      });
+
+      if (profile.hasSecretObject) {
+        push({
+          pathname: "/(child-secret-object-setup)/select-secret-object",
+          params: {
+            childId: id,
+            mode: "login",
+          },
+        });
+      } else {
+        push({
+          pathname: "/(child-secret-object-setup)/child-welcome",
+          params: {
+            childId: id,
+            childName: profile.name,
+            avatarIndex: String(profile.avatarIndex),
+          },
+        });
+      }
     },
     [push, childProfiles],
   );
