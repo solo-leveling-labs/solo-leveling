@@ -95,7 +95,7 @@ const CreateProfileScreen = () => {
         {
           text: t("profileSetup.createProfile.skipAlert.confirm"),
           style: "destructive",
-          onPress: () => dismissTo("/(tabs)"),
+          onPress: () => dismissTo("/(child-tabs)"),
         },
       ],
     );

@@ -139,7 +139,7 @@ const SelectSecretObjectScreen = () => {
         rootNavigation?.dispatch(
           CommonActions.reset({
             index: 0,
-            routes: [{ name: "(tabs)" }],
+            routes: [{ name: "(child-tabs)" }],
           }),
         );
       });
