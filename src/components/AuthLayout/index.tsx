@@ -8,8 +8,6 @@ import React, { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import {
   ActivityIndicator,
-  Keyboard,
-  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -109,7 +107,7 @@ export const AuthLayout = ({
   });
 
   return (
-    <Pressable style={styles.container} onPress={Keyboard.dismiss}>
+    <View style={styles.container}>
       <BgDecorations width={100} height={166} style={styles.decorations} />
       <Buho
         width={screenWidth * BUHO_WIDTH_RATIO}
@@ -122,6 +120,7 @@ export const AuthLayout = ({
           { paddingBottom: scrollPaddingBottom },
         ]}
         keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="interactive"
       >
         <Animated.View style={headerAnimatedStyle} />
         {showBackArrow && (
@@ -209,7 +208,7 @@ export const AuthLayout = ({
           </View>
         )}
       </ScrollView>
-    </Pressable>
+    </View>
   );
 };
 

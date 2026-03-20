@@ -18,6 +18,7 @@ interface Props {
   padding?: number;
   activeColor?: string;
   inactiveColor?: string;
+  activeThumbColor?: string;
   thumbColor?: string;
   style?: StyleProp<ViewStyle>;
   accessibilityLabel?: string;
@@ -30,8 +31,9 @@ export const Switch = ({
   width = 51,
   height = 31,
   padding = 2,
-  activeColor = colors.accent.mainBlue,
-  inactiveColor = colors.neutral[700],
+  activeColor = "rgba(25, 118, 210, 0.2)",
+  inactiveColor = "rgba(0, 0, 0, 0.38)",
+  activeThumbColor = "#1976D2",
   thumbColor = colors.neutral.white,
   accessibilityLabel,
   style,
@@ -40,7 +42,7 @@ export const Switch = ({
 
   useEffect(() => {
     progress.value = withTiming(value ? 1 : 0, {
-      duration: 300,
+      duration: 450,
       easing: Easing.out(Easing.cubic),
     });
   }, [value, progress]);
@@ -65,10 +67,16 @@ export const Switch = ({
   }, [activeColor, inactiveColor, disabled]);
 
   const thumbAnimatedStyle = useAnimatedStyle(() => {
+    const backgroundColor = interpolateColor(
+      progress.value,
+      [0, 1],
+      [thumbColor, activeThumbColor],
+    );
     return {
       transform: [{ translateX: progress.value * translateXMax }],
+      backgroundColor,
     };
-  }, [translateXMax]);
+  }, [translateXMax, thumbColor, activeThumbColor]);
 
   const onPress = () => {
     if (disabled) return;
@@ -103,7 +111,6 @@ export const Switch = ({
               width: thumbSize,
               height: thumbSize,
               borderRadius: thumbSize / 2,
-              backgroundColor: thumbColor,
               shadowColor: colors.neutral.black,
               shadowOpacity: 0.15,
               shadowRadius: 2.5,

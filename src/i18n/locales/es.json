@@ -312,7 +312,7 @@
         "email": "Email",
         "backupEmail": "Email de respaldo (opcional)",
         "emailPlaceholder": "correo@gmail.com",
-        "backupEmailHelper": "Se usará para ingresar a tu perfil parental."
+        "backupEmailHelper": "Lo usaremos como respaldo para enviarte alertas importantes si no logramos contactarte en tu mail principal."
       },
       "pushNotifications": {
         "title": "Activar notificaciones push en tu celular.",

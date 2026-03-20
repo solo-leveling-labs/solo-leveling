@@ -312,7 +312,7 @@
         "email": "Email",
         "backupEmail": "Backup email (optional)",
         "emailPlaceholder": "email@gmail.com",
-        "backupEmailHelper": "It will be used to sign in to your parental profile."
+        "backupEmailHelper": "We'll use it as a backup to send you important alerts if we can't reach you at your primary email."
       },
       "pushNotifications": {
         "title": "Enable push notifications on your phone.",
