@@ -4,7 +4,7 @@ import { ACTIVE_OPACITY } from "@/src/theme/constants";
 import { fonts } from "@/src/theme/fonts";
 import { Ionicons } from "@expo/vector-icons";
 import { CommonActions, useNavigation } from "@react-navigation/native";
-import React, { useCallback } from "react";
+import React, { useRef, useState } from "react";
 import {
   Alert,
   ScrollView,
@@ -14,16 +14,27 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { useKeyboardHandler } from "react-native-keyboard-controller";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+} from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const WELCOME_MESSAGE =
   "¡Hola! Soy Zapienz, tu amiga IA. ¿En qué te puedo ayudar hoy?";
 
-interface MessageProps {
+interface Message {
+  id: string;
+  role: "bot" | "user";
   text: string;
 }
 
-const BotMessage = ({ text }: MessageProps) => (
+interface MessageBubbleProps {
+  text: string;
+}
+
+const BotMessage = ({ text }: MessageBubbleProps) => (
   <View style={messageStyles.botRow}>
     <View style={messageStyles.avatar}>
       <Ionicons name="sparkles" size={16} color={colors.accent.mainBlue} />
@@ -34,12 +45,59 @@ const BotMessage = ({ text }: MessageProps) => (
   </View>
 );
 
+const UserMessage = ({ text }: MessageBubbleProps) => (
+  <View style={messageStyles.userRow}>
+    <View style={messageStyles.userBubble}>
+      <Text style={messageStyles.userText}>{text}</Text>
+    </View>
+  </View>
+);
+
 const HomeScreen = () => {
   const { logout } = useAuthStore();
   const { top, bottom } = useSafeAreaInsets();
   const navigation = useNavigation();
+  const scrollRef = useRef<ScrollView>(null);
+  const inputRef = useRef<TextInput>(null);
+  const keyboardHeight = useSharedValue(0);
 
-  const handleLogout = useCallback(() => {
+  useKeyboardHandler({
+    onMove: (event) => {
+      "worklet";
+      keyboardHeight.value = event.height;
+    },
+  });
+
+  const keyboardSpacerStyle = useAnimatedStyle(() => {
+    "worklet";
+    return { height: keyboardHeight.value + 12 };
+  });
+
+  const [messages, setMessages] = useState<Message[]>([
+    { id: "welcome", role: "bot", text: WELCOME_MESSAGE },
+  ]);
+  const [inputText, setInputText] = useState("");
+
+  const handleSend = () => {
+    const trimmed = inputText.trim();
+    if (!trimmed) return;
+
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      role: "user",
+      text: trimmed,
+    };
+
+    setMessages((prev) => [...prev, userMessage]);
+    setInputText("");
+
+    // Scroll to bottom after message is added
+    setTimeout(() => {
+      scrollRef.current?.scrollToEnd({ animated: true });
+    }, 100);
+  };
+
+  const handleLogout = () => {
     Alert.alert("Cerrar sesión", "¿Estás seguro que querés cerrar sesión?", [
       { text: "Cancelar", style: "cancel" },
       {
@@ -56,7 +114,7 @@ const HomeScreen = () => {
         },
       },
     ]);
-  }, [logout, navigation]);
+  };
 
   return (
     <View style={styles.container}>
@@ -88,32 +146,56 @@ const HomeScreen = () => {
       </View>
 
       <ScrollView
+        ref={scrollRef}
         style={styles.chatArea}
         contentContainerStyle={styles.chatContent}
         showsVerticalScrollIndicator={false}
-        bounces
+        keyboardDismissMode="interactive"
+        onContentSizeChange={() =>
+          scrollRef.current?.scrollToEnd({ animated: true })
+        }
       >
-        <BotMessage text={WELCOME_MESSAGE} />
+        {messages.map((message) =>
+          message.role === "bot" ? (
+            <BotMessage key={message.id} text={message.text} />
+          ) : (
+            <UserMessage key={message.id} text={message.text} />
+          ),
+        )}
       </ScrollView>
 
-      {/* TODO: Make input functional with real messaging */}
-      <View style={[styles.inputArea, { paddingBottom: bottom + 12 }]}>
+      <View style={styles.inputArea}>
         <TextInput
+          ref={inputRef}
           style={styles.textInput}
+          value={inputText}
+          onChangeText={setInputText}
           placeholder="Escribí tu mensaje..."
           placeholderTextColor={colors.neutral[700]}
-          editable={false}
+          returnKeyType="send"
+          onSubmitEditing={handleSend}
           accessibilityLabel="Campo de mensaje"
         />
         <TouchableOpacity
           activeOpacity={ACTIVE_OPACITY}
-          style={styles.sendButton}
+          style={[
+            styles.sendButton,
+            !inputText.trim() && styles.sendButtonDisabled,
+          ]}
+          onPress={handleSend}
+          disabled={!inputText.trim()}
           accessibilityLabel="Enviar mensaje"
           accessibilityRole="button"
         >
           <Ionicons name="send" size={20} color={colors.neutral.white} />
         </TouchableOpacity>
       </View>
+      <Animated.View
+        style={[
+          { paddingBottom: bottom, backgroundColor: colors.neutral.white },
+          keyboardSpacerStyle,
+        ]}
+      />
     </View>
   );
 };
@@ -146,7 +228,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 20,
     gap: 12,
-    flex: 1,
   },
   inputArea: {
     flexDirection: "row",
@@ -166,7 +247,7 @@ const styles = StyleSheet.create({
     borderColor: colors.neutral.disabled,
     fontFamily: fonts.poppins.regular,
     fontSize: 14,
-    color: colors.neutral[700],
+    color: colors.neutral[200],
     paddingHorizontal: 16,
     paddingVertical: 10,
   },
@@ -177,6 +258,9 @@ const styles = StyleSheet.create({
     height: 44,
     justifyContent: "center",
     width: 44,
+  },
+  sendButtonDisabled: {
+    opacity: 0.4,
   },
 });
 
@@ -214,6 +298,25 @@ const messageStyles = StyleSheet.create({
   },
   botText: {
     color: colors.neutral[200],
+    fontFamily: fonts.poppins.regular,
+    fontSize: 14,
+    lineHeight: 20,
+  },
+  userRow: {
+    alignSelf: "flex-end",
+    maxWidth: "80%",
+  },
+  userBubble: {
+    backgroundColor: colors.accent.mainBlue,
+    borderBottomLeftRadius: 16,
+    borderBottomRightRadius: 4,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+  },
+  userText: {
+    color: colors.neutral.white,
     fontFamily: fonts.poppins.regular,
     fontSize: 14,
     lineHeight: 20,
