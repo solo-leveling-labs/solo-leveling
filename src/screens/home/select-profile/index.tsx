@@ -8,7 +8,7 @@ import { ACTIVE_OPACITY } from "@/src/theme/constants";
 import { fonts } from "@/src/theme/fonts";
 import { minDelay } from "@/src/utils/min-delay";
 import { useFocusEffect, useRouter } from "expo-router";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   ActivityIndicator,
@@ -56,12 +56,12 @@ const SelectProfileScreen = () => {
 
   const cardWidth = (screenWidth - 48 - 16) / 2;
 
-  const parentUserId = useMemo(() => {
+  const parentUserId = (() => {
     const parent = usersResponse?.data?.find((user) => user.role === "PARENT");
     return parent ? String(parent.id) : null;
-  }, [usersResponse]);
+  })();
 
-  const childProfiles = useMemo(() => {
+  const childProfiles = (() => {
     if (!usersResponse?.data) return [];
     return usersResponse.data
       .filter((user) => user.role === "CHILD")
@@ -71,49 +71,46 @@ const SelectProfileScreen = () => {
         avatarIndex: (index % AVATAR_COUNT) + 1,
         hasSecretObject: user.hasSecretObject,
       }));
-  }, [usersResponse]);
+  })();
 
-  const handleProfilePress = useCallback(
-    (id: string) => {
-      const profile = childProfiles.find((p) => p.id === id);
-      if (!profile) return;
+  const handleProfilePress = (id: string) => {
+    const profile = childProfiles.find((p) => p.id === id);
+    if (!profile) return;
 
-      if (profile.hasSecretObject) {
-        push({
-          pathname: "/(select-profile)/select-secret-object",
-          params: {
-            childId: id,
-            mode: "login",
-          },
-        });
-      } else {
-        push({
-          pathname: "/(select-profile)/child-welcome",
-          params: {
-            childId: id,
-            childName: profile.name,
-            avatarIndex: String(profile.avatarIndex),
-          },
-        });
-      }
-    },
-    [push, childProfiles],
-  );
+    if (profile.hasSecretObject) {
+      push({
+        pathname: "/(select-profile)/select-secret-object",
+        params: {
+          childId: id,
+          mode: "login",
+        },
+      });
+    } else {
+      push({
+        pathname: "/(select-profile)/child-welcome",
+        params: {
+          childId: id,
+          childName: profile.name,
+          avatarIndex: String(profile.avatarIndex),
+        },
+      });
+    }
+  };
 
-  const handleAddProfile = useCallback(() => {
+  const handleAddProfile = () => {
     push({
       pathname: "/(select-profile)/create-profile",
       params: { source: "select-profile" },
     });
-  }, [push]);
+  };
 
-  const handleParentAccess = useCallback(() => {
+  const handleParentAccess = () => {
     if (!parentUserId) return;
     push({
       pathname: "/(select-profile)/parent-access",
       params: { parentUserId },
     });
-  }, [push]);
+  };
 
   const backgroundHeight = screenWidth * BACKGROUND_ASPECT_RATIO;
 

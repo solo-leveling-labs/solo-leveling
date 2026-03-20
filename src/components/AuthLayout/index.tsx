@@ -1,21 +1,28 @@
 import BgDecorations from "@/assets/svg/bg-decorations.svg";
 import Buho from "@/assets/svg/buho.svg";
 import { colors } from "@/src/theme/colors";
+import { ACTIVE_OPACITY } from "@/src/theme/constants";
 import { fonts } from "@/src/theme/fonts";
 import { Ionicons } from "@expo/vector-icons";
 import React, { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import {
   ActivityIndicator,
-  KeyboardAvoidingView,
-  Platform,
+  Keyboard,
   Pressable,
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   useWindowDimensions,
   View,
 } from "react-native";
+import { useKeyboardHandler } from "react-native-keyboard-controller";
+import Animated, {
+  interpolate,
+  useAnimatedStyle,
+  useSharedValue,
+} from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const BUHO_ASPECT_RATIO = 134 / 375;
@@ -70,113 +77,139 @@ export const AuthLayout = ({
   const { width: screenWidth } = useWindowDimensions();
   const { bottom: safeBottom, top: safeTop } = useSafeAreaInsets();
 
-  const paddingTop = safeTop + (showBackArrow ? 12 : 48);
+  const keyboardHeight = useSharedValue(0);
+  const progress = useSharedValue(0);
+
+  useKeyboardHandler({
+    onMove: (event) => {
+      "worklet";
+      keyboardHeight.value = event.height;
+      progress.value = event.progress;
+    },
+  });
+
+  const basePaddingTop = safeTop + (showBackArrow ? 12 : 48);
+
+  const headerAnimatedStyle = useAnimatedStyle(() => {
+    "worklet";
+    const paddingTop = interpolate(
+      progress.value,
+      [0, 1],
+      [basePaddingTop, safeTop + 8],
+    );
+    return { paddingTop };
+  });
+
+  const footerHeight = safeBottom + 40 + 56 + 16 + 24 + footerTopSpacing + 60;
+
+  const keyboardSpacerStyle = useAnimatedStyle(() => {
+    "worklet";
+    const spacerHeight = Math.max(0, keyboardHeight.value - footerHeight);
+    return { height: spacerHeight };
+  });
 
   return (
-    <View style={styles.container}>
+    <Pressable style={styles.container} onPress={Keyboard.dismiss}>
       <BgDecorations width={100} height={166} style={styles.decorations} />
       <Buho
         width={screenWidth * BUHO_WIDTH_RATIO}
         height={screenWidth * BUHO_WIDTH_RATIO * BUHO_ASPECT_RATIO}
         style={styles.background}
       />
-      <KeyboardAvoidingView
-        style={styles.flex}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      <ScrollView
+        contentContainerStyle={[
+          styles.content,
+          { paddingBottom: scrollPaddingBottom },
+        ]}
+        keyboardShouldPersistTaps="handled"
       >
-        <ScrollView
-          contentContainerStyle={[
-            styles.content,
-            { paddingTop, paddingBottom: scrollPaddingBottom },
-          ]}
-          keyboardShouldPersistTaps="handled"
-        >
-          {showBackArrow && (
-            <View style={styles.topBar}>
-              <Pressable
-                onPress={onBack}
-                style={({ pressed }) => [pressed && styles.backArrowPressed]}
-                accessibilityLabel={backArrowA11y ?? t("common.backA11y")}
-                accessibilityRole="button"
-              >
-                <Ionicons
-                  name="arrow-back"
-                  size={24}
-                  color={colors.accent.mainBlue}
-                />
-              </Pressable>
-            </View>
+        <Animated.View style={headerAnimatedStyle} />
+        {showBackArrow && (
+          <View style={styles.topBar}>
+            <TouchableOpacity
+              onPress={onBack}
+              activeOpacity={ACTIVE_OPACITY}
+              accessibilityLabel={backArrowA11y ?? t("common.backA11y")}
+              accessibilityRole="button"
+            >
+              <Ionicons
+                name="arrow-back"
+                size={24}
+                color={colors.accent.mainBlue}
+              />
+            </TouchableOpacity>
+          </View>
+        )}
+        <View style={[styles.header, { marginBottom: headerBottomSpacing }]}>
+          {title && <Text style={styles.title}>{title}</Text>}
+          {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
+          {description && descriptionInHeader && (
+            <Text style={styles.description}>{description}</Text>
           )}
-          <View style={[styles.header, { marginBottom: headerBottomSpacing }]}>
-            {title && <Text style={styles.title}>{title}</Text>}
-            {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
-            {description && descriptionInHeader && (
-              <Text style={styles.description}>{description}</Text>
-            )}
-          </View>
+        </View>
 
-          <View style={styles.form}>
-            {description && !descriptionInHeader && (
-              <Text style={[styles.description, styles.formDescription]}>
-                {description}
-              </Text>
-            )}
-            {children}
-          </View>
+        <View style={styles.form}>
+          {description && !descriptionInHeader && (
+            <Text style={[styles.description, styles.formDescription]}>
+              {description}
+            </Text>
+          )}
+          {children}
+        </View>
 
-          {!hideFooter && (
-            <View
+        <Animated.View style={keyboardSpacerStyle} />
+
+        {!hideFooter && (
+          <View
+            style={[
+              styles.footer,
+              { marginTop: footerTopSpacing, paddingBottom: safeBottom + 40 },
+            ]}
+          >
+            <TouchableOpacity
               style={[
-                styles.footer,
-                { marginTop: footerTopSpacing, paddingBottom: safeBottom + 40 },
+                styles.nextButton,
+                (!isFormValid || isLoading) && styles.nextButtonDisabled,
+              ]}
+              activeOpacity={ACTIVE_OPACITY}
+              onPress={onNext}
+              disabled={!isFormValid || isLoading}
+              accessibilityLabel={nextLabelA11y ?? t("auth.signUp.nextA11y")}
+              accessibilityRole="button"
+            >
+              {isLoading ? (
+                <ActivityIndicator color={colors.neutral[700]} />
+              ) : (
+                <Text
+                  style={[
+                    styles.nextButtonText,
+                    !isFormValid && styles.nextButtonTextDisabled,
+                  ]}
+                >
+                  {nextLabel ?? t("auth.signUp.next")}
+                </Text>
+              )}
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={onBack}
+              activeOpacity={ACTIVE_OPACITY}
+              accessibilityLabel={backLabelA11y ?? t("auth.signUp.backA11y")}
+              accessibilityRole="button"
+              accessible={!hideBackButton}
+              disabled={hideBackButton}
+              style={[
+                styles.backButton,
+                hideBackButton && styles.backButtonHidden,
               ]}
             >
-              {/* TODO: Fix insets problem */}
-              <Pressable
-                style={({ pressed }) => [
-                  styles.nextButton,
-                  (!isFormValid || isLoading) && styles.nextButtonDisabled,
-                  pressed && isFormValid && !isLoading && styles.buttonPressed,
-                ]}
-                onPress={onNext}
-                disabled={!isFormValid || isLoading}
-                accessibilityLabel={nextLabelA11y ?? t("auth.signUp.nextA11y")}
-                accessibilityRole="button"
-              >
-                {isLoading ? (
-                  <ActivityIndicator color={colors.neutral[700]} />
-                ) : (
-                  <Text
-                    style={[
-                      styles.nextButtonText,
-                      !isFormValid && styles.nextButtonTextDisabled,
-                    ]}
-                  >
-                    {nextLabel ?? t("auth.signUp.next")}
-                  </Text>
-                )}
-              </Pressable>
-              <Pressable
-                onPress={onBack}
-                accessibilityLabel={backLabelA11y ?? t("auth.signUp.backA11y")}
-                accessibilityRole="button"
-                accessible={!hideBackButton}
-                disabled={hideBackButton}
-                style={({ pressed }) => [
-                  styles.backButton,
-                  hideBackButton && styles.backButtonHidden,
-                  pressed && !hideBackButton && styles.buttonPressed,
-                ]}
-              >
-                <Text style={styles.backText}>
-                  {backLabel ?? t("auth.signUp.back")}
-                </Text>
-              </Pressable>
-            </View>
-          )}
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </View>
+              <Text style={styles.backText}>
+                {backLabel ?? t("auth.signUp.back")}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
+      </ScrollView>
+    </Pressable>
   );
 };
 
@@ -184,9 +217,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.accent.lightBackground,
-  },
-  flex: {
-    flex: 1,
   },
   content: {
     flexGrow: 1,
@@ -196,9 +226,6 @@ const styles = StyleSheet.create({
   topBar: {
     flexDirection: "row",
     marginBottom: 15,
-  },
-  backArrowPressed: {
-    opacity: 0.8,
   },
   header: {
     gap: 12,
@@ -239,9 +266,6 @@ const styles = StyleSheet.create({
   },
   nextButtonDisabled: {
     backgroundColor: colors.neutral.disabled,
-  },
-  buttonPressed: {
-    opacity: 0.8,
   },
   nextButtonText: {
     fontSize: 16,

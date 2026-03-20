@@ -1,4 +1,6 @@
 import CalendarIcon from "@/assets/svg/calendar.svg";
+import { RULES_QUERY_KEY } from "@/src/api/rules/rules.hooks";
+import { rulesApi } from "@/src/api/rules/rules.api";
 import { useCreateUser } from "@/src/api/users/users.hooks";
 import { AuthLayout } from "@/src/components/AuthLayout";
 import { DatePickerField } from "@/src/components/DatePickerField";
@@ -8,9 +10,10 @@ import { ACTIVE_OPACITY } from "@/src/theme/constants";
 import { fonts } from "@/src/theme/fonts";
 import { minDelay } from "@/src/utils/min-delay";
 import { useLocalSearchParams, useRouter } from "expo-router";
+import { useQueryClient } from "@tanstack/react-query";
 import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Alert, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { Alert, Keyboard, StyleSheet, Text, TouchableOpacity } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 const formatDate = (date: Date): string => {
@@ -30,6 +33,7 @@ const toISODate = (date: Date): string => {
 const CreateProfileScreen = () => {
   const { push, dismissTo, back } = useRouter();
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
   const { mutateAsync: createUser } = useCreateUser();
   const { source } = useLocalSearchParams<{ source: string }>();
 
@@ -42,6 +46,7 @@ const CreateProfileScreen = () => {
   const isFromSelectProfile = source === "select-profile";
 
   const showDatePicker = useCallback(() => {
+    Keyboard.dismiss();
     setIsDatePickerVisible(true);
   }, []);
 
@@ -65,6 +70,10 @@ const CreateProfileScreen = () => {
     try {
       const [data] = await Promise.all([
         createUser({ fullName: name.trim(), birthday: toISODate(birthDate) }),
+        queryClient.prefetchQuery({
+          queryKey: RULES_QUERY_KEY,
+          queryFn: () => rulesApi.getRules(),
+        }),
         minDelay(),
       ]);
 
@@ -95,7 +104,7 @@ const CreateProfileScreen = () => {
         {
           text: t("profileSetup.createProfile.skipAlert.confirm"),
           style: "destructive",
-          onPress: () => dismissTo("/(child-tabs)"),
+          onPress: () => dismissTo("/(tabs-child)"),
         },
       ],
     );
@@ -109,6 +118,8 @@ const CreateProfileScreen = () => {
       onBack={isFromSelectProfile ? back : handleCancel}
       isFormValid={isFormValid}
       isLoading={isLoading}
+      headerBottomSpacing={20}
+      footerTopSpacing={24}
       nextLabel={t("profileSetup.createProfile.next")}
       backLabel={
         isFromSelectProfile

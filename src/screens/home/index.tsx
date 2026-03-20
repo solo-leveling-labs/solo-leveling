@@ -3,6 +3,7 @@ import { colors } from "@/src/theme/colors";
 import { ACTIVE_OPACITY } from "@/src/theme/constants";
 import { fonts } from "@/src/theme/fonts";
 import { Ionicons } from "@expo/vector-icons";
+import { CommonActions, useNavigation } from "@react-navigation/native";
 import React, { useCallback } from "react";
 import {
   Alert,
@@ -36,13 +37,26 @@ const BotMessage = ({ text }: MessageProps) => (
 const HomeScreen = () => {
   const { logout } = useAuthStore();
   const { top, bottom } = useSafeAreaInsets();
+  const navigation = useNavigation();
 
   const handleLogout = useCallback(() => {
     Alert.alert("Cerrar sesión", "¿Estás seguro que querés cerrar sesión?", [
       { text: "Cancelar", style: "cancel" },
-      { text: "Cerrar sesión", style: "destructive", onPress: logout },
+      {
+        text: "Cerrar sesión",
+        style: "destructive",
+        onPress: async () => {
+          await logout();
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{ name: "(auth)" }],
+            }),
+          );
+        },
+      },
     ]);
-  }, [logout]);
+  }, [logout, navigation]);
 
   return (
     <View style={styles.container}>

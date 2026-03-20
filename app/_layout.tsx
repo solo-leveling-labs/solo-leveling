@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import { useEffect } from "react";
+import { KeyboardProvider } from "react-native-keyboard-controller";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -62,10 +63,8 @@ function RootNavigator() {
 
       <Stack.Protected guard={isAuthenticated && isProfileSetupComplete}>
         <Stack.Screen name="(select-profile)" />
-      </Stack.Protected>
-
-      <Stack.Protected guard={isAuthenticated}>
-        <Stack.Screen name="(child-tabs)" />
+        <Stack.Screen name="(tabs-parent)" />
+        <Stack.Screen name="(tabs-child)" />
       </Stack.Protected>
     </Stack>
   );
@@ -73,8 +72,10 @@ function RootNavigator() {
 
 export default function RootLayout() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <RootNavigator />
-    </QueryClientProvider>
+    <KeyboardProvider>
+      <QueryClientProvider client={queryClient}>
+        <RootNavigator />
+      </QueryClientProvider>
+    </KeyboardProvider>
   );
 }

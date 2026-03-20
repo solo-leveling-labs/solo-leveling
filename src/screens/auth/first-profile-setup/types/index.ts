@@ -19,6 +19,13 @@ export const SEVERITY_COLORS: Record<SeverityLevel, string> = {
   emergency: colors.error,
 };
 
+export const SEVERITY_TEXT_COLORS: Record<SeverityLevel, string> = {
+  mild: colors.accent.lightBackground,
+  moderate: colors.neutral[200],
+  severe: colors.accent.lightBackground,
+  emergency: colors.accent.lightBackground,
+};
+
 export const RESPONSE_COLORS: Record<ResponseLevel, string> = {
   respondNormally: colors.deco.decoGreen,
   respondAndSuggest: colors.deco.decoYellow,

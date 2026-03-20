@@ -9,7 +9,14 @@ import { Ionicons } from "@expo/vector-icons";
 import { CommonActions, useNavigation } from "@react-navigation/native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
+import {
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const PIN_LENGTH = 6;
@@ -24,6 +31,7 @@ const ParentAccessScreen = () => {
   const { mutate: selectProfile } = useSelectProfile();
   const [pin, setPin] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showError, setShowError] = useState(false);
 
   const handleDigitPress = useCallback(
     (digit: string) => {
@@ -41,13 +49,15 @@ const ParentAccessScreen = () => {
               rootNavigation?.dispatch(
                 CommonActions.reset({
                   index: 0,
-                  routes: [{ name: "(parent-tabs)" }],
+                  routes: [{ name: "(tabs-parent)" }],
                 }),
               );
             },
             onError: () => {
               setPin([]);
               setIsSubmitting(false);
+              setShowError(true);
+              setTimeout(() => setShowError(false), 2000);
             },
           },
         );
@@ -112,7 +122,9 @@ const ParentAccessScreen = () => {
             ))}
           </View>
 
-          <Text style={styles.forgotPin}>Olvidé mi clave</Text>
+          <Text style={showError ? styles.errorText : styles.forgotPin}>
+            {showError ? "Clave incorrecta" : "Olvidé mi clave"}
+          </Text>
         </View>
 
         <View style={styles.keypadWrapper}>
@@ -122,6 +134,16 @@ const ParentAccessScreen = () => {
           />
         </View>
       </View>
+
+      {isSubmitting && (
+        <Animated.View
+          entering={FadeIn.duration(200)}
+          exiting={FadeOut.duration(200)}
+          style={styles.overlay}
+        >
+          <ActivityIndicator size="large" color={colors.accent.mainBlue} />
+        </Animated.View>
+      )}
     </View>
   );
 };
@@ -130,6 +152,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.accent.lightBackground,
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(250, 241, 227, 0.7)",
+    alignItems: "center",
+    justifyContent: "center",
   },
   decoTop: {
     position: "absolute",
@@ -209,6 +237,12 @@ const styles = StyleSheet.create({
     fontFamily: fonts.poppins.regular,
     fontSize: 12,
     color: colors.neutral[300],
+    textAlign: "center",
+  },
+  errorText: {
+    fontFamily: fonts.poppins.bold,
+    fontSize: 12,
+    color: colors.error,
     textAlign: "center",
   },
   keypadWrapper: {

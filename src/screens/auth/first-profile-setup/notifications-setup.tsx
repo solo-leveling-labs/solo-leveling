@@ -1,5 +1,6 @@
 import { useUpdateAccount } from "@/src/api/accounts/accounts.hooks";
 import { AuthLayout } from "@/src/components/AuthLayout";
+import { useAuthStore } from "@/src/store/auth.store";
 import { FormField } from "@/src/components/FormField";
 import { Switch } from "@/src/components/Switch";
 import { FormErrors } from "@/src/screens/auth/first-profile-setup/types";
@@ -8,7 +9,7 @@ import { fonts } from "@/src/theme/fonts";
 import { minDelay } from "@/src/utils/min-delay";
 import * as Notifications from "expo-notifications";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Alert, StyleSheet, Text, View } from "react-native";
 
@@ -23,13 +24,18 @@ const NotificationsSetupScreen = () => {
   }>();
   const { mutateAsync: updateAccount } = useUpdateAccount();
 
-  // TODO: Get actual email from auth context/store (Ignore when Reviewing)
-  const signUpEmail = "mateolorenzo.dev@gmail.com";
+  const userEmail = useAuthStore((state) => state.user?.email ?? "");
 
-  const [email, setEmail] = useState(signUpEmail);
+  const [email, setEmail] = useState(userEmail);
   const [backupEmail, setBackupEmail] = useState("");
   const [isPushEnabled, setIsPushEnabled] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
+
+  useEffect(() => {
+    Notifications.getPermissionsAsync().then(({ status }) => {
+      setIsPushEnabled(status === "granted");
+    });
+  }, []);
   const [isLoading, setIsLoading] = useState(false);
 
   const isFormFilled = email.trim().length > 0;

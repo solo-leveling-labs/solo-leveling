@@ -8,10 +8,14 @@ export const getAlertOptions = (t: TFunction, isLocked?: boolean) => ({
       label: t("profileSetup.configureAlerts.severity.moderate"),
     },
     { key: "severe", label: t("profileSetup.configureAlerts.severity.severe") },
-    {
-      key: "emergency",
-      label: t("profileSetup.configureAlerts.severity.emergency"),
-    },
+    ...(isLocked
+      ? [
+          {
+            key: "emergency",
+            label: t("profileSetup.configureAlerts.severity.emergency"),
+          },
+        ]
+      : []),
   ],
   responseOptions: [
     {

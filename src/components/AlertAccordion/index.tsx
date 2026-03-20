@@ -6,6 +6,7 @@ import {
   NOTIFICATION_COLORS,
   RESPONSE_COLORS,
   SEVERITY_COLORS,
+  SEVERITY_TEXT_COLORS,
 } from "@/src/screens/auth/first-profile-setup/types";
 import { colors } from "@/src/theme/colors";
 import { fonts } from "@/src/theme/fonts";
@@ -43,6 +44,7 @@ export const AlertAccordion = ({
     ? colors.accent.mainBlue
     : colors.neutral[500];
   const severityColor = SEVERITY_COLORS[config.severity];
+  const severityTextColor = SEVERITY_TEXT_COLORS[config.severity];
   const severityLabel = t(
     `profileSetup.configureAlerts.severity.${config.severity}`,
   );
@@ -101,7 +103,9 @@ export const AlertAccordion = ({
         </Pressable>
         <Text style={styles.alertTitle}>{title}</Text>
         <View style={[styles.severityChip, { backgroundColor: severityColor }]}>
-          <Text style={styles.severityChipText}>{severityLabel}</Text>
+          <Text style={[styles.severityChipText, { color: severityTextColor }]}>
+            {severityLabel}
+          </Text>
         </View>
         <Animated.View style={chevronStyle}>
           <Ionicons name="chevron-down" size={24} color={colors.neutral[300]} />
