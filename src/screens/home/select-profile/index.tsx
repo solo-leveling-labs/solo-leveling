@@ -98,6 +98,14 @@ const SelectProfileScreen = () => {
   };
 
   const handleAddProfile = () => {
+    if (!isParent) {
+      if (!parentUserId) return;
+      push({
+        pathname: "/(select-profile)/parent-access",
+        params: { parentUserId, redirectTo: "create-profile" },
+      });
+      return;
+    }
     push({
       pathname: "/(select-profile)/create-profile",
       params: { source: "select-profile" },
@@ -148,22 +156,20 @@ const SelectProfileScreen = () => {
               </View>
             ))}
 
-            {isParent && (
-              <View style={[styles.profileCardWrapper, { width: cardWidth }]}>
-                <TouchableOpacity
-                  style={styles.addProfileCard}
-                  onPress={handleAddProfile}
-                  activeOpacity={ACTIVE_OPACITY}
-                  accessibilityLabel={t("selectProfile.addProfileA11y")}
-                  accessibilityRole="button"
-                >
-                  <AddProfileIconFrame width={128} height={128} />
-                  <Text style={styles.addProfileText}>
-                    {t("selectProfile.addProfile")}
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            )}
+            <View style={[styles.profileCardWrapper, { width: cardWidth }]}>
+              <TouchableOpacity
+                style={styles.addProfileCard}
+                onPress={handleAddProfile}
+                activeOpacity={ACTIVE_OPACITY}
+                accessibilityLabel={t("selectProfile.addProfileA11y")}
+                accessibilityRole="button"
+              >
+                <AddProfileIconFrame width={128} height={128} />
+                <Text style={styles.addProfileText}>
+                  {t("selectProfile.addProfile")}
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         )}
       </ScrollView>

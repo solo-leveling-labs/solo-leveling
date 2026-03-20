@@ -24,10 +24,13 @@ const PIN_LENGTH = 6;
 const DECO_OVERFLOW = 40;
 
 const ParentAccessScreen = () => {
-  const { back } = useRouter();
+  const router = useRouter();
   const rootNavigation = useNavigation().getParent();
   const { top: safeTop, bottom: safeBottom } = useSafeAreaInsets();
-  const { parentUserId } = useLocalSearchParams<{ parentUserId: string }>();
+  const { parentUserId, redirectTo } = useLocalSearchParams<{
+    parentUserId: string;
+    redirectTo?: string;
+  }>();
   const { mutate: selectProfile } = useSelectProfile();
   const [pin, setPin] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -46,12 +49,19 @@ const ParentAccessScreen = () => {
           { userId: Number(parentUserId), pin: nextPin.join("") },
           {
             onSuccess: () => {
-              rootNavigation?.dispatch(
-                CommonActions.reset({
-                  index: 0,
-                  routes: [{ name: "(tabs-parent)" }],
-                }),
-              );
+              if (redirectTo === "create-profile") {
+                router.replace({
+                  pathname: "/(select-profile)/create-profile",
+                  params: { source: "select-profile" },
+                });
+              } else {
+                rootNavigation?.dispatch(
+                  CommonActions.reset({
+                    index: 0,
+                    routes: [{ name: "(tabs-parent)" }],
+                  }),
+                );
+              }
             },
             onError: () => {
               setPin([]);
@@ -87,7 +97,7 @@ const ParentAccessScreen = () => {
       >
         <TouchableOpacity
           style={styles.backButton}
-          onPress={back}
+          onPress={router.back}
           activeOpacity={ACTIVE_OPACITY}
           accessibilityLabel="Volver"
           accessibilityRole="button"
