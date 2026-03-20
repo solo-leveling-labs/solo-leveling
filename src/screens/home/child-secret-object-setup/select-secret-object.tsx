@@ -77,7 +77,8 @@ type ScreenMode = "setup" | "login";
 
 const SelectSecretObjectScreen = () => {
   const { t } = useTranslation();
-  const { back } = useRouter();
+  const router = useRouter();
+  const { back } = router;
   const rootNavigation = useNavigation().getParent();
   const { top: safeTop, bottom: safeBottom } = useSafeAreaInsets();
   const { childId, mode = "setup" } = useLocalSearchParams<{
@@ -135,14 +136,24 @@ const SelectSecretObjectScreen = () => {
 
     const onSuccess = () => {
       setConfirmState("success");
-      minDelay().then(() => {
-        rootNavigation?.dispatch(
-          CommonActions.reset({
-            index: 0,
-            routes: [{ name: "(tabs-child)" }],
-          }),
-        );
-      });
+
+      if (mode === "login") {
+        minDelay().then(() => {
+          rootNavigation?.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{ name: "(tabs-child)" }],
+            }),
+          );
+        });
+      } else {
+        minDelay().then(() => {
+          router.push({
+            pathname: "/(select-profile)/secret-object-confirmation",
+            params: { objectId: String(visibleIndex) },
+          });
+        });
+      }
     };
 
     const onError = () => {
@@ -169,6 +180,7 @@ const SelectSecretObjectScreen = () => {
     selectProfile,
     assignSecretObject,
     rootNavigation,
+    router,
   ]);
 
   const overlayAnimatedStyle = useAnimatedStyle(() => ({
