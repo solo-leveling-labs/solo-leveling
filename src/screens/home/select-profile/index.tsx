@@ -56,6 +56,11 @@ const SelectProfileScreen = () => {
 
   const cardWidth = (screenWidth - 48 - 16) / 2;
 
+  const parentUserId = useMemo(() => {
+    const parent = usersResponse?.data?.find((user) => user.role === "PARENT");
+    return parent ? String(parent.id) : null;
+  }, [usersResponse]);
+
   const childProfiles = useMemo(() => {
     if (!usersResponse?.data) return [];
     return usersResponse.data
@@ -103,7 +108,11 @@ const SelectProfileScreen = () => {
   }, [push]);
 
   const handleParentAccess = useCallback(() => {
-    push("/(select-profile)/parent-access");
+    if (!parentUserId) return;
+    push({
+      pathname: "/(select-profile)/parent-access",
+      params: { parentUserId },
+    });
   }, [push]);
 
   const backgroundHeight = screenWidth * BACKGROUND_ASPECT_RATIO;
@@ -142,20 +151,22 @@ const SelectProfileScreen = () => {
               </View>
             ))}
 
-            {isParent && <View style={[styles.profileCardWrapper, { width: cardWidth }]}>
-              <TouchableOpacity
-                style={styles.addProfileCard}
-                onPress={handleAddProfile}
-                activeOpacity={ACTIVE_OPACITY}
-                accessibilityLabel={t("selectProfile.addProfileA11y")}
-                accessibilityRole="button"
-              >
-                <AddProfileIconFrame width={128} height={128} />
-                <Text style={styles.addProfileText}>
-                  {t("selectProfile.addProfile")}
-                </Text>
-              </TouchableOpacity>
-            </View>}
+            {isParent && (
+              <View style={[styles.profileCardWrapper, { width: cardWidth }]}>
+                <TouchableOpacity
+                  style={styles.addProfileCard}
+                  onPress={handleAddProfile}
+                  activeOpacity={ACTIVE_OPACITY}
+                  accessibilityLabel={t("selectProfile.addProfileA11y")}
+                  accessibilityRole="button"
+                >
+                  <AddProfileIconFrame width={128} height={128} />
+                  <Text style={styles.addProfileText}>
+                    {t("selectProfile.addProfile")}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            )}
           </View>
         )}
       </ScrollView>

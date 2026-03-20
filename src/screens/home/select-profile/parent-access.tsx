@@ -1,45 +1,59 @@
 import ChildWelcomeDecoBottom from "@/assets/svg/child-welcome-deco-bottom.svg";
 import ChildWelcomeDecoTop from "@/assets/svg/child-welcome-deco-top.svg";
+import { useSelectProfile } from "@/src/api/auth/auth.hooks";
 import PinKeypad from "@/src/components/PinKeypad";
 import { colors } from "@/src/theme/colors";
 import { ACTIVE_OPACITY } from "@/src/theme/constants";
 import { fonts } from "@/src/theme/fonts";
 import { Ionicons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
+import { CommonActions, useNavigation } from "@react-navigation/native";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-const PIN_LENGTH = 4;
+const PIN_LENGTH = 6;
 
 const DECO_OVERFLOW = 40;
 
 const ParentAccessScreen = () => {
   const { back } = useRouter();
+  const rootNavigation = useNavigation().getParent();
   const { top: safeTop, bottom: safeBottom } = useSafeAreaInsets();
+  const { parentUserId } = useLocalSearchParams<{ parentUserId: string }>();
+  const { mutate: selectProfile } = useSelectProfile();
   const [pin, setPin] = useState<string[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleDigitPress = useCallback(
     (digit: string) => {
-      if (pin.length >= PIN_LENGTH) return;
+      if (pin.length >= PIN_LENGTH || isSubmitting) return;
 
       const nextPin = [...pin, digit];
       setPin(nextPin);
 
       if (nextPin.length === PIN_LENGTH) {
-        const pinString = nextPin.join("");
-
-        // TODO: replace stub with POST /auth/select-profile once API is wired
-        console.log("[ParentAccess] PIN entered:", pinString);
-        Alert.alert("PIN ingresado", `PIN ingresado: ${pinString}`, [
+        setIsSubmitting(true);
+        selectProfile(
+          { userId: Number(parentUserId), pin: nextPin.join("") },
           {
-            text: "OK",
-            onPress: () => setPin([]),
+            onSuccess: () => {
+              rootNavigation?.dispatch(
+                CommonActions.reset({
+                  index: 0,
+                  routes: [{ name: "(tabs)" }],
+                }),
+              );
+            },
+            onError: () => {
+              setPin([]);
+              setIsSubmitting(false);
+            },
           },
-        ]);
+        );
       }
     },
-    [pin],
+    [pin, isSubmitting, parentUserId, selectProfile, rootNavigation],
   );
 
   const handleBackspacePress = useCallback(() => {
@@ -158,6 +172,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 24,
     marginBottom: 32,
+    width: "100%",
   },
   instruction: {
     fontFamily: fonts.poppins.regular,
@@ -168,11 +183,12 @@ const styles = StyleSheet.create({
   },
   dotsRow: {
     flexDirection: "row",
-    gap: 16,
+    gap: 8,
+    width: "100%",
   },
   dot: {
-    width: 56,
-    height: 56,
+    flex: 1,
+    aspectRatio: 1,
     borderRadius: 12,
     backgroundColor: "#ECECEC",
     borderWidth: 1,
