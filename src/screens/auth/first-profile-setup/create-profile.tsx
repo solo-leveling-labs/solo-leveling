@@ -1,6 +1,6 @@
 import CalendarIcon from "@/assets/svg/calendar.svg";
-import { RULES_QUERY_KEY } from "@/src/api/rules/rules.hooks";
 import { rulesApi } from "@/src/api/rules/rules.api";
+import { RULES_QUERY_KEY } from "@/src/api/rules/rules.hooks";
 import { useCreateUser } from "@/src/api/users/users.hooks";
 import { AuthLayout } from "@/src/components/AuthLayout";
 import { DatePickerField } from "@/src/components/DatePickerField";
@@ -9,11 +9,19 @@ import { colors } from "@/src/theme/colors";
 import { ACTIVE_OPACITY } from "@/src/theme/constants";
 import { fonts } from "@/src/theme/fonts";
 import { minDelay } from "@/src/utils/min-delay";
-import { useLocalSearchParams, useRouter } from "expo-router";
 import { useQueryClient } from "@tanstack/react-query";
-import React, { useCallback, useState } from "react";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Alert, Keyboard, StyleSheet, Text, TouchableOpacity } from "react-native";
+import {
+  Alert,
+  Keyboard,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 const formatDate = (date: Date): string => {
@@ -39,37 +47,41 @@ const CreateProfileScreen = () => {
 
   const [name, setName] = useState("");
   const [birthDate, setBirthDate] = useState<Date | null>(null);
+  const [extraInfo, setExtraInfo] = useState("");
   const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const isFormValid = name.trim().length > 0 && birthDate !== null;
   const isFromSelectProfile = source === "select-profile";
 
-  const showDatePicker = useCallback(() => {
+  const showDatePicker = () => {
     Keyboard.dismiss();
     setIsDatePickerVisible(true);
-  }, []);
+  };
 
-  const hideDatePicker = useCallback(() => {
+  const hideDatePicker = () => {
     setIsDatePickerVisible(false);
-  }, []);
+  };
 
-  const handleDateConfirm = useCallback(
-    (date: Date) => {
-      hideDatePicker();
-      setBirthDate(date);
-    },
-    [hideDatePicker],
-  );
+  const handleDateConfirm = (date: Date) => {
+    hideDatePicker();
+    setBirthDate(date);
+  };
 
-  const handleNext = useCallback(async () => {
+  const handleNext = async () => {
     if (!isFormValid || !birthDate) return;
 
     setIsLoading(true);
 
+    const payload = {
+      fullName: name.trim(),
+      birthday: toISODate(birthDate),
+      ...(extraInfo.trim() && { extraInformation: extraInfo.trim() }),
+    };
+
     try {
       const [data] = await Promise.all([
-        createUser({ fullName: name.trim(), birthday: toISODate(birthDate) }),
+        createUser(payload),
         queryClient.prefetchQuery({
           queryKey: RULES_QUERY_KEY,
           queryFn: () => rulesApi.getRules(),
@@ -90,9 +102,9 @@ const CreateProfileScreen = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [isFormValid, birthDate, createUser, name, push, source, t]);
+  };
 
-  const handleCancel = useCallback(() => {
+  const handleCancel = () => {
     Alert.alert(
       t("profileSetup.createProfile.skipAlert.title"),
       t("profileSetup.createProfile.skipAlert.message"),
@@ -108,7 +120,7 @@ const CreateProfileScreen = () => {
         },
       ],
     );
-  }, [dismissTo, t]);
+  };
 
   return (
     <AuthLayout
@@ -162,6 +174,33 @@ const CreateProfileScreen = () => {
         }
       />
 
+      <View style={styles.personalizationSection}>
+        <Text style={styles.sectionTitle}>
+          {t("profileSetup.createProfile.personalizationTitle")}
+        </Text>
+        <Text style={styles.personalizationDescription}>
+          {t("profileSetup.createProfile.personalizationDescription")}
+        </Text>
+      </View>
+
+      <View style={styles.textAreaGroup}>
+        <Text style={styles.textAreaLabel}>
+          {t("profileSetup.createProfile.fields.extraInfo")}
+        </Text>
+        <View style={styles.textAreaContainer}>
+          <TextInput
+            style={styles.textArea}
+            value={extraInfo}
+            onChangeText={setExtraInfo}
+            placeholder={t("profileSetup.createProfile.placeholders.extraInfo")}
+            placeholderTextColor={colors.neutral[500]}
+            multiline
+            textAlignVertical="top"
+            accessibilityLabel={t("profileSetup.createProfile.extraInfoA11y")}
+          />
+        </View>
+      </View>
+
       <DateTimePickerModal
         isVisible={isDatePickerVisible}
         mode="date"
@@ -199,6 +238,41 @@ const styles = StyleSheet.create({
     fontFamily: fonts.poppins.bold,
     color: colors.accent.mainBlue,
     lineHeight: 22,
+  },
+  personalizationSection: {
+    gap: 8,
+    marginTop: 8,
+  },
+  personalizationDescription: {
+    fontSize: 14,
+    fontFamily: fonts.poppins.regular,
+    color: colors.neutral.black,
+    lineHeight: 19.6,
+  },
+  textAreaGroup: {
+    gap: 8,
+  },
+  textAreaLabel: {
+    fontSize: 14,
+    fontFamily: fonts.poppins.regular,
+    color: colors.neutral[200],
+  },
+  textAreaContainer: {
+    borderRadius: 28,
+    borderWidth: 1,
+    borderColor: colors.accent.mainBlue,
+    margin: 1,
+  },
+  textArea: {
+    fontSize: 16,
+    fontFamily: fonts.poppins.regular,
+    color: colors.neutral[200],
+    height: 120,
+    paddingHorizontal: 24,
+    paddingTop: 16,
+    paddingBottom: 16,
+    lineHeight: 22,
+    includeFontPadding: false,
   },
   calendarIcon: {
     position: "absolute",

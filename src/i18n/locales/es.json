@@ -165,11 +165,16 @@
       "sectionTitle": "Datos",
       "fields": {
         "childName": "Nombre del menor",
-        "birthDate": "Fecha de nacimiento"
+        "birthDate": "Fecha de nacimiento",
+        "extraInfo": "Información adicional (opcional)"
       },
       "placeholders": {
-        "name": "Nombre"
+        "name": "Nombre",
+        "extraInfo": "Ej: Le gustan los dinosaurios, practica natación y le interesa el espacio."
       },
+      "personalizationTitle": "Personalización",
+      "personalizationDescription": "¿Hay algo más que quieras que Zapienz sepa sobre tu hijo/a?\nContanos cualquier información que creas relevante para que la experiencia sea más enriquecedora (sus gustos, hobbies, deportes que practica o lo que quieras destacar).",
+      "extraInfoA11y": "Campo de información adicional sobre el menor",
       "helperBirthDate": "Zapienz adapta sus respuestas para que sean fáciles de entender según la edad.",
       "selectDate": "Seleccioná una fecha",
       "datePickerConfirm": "Confirmar",
@@ -348,7 +353,6 @@
     "greeting": "¡Hola {{name}}!",
     "subtitle": "Te damos la bienvenida a Zapienz",
     "body": "Un lugar para charlar, sacarte todas las dudas y aprender cosas nuevas con tu nueva amiga IA.",
-    "question": "¿Empezamos?",
     "cta": "¡Quiero empezar!",
     "backA11y": "Volver",
     "ctaA11y": "Comenzar a usar Zapienz"

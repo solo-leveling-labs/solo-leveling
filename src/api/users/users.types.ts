@@ -2,6 +2,7 @@
 export interface CreateUserRequest {
   fullName: string;
   birthday: string; // ISO date string: "YYYY-MM-DD"
+  extraInformation?: string;
 }
 
 // Responses

@@ -79,10 +79,6 @@ const ChildWelcomeScreen = () => {
           </Text>
 
           <Text style={styles.body}>{t("childWelcome.body")}</Text>
-
-          <Text style={styles.sectionHeading}>
-            {t("childWelcome.question")}
-          </Text>
         </View>
 
         <View style={styles.footer}>
